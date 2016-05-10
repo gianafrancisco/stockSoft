@@ -1,0 +1,90 @@
+<div>
+    <div id="agregarArticulo" class="panel panel-primary" style="width: 90%; margin: 5%; margin-top: 100px;">
+        <div class="panel-heading"></a>Agregar nuevo artículo</div>
+        <div class="panel-body">
+            <form>
+                <div class="form-group-sm">
+                    <label for="descripcion">Código de barra</label>
+                    <input type="text" id="codigo" class="form-control" placeholder="Codigo de barra" ng-model="articulo.codigo" />
+                </div>
+                <div class="form-group-sm">
+                    <label for="descripcion">Descripción</label>
+                    <input type="text" id="descripcion" class="form-control" placeholder="Descripcion" ng-model="articulo.descripcion" />
+                </div>
+
+                <div class="form-group-sm">
+                    <label for="cantidadStock">Stock</label>
+                    <input type="number" id="cantidadStock" class="form-control" placeholder="Stock"  ng-model="articulo.cantidadStock" value="" disabled min="0" max="9999"/>
+                </div>
+                <div class="form-group-sm">
+                    <label for="cantidad">Cantidad</label>
+                    <input type="number" id="cantidad" class="form-control" placeholder="Cantidad"  ng-model="articulo.cantidad" min="0" max="9999" />
+                </div>
+
+                <div class="form-group-sm">
+                    <label for="precio">Precio de lista</label>
+                    <input type="number" step="0.01" id="precio" class="form-control" placeholder="Precio lista"  ng-model="articulo.precioLista" min="0"/>
+                </div>
+
+                <div class="form-group-sm">
+                    <label for="factor1">Factor 1</label>
+                    <input type="number" step="0.01" id="factor1" class="form-control" placeholder="factor 1"  ng-model="articulo.factor1" value="1.0" min="0"/>
+                </div>
+
+                <div class="form-group-sm">
+                    <label for="factor2">Factor 2</label>
+                    <input type="number" step="0.01" id="factor2" class="form-control" placeholder="factor 2"  ng-model="articulo.factor2" value="1.0" min="0"/>
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <button ng-click="agregarArticulo();" class="btn btn-success" ng-disabled="!isModificable();">Agregar nuevo</button>
+                    <button ng-click="modificarArticulo();" class="btn btn-primary" ng-disabled="isModificable();">Modificar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="listaArticulos">
+        <div class="panel panel-primary" style="width: 90%; margin: 5%">
+            <div class="panel-heading">Buscar artículos</div>
+            <div class="panel-body">
+                <div class="form-group-sm">
+                    <label for="buscar">Buscar</label>
+                    <input type="text" id="buscar" class="form-control" placeholder="buscar articulo"  ng-model="search" ng-change="buscarArticulo();"/>
+                </div>
+                <uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerListaArticulo();"></uib-pagination>
+                <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
+            </div>
+            <table id="tablaListaArticulo" class="table">
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Precio / Lista</th>
+                    <th>f1 / f2</th>
+                    <th>Stock</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="articulo in listado.content">
+                    <td style="width: 20%">{{articulo.codigo}}</td>
+                    <td style="width: 10%">{{articulo.precio | currency}} / {{articulo.precioLista | currency}}</td>
+                    <td style="width: 10%">{{articulo.factor1 | number:2}} / {{articulo.factor2 | number:2}}</td>
+                    <td style="width: 10%">{{articulo.cantidadStock}}</td>
+                    <td style="width: 30%">{{articulo.descripcion}}</td>
+                    <td style="width: 20%">
+                        <div class="btn-group">
+                            <button ng-click="modificar(articulo);" class="btn btn-primary btn-sm">Modificar</button>
+                            <button ng-click="copiar(articulo);" class="btn btn-primary btn-sm">Copiar</button>
+                            <button ng-click="eliminar(articulo);" class="btn btn-danger btn-sm">Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="panel-footer">
+                <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
+            </div>
+        </div>
+    </div>
+</div>

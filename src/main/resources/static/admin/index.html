@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="mainAdminApp">
+<head>
+    <meta charset="UTF-8">
+    <title>YPorque?</title>
+    <link rel="stylesheet" type="text/css" href="../js/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../js/bower_components/angular-bootstrap/ui-bootstrap-csp.css" />
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+        display: none !important;
+        }
+    </style>
+</head>
+<body ng-cloak class="ng-cloak">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">YPorQue?</a>
+    </div>
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li><a href="#articulo">Artículos</a></li>
+            <li><a href="#vendedor">Vendedores</a></li>
+            <li><a href="#venta">Historial ventas</a></li>
+        </ul>
+    </div>
+</nav>
+<ng-view />
+
+<script src="../js/bower_components/angular/angular.min.js"></script>
+<script src="../js/bower_components/angular-route/angular-route.min.js"></script>
+<script src="../js/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../js/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../js/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="../js/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+<script src="../js/articuloApp.js"></script>
+<script src="../js/ventaApp.js"></script>
+<script src="../js/vendedorApp.js"></script>
+<script src="../js/mainAdminApp.js"></script>
+
+</body>
+</html>
