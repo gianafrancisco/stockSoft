@@ -1,5 +1,11 @@
-package yporque.controller;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
 
+package fransis.mpm.controller;
+
+import fransis.mpm.model.Vendedor;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +17,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import yporque.config.MemoryDBConfig;
-import yporque.model.Vendedor;
-import yporque.repository.VendedorRepository;
+import fransis.mpm.config.MemoryDBConfig;
+import fransis.mpm.repository.VendedorRepository;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;

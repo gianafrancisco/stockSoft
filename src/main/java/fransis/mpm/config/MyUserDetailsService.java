@@ -1,5 +1,12 @@
-package yporque.config;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
 
+package fransis.mpm.config;
+
+import fransis.mpm.model.Vendedor;
+import fransis.mpm.repository.VendedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,8 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import yporque.model.Vendedor;
-import yporque.repository.VendedorRepository;
 
 import java.util.ArrayList;
 import java.util.HashSet;

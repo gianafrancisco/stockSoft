@@ -1,9 +1,14 @@
-package yporque.repository;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
 
+package fransis.mpm.repository;
+
+import fransis.mpm.model.Vendedor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import yporque.model.Vendedor;
 
 import java.util.List;
 

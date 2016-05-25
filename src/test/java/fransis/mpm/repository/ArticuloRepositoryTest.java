@@ -1,5 +1,11 @@
-package yporque.repository;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
 
+package fransis.mpm.repository;
+
+import fransis.mpm.model.Articulo;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,8 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import yporque.config.MemoryDBConfig;
-import yporque.model.Articulo;
+import fransis.mpm.config.MemoryDBConfig;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
@@ -20,7 +25,7 @@ import static org.hamcrest.core.Is.is;
  * Created by francisco on 04/12/2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ComponentScan("yporque.model")
+@ComponentScan("fransis.mpm.model")
 @ContextConfiguration(classes = {MemoryDBConfig.class})
 public class ArticuloRepositoryTest {
 
@@ -34,7 +39,7 @@ public class ArticuloRepositoryTest {
 
     @Test
     public void test_insert_articulo() throws Exception {
-        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0,1,1);
+        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0);
         articuloRepository.save(art);
         Articulo a = articuloRepository.findOne(art.getArticuloId());
         Assert.assertThat(a.getDescripcion(),is("articulo 1"));
@@ -43,7 +48,7 @@ public class ArticuloRepositoryTest {
 
     @Test
     public void test_update_articulo() throws Exception {
-        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0,1,1);
+        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0);
         articuloRepository.save(art);
         Articulo a = articuloRepository.findOne(art.getArticuloId());
         Assert.assertThat(a.getDescripcion(),is("articulo 1"));
@@ -57,7 +62,7 @@ public class ArticuloRepositoryTest {
 
     @Test
     public void test_articulo_findByDescripcionOrCodigoIgnoreCase() throws Exception {
-        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0,1,1);
+        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0);
         articuloRepository.save(art);
 
         Page<Articulo> page = articuloRepository.findByDescripcionContainingIgnoreCaseOrCodigoContainingIgnoreCase("Rticulo 1","Rticulo 1",new PageRequest(0,10));

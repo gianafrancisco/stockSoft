@@ -1,18 +1,9 @@
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import yporque.model.Articulo;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.hamcrest.core.Is.is;
+
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
 
 /**
  * Created by francisco on 21/11/15.

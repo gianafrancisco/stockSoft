@@ -1,12 +1,17 @@
-package yporque.controller;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
 
+package fransis.mpm.controller;
+
+import fransis.mpm.model.Vendedor;
+import fransis.mpm.repository.VendedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-import yporque.model.Vendedor;
-import yporque.repository.VendedorRepository;
 
 /**
  * Created by francisco on 23/12/15.

@@ -1,5 +1,11 @@
-package yporque.config;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
 
+package fransis.mpm.config;
+
+import fransis.mpm.model.Vendedor;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,8 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import yporque.model.Vendedor;
-import yporque.repository.VendedorRepository;
+import fransis.mpm.repository.VendedorRepository;
 
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -19,7 +24,7 @@ import static org.hamcrest.core.Is.is;
  * Created by francisco on 18/12/15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ComponentScan("yporque")
+@ComponentScan("fransis.mpm")
 @ContextConfiguration(classes = {MemoryDBConfig.class,MyUserDetailsService.class})
 public class MyUserDetailsServiceTest {
 

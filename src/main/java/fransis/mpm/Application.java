@@ -1,22 +1,25 @@
-package yporque;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package fransis.mpm;
+
+import fransis.mpm.model.Articulo;
+import fransis.mpm.model.Vendedor;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import yporque.model.Articulo;
-import yporque.model.Vendedor;
-import yporque.repository.ArticuloRepository;
-import yporque.repository.VendedorRepository;
+import fransis.mpm.repository.ArticuloRepository;
+import fransis.mpm.repository.VendedorRepository;
 
 import java.util.List;
 
 @SpringBootApplication
-@ComponentScan("yporque")
+@ComponentScan("fransis.mpm")
 public class Application {
 
 	public static void main(String[] args) {
@@ -37,11 +40,11 @@ public class Application {
 
 			List<Articulo> articulos = articuloRepository.findAll();
 			if(articulos.isEmpty()){
-				articuloRepository.save(new Articulo("N.CREDITO","Nota de credito por la diferencia",0.0,1.0,1.0,1000000,1000000));
-				articuloRepository.save(new Articulo("100001","Remera",300.0,1.0,1.5,50,50));
-				articuloRepository.save(new Articulo("100002","Pantalon",450.0,1.0,2.0,10,10));
-				articuloRepository.save(new Articulo("100003","Campera",500.0,2.0,2.0,5,5));
-				articuloRepository.save(new Articulo("100004","Zapatilla",350.0,1.0,1.6,7,7));
+				articuloRepository.save(new Articulo("N.CREDITO","Nota de credito por la diferencia",0.0,1.0,1.0));
+				articuloRepository.save(new Articulo("100001","Remera",300.0,1.0,1.5));
+				articuloRepository.save(new Articulo("100002","Pantalon",450.0,1.0,2.0));
+				articuloRepository.save(new Articulo("100003","Campera",500.0,2.0,2.0));
+				articuloRepository.save(new Articulo("100004","Zapatilla",350.0,1.0,1.6));
 			}
 
 

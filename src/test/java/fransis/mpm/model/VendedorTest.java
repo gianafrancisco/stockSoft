@@ -1,4 +1,9 @@
-package yporque.model;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
+
+package fransis.mpm.model;
 
 import org.junit.Assert;
 import org.junit.Test;

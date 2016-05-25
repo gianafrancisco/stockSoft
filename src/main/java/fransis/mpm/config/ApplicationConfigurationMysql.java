@@ -1,10 +1,13 @@
-package yporque.config;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
+
+package fransis.mpm.config;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
@@ -14,7 +17,7 @@ import java.util.Properties;
  * Created by francisco on 04/12/2015.
  */
 //@Configuration
-//@EnableJpaRepositories("yporque.repository")
+//@EnableJpaRepositories("fransis.mpm.repository")
 class ApplicationConfigurationMysql extends ApplicationConfiguration {
 
     @Value("${spring.datasource.driverClassName:'com.mysql.jdbc.Driver'}")
@@ -42,7 +45,7 @@ class ApplicationConfigurationMysql extends ApplicationConfiguration {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean= new LocalContainerEntityManagerFactoryBean();
 
         entityManagerFactoryBean.setDataSource(this.dataSource());
-        entityManagerFactoryBean.setPackagesToScan("yporque");
+        entityManagerFactoryBean.setPackagesToScan("fransis.mpm");
         entityManagerFactoryBean.setPersistenceUnitName("emsPU");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();

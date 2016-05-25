@@ -1,9 +1,15 @@
-package yporque.repository;
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
+
+package fransis.mpm.repository;
 
 /**
  * Created by francisco on 12/12/2015.
  */
 
+import fransis.mpm.model.Vendedor;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,11 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import yporque.config.MemoryDBConfig;
-import yporque.model.*;
+import fransis.mpm.config.MemoryDBConfig;
+
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -26,7 +31,7 @@ import static org.hamcrest.core.Is.is;
  * Created by francisco on 04/12/2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ComponentScan("yporque.model")
+@ComponentScan("fransis.mpm.model")
 @ContextConfiguration(classes = {MemoryDBConfig.class})
 public class VendedorRepositoryTest {
 
