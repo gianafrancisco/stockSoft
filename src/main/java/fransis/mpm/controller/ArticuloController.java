@@ -33,7 +33,7 @@ public class ArticuloController {
         return articuloRepository.findAll(pageRequest);
     }
 
-    @RequestMapping(value = "/articulos", method = RequestMethod.GET)
+    @RequestMapping(value = "/articulos", method = RequestMethod.GET, params = {"search"})
     public Page<Articulo> filtrarArticulos(@RequestParam(value = "") String search, Pageable pageRequest){
         return articuloRepository.findByDescripcionContainingIgnoreCaseOrCodigoContainingIgnoreCase(search, search, pageRequest);
     }

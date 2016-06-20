@@ -1,4 +1,6 @@
 .idea
 build.gradle
 gradle*
-pmp.iml
+mpm.iml
+target/
+/mpm.iml

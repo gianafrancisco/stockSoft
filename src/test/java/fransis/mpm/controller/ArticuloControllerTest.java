@@ -63,7 +63,8 @@ public class ArticuloControllerTest {
         Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
         articuloRepository.saveAndFlush(articulo);
 
-        mockMvc.perform(get("/articulos").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+        mockMvc.perform(
+                get("/articulos").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.content[0].descripcion").value("articulo 1"));
