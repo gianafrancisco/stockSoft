@@ -24,21 +24,19 @@
 
 <nav class="navbar navbar-default navbar-fixed-top">
     <div class="navbar-header">
-        <a class="navbar-brand" href="#">YPorQue?</a>
+        <a class="navbar-brand" href="#">MPM - Stock</a>
     </div>
     <div class="container">
         <ul class="nav navbar-nav">
             <li ><a href="#articulo">Artículos</a></li>
-            <li ng-show="cajaAbierta"><a href="#vender">Venta</a></li>
-            <li ><a href="#venta">Historial de ventas</a></li>
-            <li ng-show="cajaAbierta"><a href="#retiro">Retiros y Gastos</a></li>
-            <li><a href="#caja">Caja</a></li>
         </ul>
     </div>
 </nav>
 <ng-view />
 
 <script src="js/bower_components/angular/angular.min.js"></script>
+<script src="js/bower_components/lodash/lodash.min.js"></script>
+<script src="js/bower_components/restangular/restangular.min.js"></script>
 <script src="js/bower_components/angular-route/angular-route.min.js"></script>
 <script src="js/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="js/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -46,10 +44,6 @@
 <script src="js/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
 <script src="js/articuloApp.js"></script>
-<script src="js/venderApp.js"></script>
-<script src="js/ventaApp.js"></script>
-<script src="js/retiroApp.js"></script>
-<script src="js/cajaApp.js"></script>
 <script src="js/mainApp.js"></script>
 
 </body>

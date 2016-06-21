@@ -1,4 +1,6 @@
-function articuloController($scope,$http,$window,$location) {
+function articuloController($scope,$http,$window,$location, Restangular) {
+
+     var Articulo = Restangular.all('articulos');
 
 
      $scope.listado = {
@@ -14,6 +16,12 @@ function articuloController($scope,$http,$window,$location) {
      $scope.pageNumber = 1;
 
      $scope.obtenerListaArticulo = function(){
+
+        var params = {page: $scope.pageNumber-1};
+        if($scope.search != "" && $scope.search != undefined){
+            params.search = $scope.search;
+        }
+     /*
          var url = "/articulos?page="+($scope.pageNumber-1);
          if($scope.search != "" && $scope.search != undefined){
              var search = "&search="+$scope.search;
@@ -24,6 +32,13 @@ function articuloController($scope,$http,$window,$location) {
              $scope.listado=data;
              $scope.pageNumber = $scope.listado.number+1;
          });
+         */
+
+         Articulo.getList(params).then(function(a){
+             $scope.listado = a;
+             $scope.pageNumber = $scope.listado.number+1;
+         });
+
      };
 
      $scope.buscarArticulo = function(){
@@ -92,20 +107,29 @@ function articuloController($scope,$http,$window,$location) {
      $scope.eliminar = function(articulo){
 
          if(confirm("Esta seguro que quiere elimiar el articulo?")){
-
+                  //Articulo.remove(articulo.articuloId).then(function(a){
+                    //a.remove();
+                    //$scope.obtenerListaArticulo();
+                  //});
+                  Restangular.one("articulos", articulo.articuloId).remove();
+/*
              $http.get("/articulo/delete/"+articulo.articuloId)
              .success(function(data, status, headers, config) {
                  $scope.obtenerListaArticulo();
                  //$scope.obtenerListaCodigo(articulo);
-             });
+             });*/
          }
      };
 
      $scope.eliminarCodigo = function(articulo,item){
-         $http.get("/articulo/"+articulo.articuloId+"/item/delete/"+item.itemId)
+
+         var a = Articulo.get(item.itemId);
+         a.remove();
+
+         /*$http.get("/articulo/"+articulo.articuloId+"/item/delete/"+item.itemId)
          .success(function(data, status, headers, config) {
              //$scope.obtenerListaCodigo(articulo);
-         });
+         });*/
      };
 
      $scope.saveItem = function(){

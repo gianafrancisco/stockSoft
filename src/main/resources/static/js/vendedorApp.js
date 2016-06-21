@@ -1,6 +1,5 @@
 function vendedorController($scope,$http,$window,$location) {
 
-
      $scope.listado = {
          numberOfElements: 0,
          number: 0,
