@@ -28,6 +28,17 @@ public class ArticuloController {
     @Autowired
     private ArticuloRepository articuloRepository;
 
+    @RequestMapping(value = "/articulos/{articuloId}", method = RequestMethod.GET)
+    public ResponseEntity<Articulo> obtener(@PathVariable Long articuloId){
+        Articulo one = articuloRepository.findOne(articuloId);
+        if(one != null) {
+            return (ResponseEntity.status(HttpStatus.OK)).body(one);
+        }else{
+            return (ResponseEntity.status(HttpStatus.NOT_FOUND)).body(null);
+        }
+
+    }
+
     @RequestMapping(value = "/articulos", method = RequestMethod.GET)
     public Page<Articulo> obtenerListaArticulos(Pageable pageRequest){
         return articuloRepository.findAll(pageRequest);
