@@ -28,7 +28,7 @@ app.config(function(RestangularProvider) {
       if (operation === "getList") {
         // .. and handle the data and meta data
         //extractedData = data.content;
-        extractedData = [];
+        extractedData = data.content;
         extractedData.content = data.content;
         extractedData.number = data.number;
         extractedData.totalPages = data.totalPages;

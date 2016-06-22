@@ -60,23 +60,25 @@ function articuloController($scope,$http,$window,$location, Restangular) {
      };
      $scope.save = function(callback){
 
-        //$scope.articulo.put();
-
-     /*
-         $http.put("/articulo/agregar",$scope.articulo)
-         .success(function(data, status, headers, config) {
-             $scope.articulo=data;
-             $scope.obtenerListaArticulo();
-             if(callback != undefined){
-                 callback();
-             }
-         });
-     */
+        if($scope.articulo.articuloId == undefined){
+            Articulo.post($scope.articulo).then(function(){
+                $scope.obtenerListaArticulo();
+                 if(callback != undefined){
+                     callback();
+                 }
+            });
+        }else{
+            $scope.articulo.put().then(function(){
+                 if(callback != undefined){
+                     callback();
+                 }
+            });
+        }
      };
 
      $scope.eliminar = function(articulo){
          if(confirm("Esta seguro que quiere elimiar el articulo?")){
-                  Restangular.one("articulos", articulo.articuloId).remove();
+            Restangular.one("articulos", articulo.articuloId).remove();
          }
      };
      $scope.init = function(){
