@@ -71,6 +71,21 @@ public class ArticuloControllerTest {
 
     }
 
+    @Test
+    public void test_get_articulo() throws Exception {
+
+        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        articulo = articuloRepository.saveAndFlush(articulo);
+
+        mockMvc.perform(
+                get("/articulos/"+articulo.getArticuloId()).accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.descripcion").value("articulo 1"))
+                .andExpect(jsonPath("$.articuloId").value(is(articulo.getArticuloId().intValue())));
+
+    }
+
 
     @Test
     public void test_request_articulos() throws Exception {
