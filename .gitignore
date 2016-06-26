@@ -4,3 +4,10 @@ gradle*
 mpm.iml
 target/
 /mpm.iml
+src/main/gui/node_modules/
+src/main/gui/dist/
+src/main/gui/.tmp/
+src/main/gui/.sass-cache/
+src/main/gui/bower_components/
+src/main/webapp-1/
+db/
