@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="mainApp">
+<head>
+    <meta charset="UTF-8">
+    <title>MPM Stock</title>
+    <link rel="stylesheet" type="text/css" href="js/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="js/bower_components/angular-bootstrap/ui-bootstrap-csp.css" />
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+        display: none !important;
+        }
+
+        @media print
+        {
+            .no-print, .no-print *
+            {
+                display: none !important;
+            }
+        }
+
+    </style>
+</head>
+<body ng-cloak class="ng-cloak" ng-controller="MainController">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#">MPM - Stock</a>
+    </div>
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li ><a href="#articulo">Artículos</a></li>
+        </ul>
+    </div>
+</nav>
+<ng-view />
+
+<script src="js/bower_components/angular/angular.min.js"></script>
+<script src="js/bower_components/lodash/lodash.min.js"></script>
+<script src="js/bower_components/restangular/restangular.min.js"></script>
+<script src="js/bower_components/angular-route/angular-route.min.js"></script>
+<script src="js/bower_components/jquery/dist/jquery.min.js"></script>
+<script src="js/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="js/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+<script src="js/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+<script src="js/articuloApp.js"></script>
+<script src="js/mainApp.js"></script>
+
+</body>
+</html>
