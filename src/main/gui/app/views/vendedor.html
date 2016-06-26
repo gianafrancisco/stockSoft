@@ -1,6 +1,6 @@
 <div>
     <div id="agregarArticulo" class="panel panel-primary" style="width: 90%; margin: 5%; margin-top: 100px;">
-        <div class="panel-heading"></a>Vendedores</div>
+        <div class="panel-heading"></a>Usuarios</div>
         <div class="panel-body">
             <form>
                 <div class="form-group-sm">
@@ -22,19 +22,19 @@
                 </div>
 
                 <div style="margin-top: 10px;">
-                    <button ng-click="agregar();" class="btn btn-success" ng-disabled="!isModificable();">Agregar nuevo</button>
-                    <button ng-click="modificar();" class="btn btn-primary" ng-disabled="isModificable();">Modificar</button>
+                    <button ng-click="agregar();" class="btn btn-success" ng-disabled="!isModificable();"><span class="glyphicon glyphicon-plus">Agregar nuevo</button>
+                    <button ng-click="modificar();" class="btn btn-primary" ng-disabled="isModificable();"><span class="glyphicon glyphicon-edit">Modificar</button>
                 </div>
             </form>
         </div>
     </div>
     <div id="lista">
         <div class="panel panel-primary" style="width: 90%; margin: 5%">
-            <div class="panel-heading">Buscar vendedor</div>
+            <div class="panel-heading">Buscar</div>
             <div class="panel-body">
                 <div class="form-group-sm">
                     <label for="buscar">Buscar</label>
-                    <input type="text" id="buscar" class="form-control" placeholder="buscar vendedor"  ng-model="search" ng-change="buscar();"/>
+                    <input type="text" id="buscar" class="form-control" placeholder="buscar"  ng-model="search" ng-change="buscar();"/>
                 </div>
                 <uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerListaVendedor();"></uib-pagination>
                 <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
@@ -55,8 +55,8 @@
                     <td style="width: 10%">{{vendedor.apellido}}</td>
                     <td style="width: 20%">
                         <div class="btn-group">
-                            <button ng-click="editar(vendedor);" class="btn btn-primary btn-sm">Modificar</button>
-                            <button ng-click="eliminar(vendedor);" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button ng-click="editar(vendedor);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-edit"></span></button>
+                            <button ng-click="eliminar(vendedor);" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></button>
                         </div>
                     </td>
                 </tr>
