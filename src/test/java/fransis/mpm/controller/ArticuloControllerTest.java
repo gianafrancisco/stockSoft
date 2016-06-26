@@ -60,7 +60,7 @@ public class ArticuloControllerTest {
     @Test
     public void test_get_articulos() throws Exception {
 
-        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo articulo = new Articulo("1234","articulo 1",1.0);
         articuloRepository.saveAndFlush(articulo);
 
         mockMvc.perform(
@@ -74,7 +74,7 @@ public class ArticuloControllerTest {
     @Test
     public void test_get_articulo() throws Exception {
 
-        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo articulo = new Articulo("1234","articulo 1",1.0);
         articulo = articuloRepository.saveAndFlush(articulo);
 
         mockMvc.perform(
@@ -90,7 +90,7 @@ public class ArticuloControllerTest {
     @Test
     public void test_request_articulos() throws Exception {
 
-        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo articulo = new Articulo("1234","articulo 1",1.0);
         articuloRepository.saveAndFlush(articulo);
 
         Page<Articulo> page = articuloController.obtenerListaArticulos(new PageRequest(0,10));
@@ -106,7 +106,7 @@ public class ArticuloControllerTest {
     @Test
     public void test_request_articulos_put_not_content() throws Exception {
 
-        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo articulo = new Articulo("1234","articulo 1",1.0);
         articulo = articuloRepository.saveAndFlush(articulo);
         articulo.setDescripcion("articulo 20");
 
@@ -121,7 +121,7 @@ public class ArticuloControllerTest {
     @Test
     public void test_request_articulos_put_not_found() throws Exception {
 
-        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo articulo = new Articulo("1234","articulo 1",1.0);
         ResponseEntity<Void> responseEntity = articuloController.put(articulo);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NOT_FOUND));
 
@@ -131,7 +131,7 @@ public class ArticuloControllerTest {
     @Test
     public void test_request_articulo_search() throws Exception {
 
-        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo articulo = new Articulo("1234","articulo 1",1.0);
         articuloRepository.saveAndFlush(articulo);
 
         Page<Articulo> page = articuloController.filtrarArticulos("ticulo",new PageRequest(0,10));
@@ -147,7 +147,7 @@ public class ArticuloControllerTest {
     @Test
     public void test_request_articulo_agregar() throws Exception {
 
-        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo articulo = new Articulo("1234","articulo 1",1.0);
 
         ResponseEntity<Articulo> responseEntity = articuloController.agregar(articulo);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.CREATED));
@@ -168,7 +168,7 @@ public class ArticuloControllerTest {
     @Test
     public void test_request_borrar_articulo() throws Exception {
 
-        Articulo articulo = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo articulo = new Articulo("1234","articulo 1",1.0);
 
         ResponseEntity<Articulo> responseEntity = articuloController.agregar(articulo);
         articulo = responseEntity.getBody();

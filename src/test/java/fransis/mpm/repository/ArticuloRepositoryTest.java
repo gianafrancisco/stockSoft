@@ -39,16 +39,16 @@ public class ArticuloRepositoryTest {
 
     @Test
     public void test_insert_articulo() throws Exception {
-        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo art = new Articulo("1234","articulo 1",1.0);
         articuloRepository.save(art);
         Articulo a = articuloRepository.findOne(art.getArticuloId());
         Assert.assertThat(a.getDescripcion(),is("articulo 1"));
-        Assert.assertThat(a.getPrecio(),is(4.0));
+        Assert.assertThat(a.getPrecioLista(),is(1.0));
     }
 
     @Test
     public void test_update_articulo() throws Exception {
-        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo art = new Articulo("1234","articulo 1",1.0);
         articuloRepository.save(art);
         Articulo a = articuloRepository.findOne(art.getArticuloId());
         Assert.assertThat(a.getDescripcion(),is("articulo 1"));
@@ -62,7 +62,7 @@ public class ArticuloRepositoryTest {
 
     @Test
     public void test_articulo_findByDescripcionOrCodigoIgnoreCase() throws Exception {
-        Articulo art = new Articulo("1234","articulo 1",1.0,2.0,2.0);
+        Articulo art = new Articulo("1234","articulo 1",1.0);
         articuloRepository.save(art);
 
         Page<Articulo> page = articuloRepository.findByDescripcionContainingIgnoreCaseOrCodigoContainingIgnoreCase("Rticulo 1","Rticulo 1",new PageRequest(0,10));
