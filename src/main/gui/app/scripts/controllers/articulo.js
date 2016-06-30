@@ -12,6 +12,10 @@ angular.module('stockApp')
 
      var Articulo = Restangular.all('articulos');
 
+     $scope.estados = [{id: 0, label: "Stock"}, {id: 3, label: "Entrante"}];
+     $scope.estado = $scope.estados[0];
+     $scope.cantidad = 0;
+
      $scope.listado = {
          numberOfElements: 0,
          number: 0,
@@ -105,5 +109,14 @@ angular.module('stockApp')
              $location.path("/index.html");
          });
      };
+
+     $scope.agregarItems = function(articulo, cantidad, estado){
+        var item = {estado: estado.id };
+        for(var i = 0; i<cantidad;i++){
+            Restangular.one("articulos",articulo.articuloId).all("items").post(item);
+        }
+        $scope.cantidad = 0;
+     };
+
      $scope.init();
  });

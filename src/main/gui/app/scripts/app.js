@@ -32,6 +32,11 @@ angular
         controller: 'VendedorController',
         controllerAs: 'vendedor'
       })
+      .when('/reserva', {
+        templateUrl: 'views/reserva.html',
+        controller: 'ReservaController',
+        controllerAs: 'reserva'
+      })
       .otherwise({
         redirectTo: '/articulo'
       });

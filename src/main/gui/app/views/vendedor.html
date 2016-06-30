@@ -11,7 +11,6 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" class="form-control" placeholder="Password" ng-model="vendedor.password" />
                 </div>
-
                 <div class="form-group-sm">
                     <label for="nombre">Nombre</label>
                     <input type="text" id="nombre" class="form-control" placeholder="Nombre"  ng-model="vendedor.nombre" value=""/>
@@ -22,8 +21,8 @@
                 </div>
 
                 <div style="margin-top: 10px;">
-                    <button ng-click="agregar();" class="btn btn-success" ng-disabled="!isModificable();"><span class="glyphicon glyphicon-plus">Agregar nuevo</button>
-                    <button ng-click="modificar();" class="btn btn-primary" ng-disabled="isModificable();"><span class="glyphicon glyphicon-edit">Modificar</button>
+                    <button ng-click="agregar();" class="btn btn-success" ng-disabled="!isModificable();"><span class="glyphicon glyphicon-plus"></span>Agregar nuevo</button>
+                    <button ng-click="modificar();" class="btn btn-primary" ng-disabled="isModificable();"><span class="glyphicon glyphicon-edit"></span>Modificar</button>
                 </div>
             </form>
         </div>
