@@ -1,0 +1,53 @@
+<div>
+    <div id="stock" class="panel panel-primary" style="width: 100%; margin: 5%">
+        <div class="panel-heading"></a>Reservar</div>
+        <div class="panel-body">
+            <form>
+                <div class="form-group-sm">
+                    <label for="descripcion">Cantidad</label>
+                    <input type="number" id="candidad" class="form-control" min="0" max="99999" ng-model="cantidad"  />
+                </div>
+                <div style="margin-top: 10px;">
+                    <button ng-click="reservarItems(articulo, cantidad);" class="btn btn-success" ng-disabled="!(!isModificable() && cantidad > 0)"><span class="glyphicon glyphicon-plus"></span>Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="listaArticulos">
+        <div class="panel panel-primary" style="width: 100%; margin: 5%">
+            <div class="panel-heading">Buscar artículos</div>
+            <div class="panel-body">
+                <div class="form-group-sm">
+                    <label for="buscar">Buscar</label>
+                    <input type="text" id="buscar" class="form-control" placeholder="buscar articulo"  ng-model="search" ng-change="buscarArticulo();"/>
+                </div>
+                <uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerListaArticulo();"></uib-pagination>
+                <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
+            </div>
+            <table id="tablaListaArticulo" class="table">
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="articulo in listado">
+                    <td style="width: 20%">{{articulo.codigo}}</td>
+                    <td style="width: 30%">{{articulo.descripcion}}</td>
+                    <td style="width: 20%">
+                        <div class="btn-group">
+                          <button ng-click="modificar(articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-edit"></span></button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="panel-footer">
+                <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
+            </div>
+        </div>
+    </div>
+</div>
