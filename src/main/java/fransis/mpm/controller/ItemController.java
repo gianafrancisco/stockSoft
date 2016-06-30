@@ -34,12 +34,19 @@ public class ItemController {
     @Autowired
     private ArticuloRepository articuloRepository;
 
+    //TODO: Add method to get items filtered by estado
 
     @RequestMapping(value = "/items", method = RequestMethod.GET)
     public ResponseEntity<Page<Item>> obtener(Pageable pageRequest, @PathVariable() Long articuloId){
-        return ResponseEntity.ok(repository.findAll(pageRequest));
+        if(articuloId == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        Articulo articulo = articuloRepository.findOne(articuloId);
+        if(articulo == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(repository.findByArticulo(articulo, pageRequest));
     }
-
 
     @RequestMapping(value = "/items", method = RequestMethod.POST)
     public ResponseEntity<Item> agregar(@PathVariable Long articuloId, @RequestBody Item item){

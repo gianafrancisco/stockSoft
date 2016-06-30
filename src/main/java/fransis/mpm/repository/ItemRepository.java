@@ -5,11 +5,15 @@
 
 package fransis.mpm.repository;
 
+import fransis.mpm.model.Articulo;
 import fransis.mpm.model.Item;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * Created by francisco on 6/20/16.
  */
 public interface ItemRepository extends JpaRepository<Item, Long> {
+    Page<Item> findByArticulo(Articulo articulo, Pageable pageable);
 }
