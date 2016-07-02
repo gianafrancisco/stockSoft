@@ -6,6 +6,7 @@
 package fransis.mpm.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 /**
  * Created by francisco on 6/20/16.
@@ -20,11 +21,17 @@ public class Item {
     @ManyToOne
     private Articulo articulo;
     private Estado estado;
+    private String ordenCompra;
+    private Tipo tipo;
     @ManyToOne
-    private Vendedor vendedor;
+    private Reserva reserva;
+
+    private LocalDate fechaRegistro;
+    private LocalDate fechaIngreso;
 
     public Item() {
-        this.estado = Estado.EN_STOCK;
+        this.estado = Estado.DISPONIBLE;
+        this.tipo = Tipo.VIRTUAL;
     }
 
     public Articulo getArticulo() {
@@ -47,11 +54,4 @@ public class Item {
         this.estado = estado;
     }
 
-    public Vendedor getVendedor() {
-        return vendedor;
-    }
-
-    public void setVendedor(Vendedor vendedor) {
-        this.vendedor = vendedor;
-    }
 }
