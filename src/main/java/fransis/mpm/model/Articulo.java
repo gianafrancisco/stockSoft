@@ -18,21 +18,17 @@ public class Articulo {
     @Column(name = "articulo_id", unique = true, nullable = false)
     @Id
     private Long articuloId;
-    @Column(name = "precio_lista")
-    private final Double precioLista;
     private String descripcion;
     private final String codigo;
 
 
     public Articulo() {
-        this.precioLista = 0.0;
         this.descripcion = "";
         this.codigo = "";
     }
 
-    public Articulo(String codigo, String descripcion, Double precioLista) {
+    public Articulo(String codigo, String descripcion) {
         this.codigo = codigo;
-        this.precioLista = precioLista;
         this.descripcion = descripcion;
     }
 
@@ -50,10 +46,6 @@ public class Articulo {
 
     public String getCodigo() {
         return codigo;
-    }
-
-    public Double getPrecioLista() {
-        return precioLista;
     }
 
 }

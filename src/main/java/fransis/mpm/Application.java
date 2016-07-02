@@ -40,11 +40,11 @@ public class Application {
 
 			List<Articulo> articulos = articuloRepository.findAll();
 			if(articulos.isEmpty()){
-				articuloRepository.save(new Articulo("N.CREDITO","Nota de credito por la diferencia",0.0));
-				articuloRepository.save(new Articulo("100001","Remera",300.0));
-				articuloRepository.save(new Articulo("100002","Pantalon",450.0));
-				articuloRepository.save(new Articulo("100003","Campera",500.0));
-				articuloRepository.save(new Articulo("100004","Zapatilla",350.0));
+				articuloRepository.save(new Articulo("N.CREDITO","Nota de credito por la diferencia"));
+				articuloRepository.save(new Articulo("100001","Remera"));
+				articuloRepository.save(new Articulo("100002","Pantalon"));
+				articuloRepository.save(new Articulo("100003","Campera"));
+				articuloRepository.save(new Articulo("100004","Zapatilla"));
 			}
 
 
