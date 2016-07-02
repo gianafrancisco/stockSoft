@@ -61,11 +61,11 @@ public class ItemRepositoryTest {
     public void test_insert_item() throws Exception {
         Item item = new Item();
         item.setArticulo(articulo);
-        item.setEstado(Estado.EN_STOCK);
+        item.setEstado(Estado.DISPONIBLE);
         Item item1 = itemRepository.save(item);
         List<Item> itemsList = itemRepository.findAll();
         Assert.assertThat(itemsList.size(),is(1));
-        Assert.assertThat(itemsList.get(0).getEstado(),is(Estado.EN_STOCK));
+        Assert.assertThat(itemsList.get(0).getEstado(),is(Estado.DISPONIBLE));
         Assert.assertThat(itemsList.get(0).getArticulo().getDescripcion(),is(articulo.getDescripcion()));
     }
 
@@ -73,7 +73,7 @@ public class ItemRepositoryTest {
     public void test_update_item() throws Exception {
         Item item = new Item();
         item.setArticulo(articulo);
-        item.setEstado(Estado.EN_STOCK);
+        item.setEstado(Estado.DISPONIBLE);
         Item item1 = itemRepository.save(item);
         item1.setEstado(Estado.RESERVADO);
         itemRepository.save(item1);
@@ -90,8 +90,48 @@ public class ItemRepositoryTest {
         itemRepository.delete(item1);
         List<Item> itemsList = itemRepository.findAll();
         Assert.assertThat(itemsList.size(),is(0));
-        Assert.assertThat(itemsList.size(),is(0));
-
     }
+
+    @Test
+    public void test_item_findByArticulo() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+        Page<Item> itemsList = itemRepository.findByArticulo(articulo, new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(1));
+    }
+
+    @Test
+    public void test_item_findByArticulo_not_found() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+
+        Articulo articulo1 = new Articulo();
+        articulo1.setDescripcion("Articulo 2");
+        articulo1 = articuloRepository.saveAndFlush(articulo1);
+
+        Item item1 = itemRepository.save(item);
+        Page<Item> itemsList = itemRepository.findByArticulo(articulo1, new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(0));
+    }
+
+    @Test
+    public void test_item_findByArticuloAndEstado() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+        Page<Item> itemsList = itemRepository.findByArticuloAndEstado(articulo, Estado.DISPONIBLE, new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(1));
+    }
+
+    @Test
+    public void test_item_findByArticuloAndEstado_not_found() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+        Page<Item> itemsList = itemRepository.findByArticuloAndEstado(articulo, Estado.RESERVADO, new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(0));
+    }
+
 
 }

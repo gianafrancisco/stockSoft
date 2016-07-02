@@ -100,8 +100,49 @@ public class ItemControllerTest {
         mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.content[0].estado").value(Estado.EN_STOCK.toString()))
+                .andExpect(jsonPath("$.content[0].estado").value(Estado.DISPONIBLE.toString()))
                 .andExpect(jsonPath("$.content[0].itemId").value(is(itemId.intValue())));
+    }
+
+    @Test
+    public void test_items_filter_by_estado_by_controller() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),articulo.getArticuloId(), Estado.DISPONIBLE);
+
+        Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
+        Assert.assertThat(response.getBody().getTotalElements(),is(1L));
+        Assert.assertThat(response.getBody().getContent().get(0).getItemId(),is(item.getItemId()));
+
+    }
+
+    @Test
+    public void test_items_filter_by_estado_integration() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Long itemId = item.getItemId();
+        mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items?estado=DISPONIBLE").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.content[0].estado").value(Estado.DISPONIBLE.toString()))
+                .andExpect(jsonPath("$.content[0].itemId").value(is(itemId.intValue())));
+    }
+
+    @Test
+    public void test_items_filter_by_estado_empty_response_integration() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Long itemId = item.getItemId();
+        mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items?estado=RESERVADO").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
     @Test
@@ -127,12 +168,46 @@ public class ItemControllerTest {
     }
 
     @Test
+    public void test_get_items_filter_by_estado_not_found() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),-1L, Estado.DISPONIBLE);
+
+        Assert.assertThat(response.getStatusCode(),is(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
+    public void test_get_items_filter_by_estado_not_found_integration() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Long itemId = item.getItemId();
+        mockMvc.perform(get("/articulos/0/items?estado=DISPONIBLE").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
     public void test_get_items_null_articuloId() throws Exception {
         Item item = new Item();
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
         ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),null);
+
+        Assert.assertThat(response.getStatusCode(),is(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
+    public void test_get_items_filter_by_estado_with_null_articuloId() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),null, Estado.DISPONIBLE);
 
         Assert.assertThat(response.getStatusCode(),is(HttpStatus.NOT_FOUND));
     }
@@ -250,7 +325,7 @@ public class ItemControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.estado").value(Estado.EN_STOCK.toString()))
+                .andExpect(jsonPath("$.estado").value(Estado.DISPONIBLE.toString()))
                 .andExpect(jsonPath("$.itemId").value(is(nextId.intValue())))
                 .andExpect(header().string("location",is("/articulos/"+articulo.getArticuloId()+"/items/"+nextId.intValue())));
     }
