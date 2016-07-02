@@ -9,8 +9,7 @@ package fransis.mpm.model;
  * Created by francisco on 6/20/16.
  */
 public enum Estado {
-    EN_STOCK,
+    DISPONIBLE,
     RESERVADO,
-    VENDIDO,
-    ENTRANTE
+    VENDIDO
 }
