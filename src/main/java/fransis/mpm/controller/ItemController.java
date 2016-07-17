@@ -35,8 +35,6 @@ public class ItemController {
     @Autowired
     private ArticuloRepository articuloRepository;
 
-    //TODO: add method to get items filtered by orderCompra
-
     @RequestMapping(value = "/items", method = RequestMethod.GET)
     public ResponseEntity<Page<Item>> obtener(Pageable pageRequest, @PathVariable() Long articuloId){
         if(articuloId == null){
@@ -60,6 +58,22 @@ public class ItemController {
         }
 
         return ResponseEntity.ok(repository.findByArticuloAndEstado(articulo, estado, pageRequest));
+    }
+
+    @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"ordenDeCompra"})
+    public ResponseEntity<Page<Item>> obtener(Pageable pageRequest, @PathVariable() Long articuloId, @RequestParam() String ordenDeCompra){
+
+        /*
+        if(articuloId == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        Articulo articulo = articuloRepository.findOne(articuloId);
+        if(articulo == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        */
+
+        return ResponseEntity.ok(repository.findByOrdenDeCompra(ordenDeCompra, pageRequest));
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.POST)

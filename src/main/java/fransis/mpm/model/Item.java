@@ -21,7 +21,7 @@ public class Item {
     @ManyToOne
     private Articulo articulo;
     private Estado estado;
-    private String ordenCompra;
+    private String ordenDeCompra;
     private Tipo tipo;
     @ManyToOne
     private Reserva reserva;
@@ -32,6 +32,7 @@ public class Item {
     public Item() {
         this.estado = Estado.DISPONIBLE;
         this.tipo = Tipo.VIRTUAL;
+        this.ordenDeCompra = "";
     }
 
     public Articulo getArticulo() {
@@ -54,4 +55,11 @@ public class Item {
         this.estado = estado;
     }
 
+    public void setOrdenDeCompra(String ordenDeCompra) {
+        this.ordenDeCompra = ordenDeCompra;
+    }
+
+    public String getOrdenDeCompra() {
+        return ordenDeCompra;
+    }
 }

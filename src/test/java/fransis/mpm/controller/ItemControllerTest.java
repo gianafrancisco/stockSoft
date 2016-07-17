@@ -145,6 +145,51 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.content", hasSize(0)));
     }
 
+
+    @Test
+    public void test_items_filter_by_orden_de_compra_by_controller() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("X-0001");
+        item = itemRepository.saveAndFlush(item);
+
+        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10), null, "X-0001");
+
+        Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
+        Assert.assertThat(response.getBody().getTotalElements(),is(1L));
+        Assert.assertThat(response.getBody().getContent().get(0).getItemId(),is(item.getItemId()));
+
+    }
+
+    @Test
+    public void test_items_filter_by_orden_de_compra_integration() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("X-0001");
+        item = itemRepository.saveAndFlush(item);
+
+        Long itemId = item.getItemId();
+        mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items?ordenDeCompra=X-0001").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.content[0].ordenDeCompra").value("X-0001"))
+                .andExpect(jsonPath("$.content[0].itemId").value(is(itemId.intValue())));
+    }
+
+    @Test
+    public void test_items_filter_by_orden_de_compra_empty_response_integration() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0002");
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Long itemId = item.getItemId();
+        mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items?ordenDeCompra=X-0003").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.content", hasSize(0)));
+    }
+
     @Test
     public void test_get_items_not_found() throws Exception {
         Item item = new Item();
@@ -189,14 +234,13 @@ public class ItemControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-
     @Test
     public void test_get_items_null_articuloId() throws Exception {
         Item item = new Item();
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),null);
+        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),(Long)null);
 
         Assert.assertThat(response.getStatusCode(),is(HttpStatus.NOT_FOUND));
     }

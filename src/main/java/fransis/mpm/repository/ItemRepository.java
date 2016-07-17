@@ -18,4 +18,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findByArticulo(Articulo articulo, Pageable pageable);
     Page<Item> findByArticuloAndEstado(Articulo articulo, Estado estado, Pageable pageable);
+    Page<Item> findByOrdenDeCompra(String ordenDeCompra, Pageable pageable);
 }

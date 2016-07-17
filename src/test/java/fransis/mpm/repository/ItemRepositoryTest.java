@@ -99,6 +99,7 @@ public class ItemRepositoryTest {
         Item item1 = itemRepository.save(item);
         Page<Item> itemsList = itemRepository.findByArticulo(articulo, new PageRequest(0, 10));
         Assert.assertThat(itemsList.getContent().size(),is(1));
+        Assert.assertThat(itemsList.getContent().get(0).getItemId(),is(item1.getItemId()));
     }
 
     @Test
@@ -122,6 +123,7 @@ public class ItemRepositoryTest {
         Item item1 = itemRepository.save(item);
         Page<Item> itemsList = itemRepository.findByArticuloAndEstado(articulo, Estado.DISPONIBLE, new PageRequest(0, 10));
         Assert.assertThat(itemsList.getContent().size(),is(1));
+        Assert.assertThat(itemsList.getContent().get(0).getItemId(),is(item1.getItemId()));
     }
 
     @Test
@@ -130,6 +132,27 @@ public class ItemRepositoryTest {
         item.setArticulo(articulo);
         Item item1 = itemRepository.save(item);
         Page<Item> itemsList = itemRepository.findByArticuloAndEstado(articulo, Estado.RESERVADO, new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(0));
+    }
+
+    @Test
+    public void test_item_findByOrdenDeCompra() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+        Page<Item> itemsList = itemRepository.findByOrdenDeCompra("X-0001", new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(1));
+        Assert.assertThat(itemsList.getContent().get(0).getItemId(),is(item1.getItemId()));
+    }
+
+    @Test
+    public void test_item_findByOrdenDeCompra_not_found() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0002");
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+        Page<Item> itemsList = itemRepository.findByOrdenDeCompra("X-0001", new PageRequest(0, 10));
         Assert.assertThat(itemsList.getContent().size(),is(0));
     }
 
