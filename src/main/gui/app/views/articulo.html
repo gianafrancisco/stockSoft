@@ -1,45 +1,68 @@
-<div>
-    <div id="agregarArticulo" class="panel panel-primary" style="width: 100%; margin: 5%; margin-top: 100px;">
-        <div class="panel-heading"></a>Agregar nuevo artículo</div>
-        <div class="panel-body">
-            <form>
-                <div class="form-group-sm">
-                    <label for="descripcion">Código de barra</label>
-                    <input type="text" id="codigo" class="form-control" placeholder="Codigo de barra" ng-model="articulo.codigo" />
-                </div>
-                <div class="form-group-sm">
-                    <label for="descripcion">Descripción</label>
-                    <input type="text" id="descripcion" class="form-control" placeholder="Descripcion" ng-model="articulo.descripcion" />
-                </div>
-                <div style="margin-top: 10px;">
-                    <button ng-click="agregarArticulo();" class="btn btn-success" ng-disabled="!isModificable();"><span class="glyphicon glyphicon-plus"></span>Agregar nuevo</button>
-                    <button ng-click="modificarArticulo();" class="btn btn-primary" ng-disabled="isModificable();"><span class="glyphicon glyphicon-edit"></span>Modificar</button>
-                </div>
-            </form>
+<!--
+  ~ Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+  ~
+  -->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert" ng-show="dangerShow">{{messageDanger}}</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert" ng-show="successShow">{{messageSuccess}}</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div id="agregarArticulo" class="panel panel-primary">
+            <div class="panel-heading"></a>Artículos</div>
+            <div class="panel-body">
+                <form>
+                    <div class="form-group-sm">
+                        <label for="descripcion">Código de barra</label>
+                        <input type="text" id="codigo" class="form-control" placeholder="Codigo de barra" ng-model="articulo.codigo" />
+                    </div>
+                    <div class="form-group-sm">
+                        <label for="descripcion">Descripción</label>
+                        <input type="text" id="descripcion" class="form-control" placeholder="Descripcion" ng-model="articulo.descripcion" />
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <button ng-click="agregarArticulo();" class="btn btn-success" ng-disabled="!isModificable();"><span class="glyphicon glyphicon-plus"></span>Agregar nuevo</button>
+                        <button ng-click="modificarArticulo();" class="btn btn-primary" ng-disabled="isModificable();"><span class="glyphicon glyphicon-edit"></span>Modificar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-
-    <div id="stock" class="panel panel-primary" style="width: 100%; margin: 5%">
-        <div class="panel-heading"></a>Ingreso de Stock</div>
-        <div class="panel-body">
-            <form>
-                <div class="form-group-sm">
-                    <label for="descripcion">Cantidad</label>
-                    <input type="number" id="candidad" class="form-control" min="0" max="99999" ng-model="cantidad"  />
-                </div>
-                <div class="form-group-sm">
-                    <label for="descripcion">Tipo</label>
-                    <select class="form-control" ng-options="estado as estado.label for estado in estados track by estado.id" ng-model="estado"></select>
-                </div>
-                <div style="margin-top: 10px;">
-                    <button ng-click="agregarItems(articulo, cantidad, estado);" class="btn btn-success" ng-disabled="!(!isModificable() && cantidad > 0)"><span class="glyphicon glyphicon-plus"></span>Agregar</button>
-                </div>
-            </form>
+    <div class="col-md-4">
+        <div id="stock" class="panel panel-primary">
+            <div class="panel-heading"></a>Agregar Stock</div>
+            <div class="panel-body">
+                <form>
+                    <div class="form-group-sm">
+                        <label for="descripcion">Orden de compra</label>
+                        <input type="text" id="ordenDeCompra" class="form-control" ng-model="ordenDeCompra"  />
+                    </div>
+                    <div class="form-group-sm">
+                        <label for="descripcion">Tipo</label>
+                        <select class="form-control" ng-options="tipo as tipo.label for tipo in tipos track by tipo.id" ng-model="tipo"></select>
+                    </div>
+                    <div class="form-group-sm">
+                        <label for="descripcion">Cantidad</label>
+                        <input type="number" id="candidad" class="form-control" min="0" max="99999" ng-model="cantidad"  />
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <button ng-click="agregarItems(articulo, cantidad, tipo, ordenDeCompra);" class="btn btn-success" ng-disabled="!(!isModificable() && cantidad > 0)"><span class="glyphicon glyphicon-plus"></span>Agregar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-
-    <div id="listaArticulos">
-        <div class="panel panel-primary" style="width: 100%; margin: 5%">
+</div>
+<div class="row">
+    <div id="listaArticulos" class="col-md-12">
+        <div class="panel panel-primary" >
             <div class="panel-heading">Buscar artículos</div>
             <div class="panel-body">
                 <div class="form-group-sm">
@@ -53,7 +76,6 @@
                 <thead>
                 <tr>
                     <th>Código</th>
-                    <!--<th>Precio / Lista</th>-->
                     <th>Stock</th>
                     <th>Descripción</th>
                     <th>Acciones</th>
@@ -62,16 +84,10 @@
                 <tbody>
                 <tr ng-repeat="articulo in listado">
                     <td style="width: 20%">{{articulo.codigo}}</td>
-                    <!--<td style="width: 10%">{{articulo.precio | currency}} / {{articulo.precioLista | currency}}</td>-->
                     <td style="width: 10%">{{articulo.cantidadStock}}</td>
                     <td style="width: 30%">{{articulo.descripcion}}</td>
                     <td style="width: 20%">
                         <div class="btn-group">
-                          <!--
-                            <button ng-click="modificar(articulo);" class="btn btn-primary btn-sm">Modificar</button>
-                            <button ng-click="copiar(articulo);" class="btn btn-primary btn-sm">Copiar</button>
-                            <button ng-click="eliminar(articulo);" class="btn btn-danger btn-sm">Eliminar</button>
-                          -->
                           <button ng-click="modificar(articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-edit"></span></button>
                           <button ng-click="copiar(articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-copy"></span></button>
                           <button ng-click="eliminar(articulo);" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></button>

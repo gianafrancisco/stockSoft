@@ -8,12 +8,12 @@
  * Controller of the stockApp
  */
 angular.module('stockApp')
-  .controller('ArticuloController', function ($scope,$http,$window,$location, Restangular) {
+  .controller('ArticuloController', function ($scope,$http,$window,$location, Restangular, $timeout) {
 
      var Articulo = Restangular.all('articulos');
 
-     $scope.estados = [{id: 0, label: "Stock"}, {id: 3, label: "Entrante"}];
-     $scope.estado = $scope.estados[0];
+     $scope.tipos = [{id: 0, label: "Virtual"}, {id: 1, label: "Físico"}];
+     $scope.tipo = $scope.tipos[0];
      $scope.cantidad = 0;
 
      $scope.listado = {
@@ -27,6 +27,27 @@ angular.module('stockApp')
      $scope.codigo = {};
      $scope.ipp = 20;
      $scope.pageNumber = 1;
+
+     $scope.messageDanger = "";
+     $scope.messageSuccess = "";
+     $scope.dangerShow = false;
+     $scope.successShow = false;
+
+
+     $scope.showDanger = function (message, show, timeout){
+        $scope.messageDanger = message;
+        $scope.dangerShow = show;
+        if(show == true){
+            $timeout($scope.showDanger, timeout, true, "", false, 10);
+        }
+     };
+     $scope.showSuccess = function (message, show, timeout){
+        $scope.messageSuccess = message;
+        $scope.successShow = show;
+        if(show == true){
+            $timeout($scope.showSuccess, timeout, true, "", false, 10);
+        }
+     };
 
      $scope.obtenerListaArticulo = function(){
 
@@ -110,10 +131,20 @@ angular.module('stockApp')
          });
      };
 
-     $scope.agregarItems = function(articulo, cantidad, estado){
-        var item = {estado: estado.id };
-        for(var i = 0; i<cantidad;i++){
+     $scope.agregarItems = function(articulo, cantidad, tipo, ordenDeCompra){
+        var item = {
+                tipo: tipo.id,
+                ordenDeCompra: ordenDeCompra,
+                estado: "DISPONIBLE"
+         };
+        var i;
+        for(i = 0; i<cantidad;i++){
             Restangular.one("articulos",articulo.articuloId).all("items").post(item);
+        }
+        if(i == cantidad){
+            $scope.showSuccess("Se han agregado todos los item al stock", true, 5000);
+        }else{
+            $scope.showSuccess("Algunos items no se han podido crear "+i+"/"+cantidad, true, 5000);
         }
         $scope.cantidad = 0;
      };
