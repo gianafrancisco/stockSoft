@@ -9,6 +9,6 @@ package fransis.mpm.model;
  * Created by francisco on 6/30/16.
  */
 public enum Tipo {
-    FISICO,
-    VIRTUAL
+    VIRTUAL,
+    FISICO
 }

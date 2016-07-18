@@ -78,6 +78,7 @@ public class ItemController {
 
     @RequestMapping(value = "/items", method = RequestMethod.POST)
     public ResponseEntity<Item> agregar(@PathVariable Long articuloId, @RequestBody Item item){
+        item.setEstado(Estado.DISPONIBLE);
         Articulo a = articuloRepository.findOne(articuloId);
         if(a != null){
             Item i = item;
