@@ -96,35 +96,57 @@ angular.module('stockApp')
             }
         });
         if(!exist){
-            reserva.items.push({articulo: articulo, cantidad: 1});
+            reserva.items.push({articulo: articulo, cantidad: 1, sinStock: false});
         }
      };
 
      $scope.generarReserva = function(reserva){
         //TODO: Verificar primero la disponibilidad de los articulos y despues hacer la reserva.
-        var r = {descripcion: reserva.descripcion, email: reserva.email};
-        Reservas.post(r).then(function(r){
-            console.log(r);
-            reserva.items.forEach(function(current,index){
-                var params = {
-                        page : 0,
-                        size : current.cantidad,
-                        estado: "DISPONIBLE",
-                    };
-                Articulo.one(current.articulo.articuloId).getList('items', params).then(function(list){
-                    if(list.length < current.cantidad){
-                        alert("La cantidad solicitada del articulo "+current.articulo.codigo+" no se encuentra disponible en stock");
-                    }else{
-                        list.forEach(function(itemCurr){
-                            console.log(itemCurr);
-                            itemCurr.reserva = r;
-                            itemCurr.estado = "RESERVADO";
-                            itemCurr.put();
-                        });
-                    }
-                });
+        var res = {descripcion: reserva.descripcion, email: reserva.email};
+        var ask = false;
+        var msg = "";
+        var confirmar = true;
+        reserva.items.forEach(function(current,index){
+            var params = {
+                    page : 0,
+                    size : current.cantidad,
+                    estado: "DISPONIBLE",
+                };
+            Articulo.one(current.articulo.articuloId).getList('items', params).then(function(list){
+                if(list.length < current.cantidad){
+                    current.sinStock = true;
+                    ask = true;
+                }
             });
         });
+
+        if(ask){
+            confirmar = confirm("Alguno articulos no se encuentran disponible en stock. continuar?");
+        }
+        if(confirmar){        
+            Reservas.post(res).then(function(r){
+                console.log(r);
+                reserva.items.forEach(function(current,index){
+                    var params = {
+                            page : 0,
+                            size : current.cantidad,
+                            estado: "DISPONIBLE",
+                        };
+                    Articulo.one(current.articulo.articuloId).getList('items', params).then(function(list){
+                        if(list.length < current.cantidad){
+                            alert("La cantidad solicitada del articulo "+current.articulo.codigo+" no se encuentra disponible en stock");
+                        }else{
+                            list.forEach(function(itemCurr){
+                                console.log(itemCurr);
+                                itemCurr.reserva = r;
+                                itemCurr.estado = "RESERVADO";
+                                itemCurr.put();
+                            });
+                        }
+                    });
+                });
+            });
+        }
      };
      $scope.init();
  });
