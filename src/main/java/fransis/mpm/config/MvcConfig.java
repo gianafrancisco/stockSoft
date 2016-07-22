@@ -19,12 +19,12 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry){
         registry.addResourceHandler("/dev/bower_components/**")
-                .addResourceLocations("file:/home/francisco/git/stockSoft/src/main/gui/bower_components/")
-                //.addResourceLocations("classpath:../../src/main/gui/bower_components/")
+                //.addResourceLocations("file:/home/francisco/git/stockSoft/src/main/gui/bower_components/")
+                .addResourceLocations("file:src/main/gui/bower_components/")
                 .setCachePeriod(0);
         registry.addResourceHandler("/dev/**")
-                .addResourceLocations("file:/home/francisco/git/stockSoft/src/main/gui/app/")
-                //.addResourceLocations("classpath:../../src/main/gui/app/")
+                //.addResourceLocations("file:/home/francisco/git/stockSoft/src/main/gui/app/")
+                .addResourceLocations("file:src/main/gui/app/")
                 .setCachePeriod(0);
     }
 }
