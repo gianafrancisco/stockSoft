@@ -1,21 +1,63 @@
-<div>
-    <div id="stock" class="panel panel-primary" style="width: 100%; margin: 5%">
-        <div class="panel-heading"></a>Reservar</div>
-        <div class="panel-body">
-            <form>
+<!--
+  ~ Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+  ~
+  -->
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="stock" class="panel panel-primary">
+            <div class="panel-heading"></a>Reserva</div>
+            <div class="panel-body">
+            <div class="content-fluid">
+            <div class="row">
+            <div class="col-md-4">
                 <div class="form-group-sm">
-                    <label for="descripcion">Cantidad</label>
-                    <input type="number" id="candidad" class="form-control" min="0" max="99999" ng-model="cantidad"  />
+                    <label for="nombre">Descripción de reserva</label>
+                    <input type="text" class="form-control" ng-model="reserva.descripcion" />
                 </div>
-                <div style="margin-top: 10px;">
-                    <button ng-click="reservarItems(articulo, cantidad);" class="btn btn-success" ng-disabled="!(!isModificable() && cantidad > 0)"><span class="glyphicon glyphicon-plus"></span>Agregar</button>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group-sm">
+                    <label for="email">Dirección de email</label>
+                    <input type="email" class="form-control" ng-model="reserva.email" />
                 </div>
-            </form>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group-sm">
+                    <label for="acciones">Acciones</label>
+                    <button class="form-control btn btn-success" ng-click="generarReserva(reserva);"><span class="glyphicon glyphicon-plus"></span>Crear Reserva</button>
+                </div>
+            </div>
+            </div>
+            <div class="row">
+                <table id="tablaListaArticulo" class="table">
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Cantidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in reserva.items">
+                            <td style="width: 20%">{{item.articulo.codigo}}</td>
+                            <td style="width: 30%">{{item.articulo.descripcion}}</td>
+                            <td style="width: 30%"><input type="number" ng-model="item.cantidad" min="0" /></td>
+                            <td style="width: 20%"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            </div>
         </div>
     </div>
+</div>
 
-    <div id="listaArticulos">
-        <div class="panel panel-primary" style="width: 100%; margin: 5%">
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary" >
             <div class="panel-heading">Buscar artículos</div>
             <div class="panel-body">
                 <div class="form-group-sm">
@@ -39,7 +81,7 @@
                     <td style="width: 30%">{{articulo.descripcion}}</td>
                     <td style="width: 20%">
                         <div class="btn-group">
-                          <button ng-click="modificar(articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-edit"></span></button>
+                          <button ng-click="agregarReserva(reserva, articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span></button>
                         </div>
                     </td>
                 </tr>
@@ -51,3 +93,5 @@
         </div>
     </div>
 </div>
+
+

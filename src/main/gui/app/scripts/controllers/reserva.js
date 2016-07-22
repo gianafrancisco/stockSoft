@@ -8,15 +8,22 @@
  * Controller of the stockApp
  */
 angular.module('stockApp')
-  .controller('ReservaController', function ($scope,$http,$window,$location, Restangular) {
+  .controller('ReservaController', function ($scope,$http,$window,$location, Restangular, $timeout) {
 
-     var Articulo = Restangular.all('articulos');
+     var Articulo = Restangular.service('articulos');
+     var Reservas = Restangular.service('reservas');
 
+     $scope.reserva = {
+        descripcion: "",
+        email: "",
+        items: []
+     };
      $scope.listado = {
          numberOfElements: 0,
          number: 0,
          totalElements: 0
      };
+
      $scope.maxSize = 100;
      $scope.listadoCodigo = {};
      $scope.articulo = {};
@@ -57,7 +64,7 @@ angular.module('stockApp')
          }
      };
      $scope.init = function(){
-         $scope.obtenerListaArticulo();
+        $scope.obtenerListaArticulo();
      };
 
      $scope.isModificable = function(){
@@ -76,5 +83,48 @@ angular.module('stockApp')
         $scope.cantidad = 0;
      };
 
+     $scope.agregarReserva = function(reserva, articulo){
+
+        var exist = false;
+        if( reserva.items === undefined){
+            reserva.items = [];
+        }
+        reserva.items.forEach(function(current, index){
+            if(current.articulo.articuloId === articulo.articuloId){
+                current.cantidad++;
+                exist = true;
+            }
+        });
+        if(!exist){
+            reserva.items.push({articulo: articulo, cantidad: 1});
+        }
+     };
+
+     $scope.generarReserva = function(reserva){
+        //TODO: Verificar primero la disponibilidad de los articulos y despues hacer la reserva.
+        var r = {descripcion: reserva.descripcion, email: reserva.email};
+        Reservas.post(r).then(function(r){
+            console.log(r);
+            reserva.items.forEach(function(current,index){
+                var params = {
+                        page : 0,
+                        size : current.cantidad,
+                        estado: "DISPONIBLE",
+                    };
+                Articulo.one(current.articulo.articuloId).getList('items', params).then(function(list){
+                    if(list.length < current.cantidad){
+                        alert("La cantidad solicitada del articulo "+current.articulo.codigo+" no se encuentra disponible en stock");
+                    }else{
+                        list.forEach(function(itemCurr){
+                            console.log(itemCurr);
+                            itemCurr.reserva = r;
+                            itemCurr.estado = "RESERVADO";
+                            itemCurr.put();
+                        });
+                    }
+                });
+            });
+        });
+     };
      $scope.init();
  });
