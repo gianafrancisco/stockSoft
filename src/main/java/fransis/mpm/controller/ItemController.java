@@ -86,7 +86,7 @@ public class ItemController {
             i = repository.saveAndFlush(i);
             URI location = null;
             try {
-                location = new URI("/articulos/" + a.getArticuloId()+"/items/"+i.getItemId());
+                location = new URI("/articulos/" + a.getArticuloId()+"/items/"+i.getId());
             } catch (URISyntaxException e) {
                 return (ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)).body(null);
             }
@@ -96,9 +96,9 @@ public class ItemController {
         }
     }
 
-    @RequestMapping(value = "/items/{itemId}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> put(@PathVariable() Long articuloId, @PathVariable() Long itemId, @RequestBody Item item){
-        if(item.getItemId() != null && repository.exists(itemId)) {
+    @RequestMapping(value = "/items/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> put(@PathVariable() Long articuloId, @PathVariable() Long id, @RequestBody Item item){
+        if(item.getId() != null && repository.exists(id)) {
             Item i = repository.saveAndFlush(item);
             return (ResponseEntity.status(HttpStatus.NO_CONTENT)).build();
         }else{

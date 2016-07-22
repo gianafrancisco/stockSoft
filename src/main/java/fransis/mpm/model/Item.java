@@ -17,7 +17,7 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id", unique = true, nullable = false)
     @Id
-    private Long itemId;
+    private Long id;
     @ManyToOne
     private Articulo articulo;
     private Estado estado;
@@ -43,8 +43,8 @@ public class Item {
         this.articulo = articulo;
     }
 
-    public Long getItemId() {
-        return itemId;
+    public Long getId() {
+        return id;
     }
 
     public Estado getEstado() {
@@ -61,5 +61,9 @@ public class Item {
 
     public String getOrdenDeCompra() {
         return ordenDeCompra;
+    }
+
+    public Tipo getTipo() {
+        return tipo;
     }
 }

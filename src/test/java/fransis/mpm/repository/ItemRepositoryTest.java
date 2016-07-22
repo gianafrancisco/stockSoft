@@ -99,7 +99,7 @@ public class ItemRepositoryTest {
         Item item1 = itemRepository.save(item);
         Page<Item> itemsList = itemRepository.findByArticulo(articulo, new PageRequest(0, 10));
         Assert.assertThat(itemsList.getContent().size(),is(1));
-        Assert.assertThat(itemsList.getContent().get(0).getItemId(),is(item1.getItemId()));
+        Assert.assertThat(itemsList.getContent().get(0).getId(),is(item1.getId()));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class ItemRepositoryTest {
         Item item1 = itemRepository.save(item);
         Page<Item> itemsList = itemRepository.findByArticuloAndEstado(articulo, Estado.DISPONIBLE, new PageRequest(0, 10));
         Assert.assertThat(itemsList.getContent().size(),is(1));
-        Assert.assertThat(itemsList.getContent().get(0).getItemId(),is(item1.getItemId()));
+        Assert.assertThat(itemsList.getContent().get(0).getId(),is(item1.getId()));
     }
 
     @Test
@@ -143,7 +143,7 @@ public class ItemRepositoryTest {
         Item item1 = itemRepository.save(item);
         Page<Item> itemsList = itemRepository.findByOrdenDeCompra("X-0001", new PageRequest(0, 10));
         Assert.assertThat(itemsList.getContent().size(),is(1));
-        Assert.assertThat(itemsList.getContent().get(0).getItemId(),is(item1.getItemId()));
+        Assert.assertThat(itemsList.getContent().get(0).getId(),is(item1.getId()));
     }
 
     @Test

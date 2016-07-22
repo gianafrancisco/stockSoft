@@ -86,7 +86,7 @@ public class ItemControllerTest {
 
         Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
         Assert.assertThat(response.getBody().getTotalElements(),is(1L));
-        Assert.assertThat(response.getBody().getContent().get(0).getItemId(),is(item.getItemId()));
+        Assert.assertThat(response.getBody().getContent().get(0).getId(),is(item.getId()));
 
     }
 
@@ -96,12 +96,12 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        Long itemId = item.getItemId();
+        Long itemId = item.getId();
         mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.content[0].estado").value(Estado.DISPONIBLE.toString()))
-                .andExpect(jsonPath("$.content[0].itemId").value(is(itemId.intValue())));
+                .andExpect(jsonPath("$.content[0].id").value(is(itemId.intValue())));
     }
 
     @Test
@@ -114,7 +114,7 @@ public class ItemControllerTest {
 
         Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
         Assert.assertThat(response.getBody().getTotalElements(),is(1L));
-        Assert.assertThat(response.getBody().getContent().get(0).getItemId(),is(item.getItemId()));
+        Assert.assertThat(response.getBody().getContent().get(0).getId(),is(item.getId()));
 
     }
 
@@ -124,12 +124,12 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        Long itemId = item.getItemId();
+        Long itemId = item.getId();
         mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items?estado=DISPONIBLE").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.content[0].estado").value(Estado.DISPONIBLE.toString()))
-                .andExpect(jsonPath("$.content[0].itemId").value(is(itemId.intValue())));
+                .andExpect(jsonPath("$.content[0].id").value(is(itemId.intValue())));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        Long itemId = item.getItemId();
+        Long itemId = item.getId();
         mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items?estado=RESERVADO").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -157,7 +157,7 @@ public class ItemControllerTest {
 
         Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
         Assert.assertThat(response.getBody().getTotalElements(),is(1L));
-        Assert.assertThat(response.getBody().getContent().get(0).getItemId(),is(item.getItemId()));
+        Assert.assertThat(response.getBody().getContent().get(0).getId(),is(item.getId()));
 
     }
 
@@ -168,12 +168,12 @@ public class ItemControllerTest {
         item.setOrdenDeCompra("X-0001");
         item = itemRepository.saveAndFlush(item);
 
-        Long itemId = item.getItemId();
+        Long itemId = item.getId();
         mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items?ordenDeCompra=X-0001").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.content[0].ordenDeCompra").value("X-0001"))
-                .andExpect(jsonPath("$.content[0].itemId").value(is(itemId.intValue())));
+                .andExpect(jsonPath("$.content[0].id").value(is(itemId.intValue())));
     }
 
     @Test
@@ -183,7 +183,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        Long itemId = item.getItemId();
+        Long itemId = item.getId();
         mockMvc.perform(get("/articulos/"+articulo.getArticuloId()+"/items?ordenDeCompra=X-0003").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -207,7 +207,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        Long itemId = item.getItemId();
+        Long itemId = item.getId();
         mockMvc.perform(get("/articulos/0/items").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isNotFound());
     }
@@ -229,7 +229,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        Long itemId = item.getItemId();
+        Long itemId = item.getId();
         mockMvc.perform(get("/articulos/0/items?estado=DISPONIBLE").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isNotFound());
     }
@@ -262,7 +262,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        Long itemId = item.getItemId();
+        Long itemId = item.getId();
         mockMvc.perform(get("/articulos//items").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isNotFound());
     }
@@ -276,10 +276,10 @@ public class ItemControllerTest {
         item = itemRepository.saveAndFlush(item);
         item.setEstado(Estado.RESERVADO);
 
-        ResponseEntity<Void> responseEntity = itemController.put(articulo.getArticuloId(), item.getItemId(), item);
+        ResponseEntity<Void> responseEntity = itemController.put(articulo.getArticuloId(), item.getId(), item);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
 
-        Item item1 = itemRepository.findOne(item.getItemId());
+        Item item1 = itemRepository.findOne(item.getId());
         Assert.assertThat(item1.getEstado(),is(Estado.RESERVADO));
 
     }
@@ -296,8 +296,8 @@ public class ItemControllerTest {
         String itemJson = mapper.writeValueAsString(item);
 
 
-        Long itemId = item.getItemId();
-        MockHttpServletRequestBuilder accept = MockMvcRequestBuilders.put("/articulos/" + articulo.getArticuloId() + "/items/" + item.getItemId())
+        Long itemId = item.getId();
+        MockHttpServletRequestBuilder accept = MockMvcRequestBuilders.put("/articulos/" + articulo.getArticuloId() + "/items/" + item.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(itemJson.getBytes());
 
@@ -327,8 +327,8 @@ public class ItemControllerTest {
         String itemJson = mapper.writeValueAsString(item);
 
 
-        Long itemId = item.getItemId();
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put("/articulos/" + articulo.getArticuloId() + "/items/" + item.getItemId()+100)
+        Long itemId = item.getId();
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put("/articulos/" + articulo.getArticuloId() + "/items/" + item.getId()+100)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(itemJson.getBytes());
 
@@ -345,7 +345,7 @@ public class ItemControllerTest {
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.CREATED));
         URI location = responseEntity.getHeaders().getLocation();
         Item itemResponse = responseEntity.getBody();
-        Assert.assertThat(location.toString(),is("/articulos/"+articulo.getArticuloId()+"/items/"+itemResponse.getItemId()));
+        Assert.assertThat(location.toString(),is("/articulos/"+articulo.getArticuloId()+"/items/"+itemResponse.getId()));
         List<Item> itemList = itemRepository.findAll();
         Assert.assertThat(itemList.size(),is(1));
 
@@ -357,7 +357,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
         /* Calculate the next Id for item, in order to use in the integration test with mockMvc */
-        Long nextId = item.getItemId() + 1;
+        Long nextId = item.getId() + 1;
         item = new Item();
         item.setArticulo(articulo);
 
@@ -370,7 +370,7 @@ public class ItemControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.estado").value(Estado.DISPONIBLE.toString()))
-                .andExpect(jsonPath("$.itemId").value(is(nextId.intValue())))
+                .andExpect(jsonPath("$.id").value(is(nextId.intValue())))
                 .andExpect(header().string("location",is("/articulos/"+articulo.getArticuloId()+"/items/"+nextId.intValue())));
     }
 
@@ -382,7 +382,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        ResponseEntity<Void>  responseEntity = itemController.borrar(item.getItemId());
+        ResponseEntity<Void>  responseEntity = itemController.borrar(item.getId());
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.OK));
     }
 
@@ -392,7 +392,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/articulos/" + articulo.getArticuloId() + "/items/"+item.getItemId())
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/articulos/" + articulo.getArticuloId() + "/items/"+item.getId())
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
@@ -412,7 +412,7 @@ public class ItemControllerTest {
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/articulos/" + articulo.getArticuloId() + "/items/"+item.getItemId()+1)
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/articulos/" + articulo.getArticuloId() + "/items/"+item.getId()+1)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
