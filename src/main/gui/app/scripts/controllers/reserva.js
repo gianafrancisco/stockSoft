@@ -23,7 +23,6 @@ angular.module('stockApp')
          number: 0,
          totalElements: 0
      };
-
      $scope.maxSize = 100;
      $scope.listadoCodigo = {};
      $scope.articulo = {};
@@ -31,6 +30,8 @@ angular.module('stockApp')
      $scope.ipp = 20;
      $scope.pageNumber = 1;
      $scope.cantidad = 0;
+     $scope.descripcionError = false;
+     $scope.emailError = false;
 
      $scope.obtenerListaArticulo = function(){
 
@@ -102,31 +103,48 @@ angular.module('stockApp')
 
      $scope.generarReserva = function(reserva){
         //TODO: Verificar primero la disponibilidad de los articulos y despues hacer la reserva.
+        $scope.descripcionError = false;
+        $scope.emailError = false;
+        if(reserva.descripcion === "" || reserva.descripcion === undefined){
+            $scope.descripcionError = true;
+            return false;
+        }
+        if(reserva.email === "" || reserva.email === undefined){
+            $scope.emailError = true;
+            return false;
+        }
+
         var res = {descripcion: reserva.descripcion, email: reserva.email};
-        var ask = false;
         var msg = "";
         var confirmar = true;
-        reserva.items.forEach(function(current,index){
-            var params = {
-                    page : 0,
-                    size : current.cantidad,
-                    estado: "DISPONIBLE",
-                };
-            Articulo.one(current.articulo.articuloId).getList('items', params).then(function(list){
-                if(list.length < current.cantidad){
-                    current.sinStock = true;
-                    ask = true;
+        if( reserva.items === undefined){
+            reserva.items = [];
+        }
+        var promise = new Promise(function(done, error){
+            reserva.items.forEach(function(current, index, array){
+                if(current.cantidad === 0){
+                    current.sinStock = false;
                 }
+                var params = {
+                        page : 0,
+                        size : current.cantidad,
+                        estado: "DISPONIBLE",
+                    };
+                Articulo.one(current.articulo.articuloId).getList('items', params).then(function(list){
+                    if(list.length < current.cantidad){
+                        current.sinStock = true;
+                        error("La cantidad solicitada del articulo "+current.articulo.codigo+" no se encuentra disponible en stock");
+                    }
+                    if(index === (array.length - 1) ){
+                        done();
+                    }
+                });
             });
         });
-
-        if(ask){
-            confirmar = confirm("Alguno articulos no se encuentran disponible en stock. continuar?");
-        }
-        if(confirmar){        
+        promise.then(function(){
             Reservas.post(res).then(function(r){
                 console.log(r);
-                reserva.items.forEach(function(current,index){
+                reserva.items.forEach(function(current, index, array){
                     var params = {
                             page : 0,
                             size : current.cantidad,
@@ -146,7 +164,11 @@ angular.module('stockApp')
                     });
                 });
             });
-        }
+        })
+        .catch(function(err){
+            console.log(err);
+            alert(err);
+        });
      };
      $scope.init();
  });

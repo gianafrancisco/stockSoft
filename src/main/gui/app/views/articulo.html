@@ -72,30 +72,32 @@
                 <uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerListaArticulo();"></uib-pagination>
                 <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
             </div>
-            <table id="tablaListaArticulo" class="table">
-                <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Stock</th>
-                    <th>Descripción</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="articulo in listado">
-                    <td style="width: 20%">{{articulo.codigo}}</td>
-                    <td style="width: 10%">{{articulo.cantidadStock}}</td>
-                    <td style="width: 30%">{{articulo.descripcion}}</td>
-                    <td style="width: 20%">
-                        <div class="btn-group">
-                          <button ng-click="modificar(articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-edit"></span></button>
-                          <button ng-click="copiar(articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-copy"></span></button>
-                          <button ng-click="eliminar(articulo);" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></button>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="tablaListaArticulo" class="table">
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Stock</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="articulo in listado">
+                        <td style="width: 20%">{{articulo.codigo}}</td>
+                        <td style="width: 10%">{{articulo.cantidadStock}}</td>
+                        <td style="width: 30%">{{articulo.descripcion}}</td>
+                        <td style="width: 20%">
+                            <div class="btn-group">
+                              <button ng-click="modificar(articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-edit"></span></button>
+                              <button ng-click="copiar(articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-copy"></span></button>
+                              <button ng-click="eliminar(articulo);" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="panel-footer">
                 <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
             </div>

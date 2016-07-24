@@ -11,13 +11,13 @@
             <div class="content-fluid">
             <div class="row">
             <div class="col-md-4">
-                <div class="form-group-sm">
+                <div class="form-group-sm" ng-class = "{'has-error': descripcionError}">
                     <label for="nombre">Descripción de reserva</label>
                     <input type="text" class="form-control" ng-model="reserva.descripcion" />
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="form-group-sm">
+                <div class="form-group-sm" ng-class = "{'has-error': emailError}">
                     <label for="email">Dirección de email</label>
                     <input type="email" class="form-control" ng-model="reserva.email" />
                 </div>
@@ -30,24 +30,26 @@
             </div>
             </div>
             <div class="row">
-                <table id="tablaListaArticulo" class="table">
-                    <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Descripción</th>
-                        <th>Cantidad</th>
-                        <th>Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="item in reserva.items">
-                            <td style="width: 20%">{{item.articulo.codigo}}</td>
-                            <td style="width: 30%">{{item.articulo.descripcion}}</td>
-                            <td style="width: 30%"><input type="number" ng-model="item.cantidad" min="0" /></td>
-                            <td style="width: 20%"></td>
+                <div class="table-responsive">
+                    <table id="tablaListaArticulo" class="table">
+                        <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Acciones</th>
                         </tr>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in reserva.items" ng-class = "{ 'danger': item.sinStock }">
+                                <td style="width: 20%">{{item.articulo.codigo}}</td>
+                                <td style="width: 30%">{{item.articulo.descripcion}}</td>
+                                <td style="width: 30%"><input type="number" ng-model="item.cantidad" min="0" /></td>
+                                <td style="width: 20%"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             </div>
             </div>
@@ -67,26 +69,28 @@
                 <uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerListaArticulo();"></uib-pagination>
                 <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
             </div>
-            <table id="tablaListaArticulo" class="table">
-                <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Descripción</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="articulo in listado">
-                    <td style="width: 20%">{{articulo.codigo}}</td>
-                    <td style="width: 30%">{{articulo.descripcion}}</td>
-                    <td style="width: 20%">
-                        <div class="btn-group">
-                          <button ng-click="agregarReserva(reserva, articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span></button>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table id="tablaListaArticulo" class="table">
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="articulo in listado">
+                        <td style="width: 20%">{{articulo.codigo}}</td>
+                        <td style="width: 30%">{{articulo.descripcion}}</td>
+                        <td style="width: 20%">
+                            <div class="btn-group">
+                              <button ng-click="agregarReserva(reserva, articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span></button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="panel-footer">
                 <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
             </div>
