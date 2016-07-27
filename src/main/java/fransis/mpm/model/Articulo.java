@@ -20,16 +20,23 @@ public class Articulo {
     private Long articuloId;
     private String descripcion;
     private final String codigo;
-
+    @Transient
+    private Long stockFisico;
+    @Transient
+    private Long stockVirtual;
 
     public Articulo() {
         this.descripcion = "";
         this.codigo = "";
+        this.stockFisico = 0L;
+        this.stockVirtual = 0L;
     }
 
     public Articulo(String codigo, String descripcion) {
         this.codigo = codigo;
         this.descripcion = descripcion;
+        this.stockFisico = 0L;
+        this.stockVirtual = 0L;
     }
 
     public Long getArticuloId() {
@@ -48,5 +55,20 @@ public class Articulo {
         return codigo;
     }
 
+    public Long getStockFisico() {
+        return stockFisico;
+    }
+
+    public Long getStockVirtual() {
+        return stockVirtual;
+    }
+
+    public void setStockFisico(Long stockFisico) {
+        this.stockFisico = stockFisico;
+    }
+
+    public void setStockVirtual(Long stockVirtual) {
+        this.stockVirtual = stockVirtual;
+    }
 }
 

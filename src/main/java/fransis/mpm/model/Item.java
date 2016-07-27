@@ -66,4 +66,8 @@ public class Item {
     public Tipo getTipo() {
         return tipo;
     }
+
+    public void setTipo(Tipo tipo) {
+        this.tipo = tipo;
+    }
 }

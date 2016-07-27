@@ -6,6 +6,10 @@
 package fransis.mpm.controller;
 
 import fransis.mpm.model.Articulo;
+import fransis.mpm.model.Estado;
+import fransis.mpm.model.Item;
+import fransis.mpm.model.Tipo;
+import fransis.mpm.repository.ItemRepository;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +49,12 @@ public class ArticuloControllerTest {
     private ArticuloRepository articuloRepository;
 
     @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
     private ArticuloController articuloController;
+
+
 
     @Before
     public void setUp() throws Exception {
@@ -54,6 +63,7 @@ public class ArticuloControllerTest {
 
     @After
     public void tearDown() throws Exception {
+        itemRepository.deleteAll();
         articuloRepository.deleteAll();
     }
 
@@ -61,13 +71,34 @@ public class ArticuloControllerTest {
     public void test_get_articulos() throws Exception {
 
         Articulo articulo = new Articulo("1234","articulo 1");
-        articuloRepository.saveAndFlush(articulo);
+        articulo = articuloRepository.saveAndFlush(articulo);
+
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123456");
+        item.setEstado(Estado.DISPONIBLE);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123459");
+        item.setEstado(Estado.DISPONIBLE);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123458");
+        item.setEstado(Estado.RESERVADO);
+        itemRepository.saveAndFlush(item);
 
         mockMvc.perform(
                 get("/articulos").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(jsonPath("$.content[0].descripcion").value("articulo 1"));
+                .andExpect(jsonPath("$.content[0].descripcion").value("articulo 1"))
+                .andExpect(jsonPath("$.content[0].stockVirtual").value(1))
+                .andExpect(jsonPath("$.content[0].stockFisico").value(1));
 
     }
 
@@ -100,7 +131,26 @@ public class ArticuloControllerTest {
     public void test_request_articulos() throws Exception {
 
         Articulo articulo = new Articulo("1234","articulo 1");
-        articuloRepository.saveAndFlush(articulo);
+        articulo = articuloRepository.saveAndFlush(articulo);
+
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123456");
+        item.setEstado(Estado.DISPONIBLE);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123459");
+        item.setEstado(Estado.DISPONIBLE);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123458");
+        item.setEstado(Estado.RESERVADO);
+        itemRepository.saveAndFlush(item);
 
         Page<Articulo> page = articuloController.obtenerListaArticulos(new PageRequest(0,10));
 
@@ -109,6 +159,8 @@ public class ArticuloControllerTest {
         Assert.assertThat(page.getNumberOfElements(),is(1));
         Assert.assertThat(page.getContent().get(0).getCodigo(),is("1234"));
         Assert.assertThat(page.getContent().get(0).getDescripcion(),is("articulo 1"));
+        Assert.assertThat(page.getContent().get(0).getStockVirtual(),is(1L));
+        Assert.assertThat(page.getContent().get(0).getStockFisico(),is(1L));
 
     }
 

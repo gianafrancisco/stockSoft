@@ -6,8 +6,13 @@
 package fransis.mpm.controller;
 
 import fransis.mpm.model.Articulo;
+import fransis.mpm.model.Estado;
+import fransis.mpm.model.Item;
+import fransis.mpm.model.Tipo;
+import fransis.mpm.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +22,7 @@ import fransis.mpm.repository.ArticuloRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * Created by francisco on 18/12/15.
@@ -27,6 +33,9 @@ public class ArticuloController {
 
     @Autowired
     private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
     @RequestMapping(value = "/articulos/{articuloId}", method = RequestMethod.GET)
     public ResponseEntity<Articulo> obtener(@PathVariable Long articuloId){
@@ -41,7 +50,15 @@ public class ArticuloController {
 
     @RequestMapping(value = "/articulos", method = RequestMethod.GET)
     public Page<Articulo> obtenerListaArticulos(Pageable pageRequest){
-        return articuloRepository.findAll(pageRequest);
+        Page<Articulo> articulos = articuloRepository.findAll(pageRequest);
+        articulos.forEach(articulo -> {
+            List<Item> items = itemRepository.findByArticuloAndEstado(articulo, Estado.DISPONIBLE);
+            long virtual = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
+            long fisico = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
+            articulo.setStockVirtual(virtual);
+            articulo.setStockFisico(fisico);
+        });
+        return articulos;
     }
 
     @RequestMapping(value = "/articulos", method = RequestMethod.GET, params = {"search"})
