@@ -25,7 +25,7 @@
             <div class="col-md-4">
                 <div class="form-group-sm">
                     <label for="acciones">Acciones</label>
-                    <button class="form-control btn btn-success" ng-click="generarReserva(reserva);"><span class="glyphicon glyphicon-plus"></span>Crear Reserva</button>
+                    <button class="form-control btn btn-success" ng-click="generarReserva(reserva);"><span class="glyphicon glyphicon-plus"></span> Crear Reserva</button>
                 </div>
             </div>
             </div>
@@ -44,7 +44,7 @@
                             <tr ng-repeat="item in reserva.items" ng-class = "{ 'danger': item.sinStock }">
                                 <td style="width: 20%">{{item.articulo.codigo}}</td>
                                 <td style="width: 30%">{{item.articulo.descripcion}}</td>
-                                <td style="width: 30%"><input type="number" ng-model="item.cantidad" min="0" /></td>
+                                <td style="width: 30%"><input type="number" ng-model="item.cantidad" min="0" max="{{item.articulo.stockFisico+item.articulo.stockVirtual}}"/></td>
                                 <td style="width: 20%"></td>
                             </tr>
                         </tbody>
@@ -75,6 +75,7 @@
                     <tr>
                         <th>Código</th>
                         <th>Descripción</th>
+                        <th>Stock (F/V)</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -82,6 +83,7 @@
                     <tr ng-repeat="articulo in listado">
                         <td style="width: 20%">{{articulo.codigo}}</td>
                         <td style="width: 30%">{{articulo.descripcion}}</td>
+                        <td style="width: 10%">{{articulo.stockFisico}} / {{articulo.stockVirtual}}</td>
                         <td style="width: 20%">
                             <div class="btn-group">
                               <button ng-click="agregarReserva(reserva, articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span></button>

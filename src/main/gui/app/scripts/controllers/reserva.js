@@ -8,16 +8,19 @@
  * Controller of the stockApp
  */
 angular.module('stockApp')
-  .controller('ReservaController', function ($scope,$http,$window,$location, Restangular, $timeout) {
+  .controller('ReservaController', function ($scope,$http,$window,$location, Restangular, $timeout, ReservaService) {
 
      var Articulo = Restangular.service('articulos');
      var Reservas = Restangular.service('reservas');
 
+     //$scope.reserva = ReservaService;
+     
      $scope.reserva = {
         descripcion: "",
         email: "",
         items: []
      };
+     
      $scope.listado = {
          numberOfElements: 0,
          number: 0,
