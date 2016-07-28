@@ -89,7 +89,7 @@ public class MemoryDBConfig {
         ps.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
         ps.put("hibernate.hbm2ddl.auto", "create-drop");
         ps.put("hibernate.archive.autodetection","class");
-        ps.put("hibernate.show_sql","true");
+        ps.put("hibernate.show_sql","false");
 
         ps.put("hibernate.order_inserts", "true");
         ps.put("hibernate.order_updates", "true");
