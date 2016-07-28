@@ -26,7 +26,6 @@ import java.net.URISyntaxException;
  */
 @RestController
 @Component("itemController")
-@RequestMapping("/articulos/{articuloId}")
 public class ItemController {
 
     @Autowired
@@ -35,7 +34,7 @@ public class ItemController {
     @Autowired
     private ArticuloRepository articuloRepository;
 
-    @RequestMapping(value = "/items", method = RequestMethod.GET)
+    @RequestMapping(value = "/articulos/{articuloId}/items", method = RequestMethod.GET)
     public ResponseEntity<Page<Item>> obtener(Pageable pageRequest, @PathVariable() Long articuloId){
         if(articuloId == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -47,7 +46,7 @@ public class ItemController {
         return ResponseEntity.ok(repository.findByArticulo(articulo, pageRequest));
     }
 
-    @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"estado"})
+    @RequestMapping(value = "/articulos/{articuloId}/items", method = RequestMethod.GET, params = {"estado"})
     public ResponseEntity<Page<Item>> obtener(Pageable pageRequest, @PathVariable() Long articuloId, @RequestParam() Estado estado){
         if(articuloId == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -60,7 +59,7 @@ public class ItemController {
         return ResponseEntity.ok(repository.findByArticuloAndEstado(articulo, estado, pageRequest));
     }
 
-    @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"ordenDeCompra"})
+    @RequestMapping(value = "/articulos/{articuloId}/items", method = RequestMethod.GET, params = {"ordenDeCompra"})
     public ResponseEntity<Page<Item>> obtener(Pageable pageRequest, @PathVariable() Long articuloId, @RequestParam() String ordenDeCompra){
 
         /*
@@ -76,7 +75,7 @@ public class ItemController {
         return ResponseEntity.ok(repository.findByOrdenDeCompra(ordenDeCompra, pageRequest));
     }
 
-    @RequestMapping(value = "/items", method = RequestMethod.POST)
+    @RequestMapping(value = "/articulos/{articuloId}/items", method = RequestMethod.POST)
     public ResponseEntity<Item> agregar(@PathVariable Long articuloId, @RequestBody Item item){
         item.setEstado(Estado.DISPONIBLE);
         Articulo a = articuloRepository.findOne(articuloId);
@@ -96,8 +95,17 @@ public class ItemController {
         }
     }
 
-    @RequestMapping(value = "/items/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/articulos/{articuloId}/items/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> put(@PathVariable() Long articuloId, @PathVariable() Long id, @RequestBody Item item){
+        return updateItem(id, item);
+    }
+
+    @RequestMapping(value = "/items/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> put(@PathVariable() Long id, @RequestBody Item item){
+        return updateItem(id, item);
+    }
+
+    private ResponseEntity<Void> updateItem(@PathVariable() Long id, @RequestBody Item item) {
         if(item.getId() != null && repository.exists(id)) {
             Item i = repository.saveAndFlush(item);
             return (ResponseEntity.status(HttpStatus.NO_CONTENT)).build();
@@ -106,7 +114,7 @@ public class ItemController {
         }
     }
 
-    @RequestMapping(value = "/items/{itemId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/articulos/{articuloId}/items/{itemId}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> borrar(@PathVariable Long itemId){
 
         if(repository.exists(itemId)){
@@ -116,6 +124,11 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
+    }
+
+    @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"ordenDeCompra"})
+    public ResponseEntity<Page<Item>> obtener(Pageable pageRequest,  @RequestParam() String ordenDeCompra){
+        return ResponseEntity.ok(repository.findByOrdenDeCompra(ordenDeCompra, pageRequest));
     }
 
 }

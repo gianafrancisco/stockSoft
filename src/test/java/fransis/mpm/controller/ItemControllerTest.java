@@ -306,6 +306,45 @@ public class ItemControllerTest {
     }
 
     @Test
+    public void test_item_put_not_content() throws Exception {
+
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+        item.setEstado(Estado.RESERVADO);
+
+        ResponseEntity<Void> responseEntity = itemController.put(item.getId(), item);
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
+
+        Item item1 = itemRepository.findOne(item.getId());
+        Assert.assertThat(item1.getEstado(),is(Estado.RESERVADO));
+
+    }
+
+
+    @Test
+    public void test_item_put_not_content_integration() throws Exception {
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        item.setEstado(Estado.RESERVADO);
+
+        String itemJson = mapper.writeValueAsString(item);
+
+
+        Long itemId = item.getId();
+        MockHttpServletRequestBuilder accept = MockMvcRequestBuilders.put("/items/" + item.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(itemJson.getBytes());
+
+        mockMvc.perform(accept)
+                .andExpect(status().isNoContent());
+    }
+
+
+
+    @Test
     public void test_request_articulos_put_not_found() throws Exception {
 
         Item item = new Item();
@@ -418,6 +457,49 @@ public class ItemControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    public void test_get_items_filtered_by_orderDeCompra() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Item item2 = new Item();
+        item2.setOrdenDeCompra("X-0002");
+        item2.setArticulo(articulo);
+        itemRepository.saveAndFlush(item2);
+
+        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),"X-0001");
+
+        Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
+        Assert.assertThat(response.getBody().getTotalElements(),is(1L));
+        Assert.assertThat(response.getBody().getContent().get(0).getId(),is(item.getId()));
+        Assert.assertThat(response.getBody().getContent().get(0).getOrdenDeCompra(),is("X-0001"));
+
+    }
+
+    @Test
+    public void test_get_items_filtered_by_orderDeCompra_integration() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Item item2 = new Item();
+        item2.setOrdenDeCompra("X-0002");
+        item2.setArticulo(articulo);
+        itemRepository.saveAndFlush(item2);
+
+        Long itemId = item.getId();
+        mockMvc.perform(get("/items?ordenDeCompra=X-0001").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].estado").value(Estado.DISPONIBLE.toString()))
+                .andExpect(jsonPath("$.content[0].ordenDeCompra").value(is("X-0001")));
+    }
+
 
 
 }
