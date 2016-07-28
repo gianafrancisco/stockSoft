@@ -3,6 +3,7 @@ FROM ubuntu:14.04
 RUN mkdir -p /opt/target && mkdir -p /opt/src/main
 
 COPY target/mpmStock-0.1.0.jar /opt/target/mpmStock-0.1.0.jar
+COPY src/main/webapp /opt/src/main/webapp
 COPY mysqlSchema.sh /opt/mysqlSchema.sh
 COPY init.sh /opt/init.sh
 
