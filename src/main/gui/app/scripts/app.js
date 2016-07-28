@@ -37,6 +37,11 @@ angular
         controller: 'ReservaController',
         controllerAs: 'reserva'
       })
+      .when('/ingreso', {
+        templateUrl: 'views/ingreso.html',
+        controller: 'IngresoController',
+        controllerAs: 'ingreso'
+      })
       .otherwise({
         redirectTo: '/articulo'
       });

@@ -15,6 +15,7 @@ angular.module('stockApp')
 
      //$scope.reserva = ReservaService;
      
+
      $scope.reserva = {
         descripcion: "",
         email: "",
@@ -35,6 +36,16 @@ angular.module('stockApp')
      $scope.cantidad = 0;
      $scope.descripcionError = false;
      $scope.emailError = false;
+     $scope.messageSuccess = "";
+     $scope.successShow = false;
+
+     $scope.showSuccess = function (message, show, timeout){
+        $scope.messageSuccess = message;
+        $scope.successShow = show;
+        if(show == true){
+            $timeout($scope.showSuccess, timeout, true, "", false, 10);
+        }
+     };
 
      $scope.obtenerListaArticulo = function(){
 
@@ -163,6 +174,13 @@ angular.module('stockApp')
                                 itemCurr.estado = "RESERVADO";
                                 itemCurr.put();
                             });
+                        }
+                        if(index == array.length - 1){
+                            $scope.showSuccess("La reserva ha sido creada con exito.", true, 5000);
+                            $scope.reserva.descripcion = "";
+                            $scope.reserva.email = "";
+                            $scope.reserva.items = [];
+                            $scope.obtenerListaArticulo();
                         }
                     });
                 });

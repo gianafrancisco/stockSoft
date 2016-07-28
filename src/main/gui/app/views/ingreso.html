@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+  ~
+  -->
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger" role="alert" ng-show="dangerShow">{{messageDanger}}</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert" ng-show="successShow">{{messageSuccess}}</div>
+    </div>
+</div>
+<div class="row">
+    <div id="listaArticulos" class="col-md-12">
+        <div class="panel panel-primary" >
+            <div class="panel-heading">Orden de compra</div>
+            <div class="panel-body">
+                <div class="form-group-sm">
+                    <label for="buscar">Buscar </label>
+                    <input type="text" id="buscar" class="form-control" placeholder="buscar stock"  ng-model="search" ng-change="buscar();"/>
+                </div>
+                <uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerLista();"></uib-pagination>
+                <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
+            </div>
+            <div class="table-responsive">
+                <table id="tablaListaArticulo" class="table">
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in listado">
+                        <td style="width: 20%">{{item.articulo.codigo}}</td>
+                        <td style="width: 30%">{{item.articulo.descripcion}}</td>
+                        <td style="width: 30%">{{item.tipo}}</td>
+                        <td style="width: 20%">
+                            <div class="btn-group">
+                              <button ng-click="ingresar(item);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-log-in"></span></button>
+                              <button ng-click="cancelar(item);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-log-out"></span></button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
+            </div>
+        </div>
+    </div>
+</div>
