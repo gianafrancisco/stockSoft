@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM java:8-jre-alpine
 
 RUN mkdir -p /opt/target && mkdir -p /opt/src/main
 
