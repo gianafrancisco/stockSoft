@@ -8,15 +8,16 @@ jdk:
 services:
   - docker
 install:
-  - mvn install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -B -V
+  - mvn install -Dmaven.javadoc.skip=true -B -V
+# - mvn install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -B -V
 
 before_install:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 after_success:
-  - docker build -t fgiana/stock .
-  - docker run --name stock -d -P fgiana/stock
+  - docker build -t fgiana/stock:latest .
+  - docker run --name stock -d -P fgiana/stock:latest
   - docker ps
   - docker port stock
-  - docker push fgiana/stock
+  - docker push fgiana/stock:latest
 
