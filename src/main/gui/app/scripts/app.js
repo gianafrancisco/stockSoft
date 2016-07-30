@@ -42,6 +42,11 @@ angular
         controller: 'IngresoController',
         controllerAs: 'ingreso'
       })
+      .when('/dashboard', {
+        templateUrl: 'views/dashboard.html',
+        controller: 'DashboardController',
+        controllerAs: 'dashboard'
+      })
       .otherwise({
         redirectTo: '/articulo'
       });
