@@ -16,7 +16,7 @@ public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserva_id", unique = true, nullable = false)
     @Id
-    private Long reservaId;
+    private Long id;
     private String descripcion;
     private String email;
     private String orderCompraCliente;
@@ -43,8 +43,8 @@ public class Reserva {
         this.estado = estado;
     }
 
-    public Long getReservaId() {
-        return reservaId;
+    public Long getId() {
+        return id;
     }
 
     public String getDescripcion() {

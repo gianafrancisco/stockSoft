@@ -9,6 +9,7 @@ import fransis.mpm.config.MemoryDBConfig;
 import fransis.mpm.model.Articulo;
 import fransis.mpm.model.Estado;
 import fransis.mpm.model.Item;
+import fransis.mpm.model.Reserva;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,20 +42,27 @@ public class ItemRepositoryTest {
     @Autowired
     private ItemRepository itemRepository;
 
+    @Autowired
+    private ReservaRepository reservaRepository;
+
 
     @After
     public void tearDown() throws Exception {
         itemRepository.deleteAll();
+        reservaRepository.deleteAll();
         articuloRepository.deleteAll();
     }
 
     private Articulo articulo = null;
+    private Reserva reserva = null;
 
     @Before
     public void setUp() throws Exception {
         articulo = new Articulo();
         articulo.setDescripcion("Articulo 1");
         articulo = articuloRepository.saveAndFlush(articulo);
+        reserva = new Reserva("Reserva 1", "r@domain.com", null);
+        reserva = reservaRepository.saveAndFlush(reserva);
     }
 
     @Test
@@ -156,5 +164,26 @@ public class ItemRepositoryTest {
         Assert.assertThat(itemsList.getContent().size(),is(0));
     }
 
+    @Test
+    public void test_item_findByReserva() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item.setReserva(reserva);
+        Item item1 = itemRepository.save(item);
+        List<Item> itemsList = itemRepository.findByReserva(reserva);
+        Assert.assertThat(itemsList.size(),is(1));
+        Assert.assertThat(itemsList.get(0).getId(),is(item1.getId()));
+    }
+
+    @Test
+    public void test_item_findByReserva_not_found() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0002");
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+        List<Item> itemsList = itemRepository.findByReserva(reserva);
+        Assert.assertThat(itemsList.size(),is(0));
+    }
 
 }

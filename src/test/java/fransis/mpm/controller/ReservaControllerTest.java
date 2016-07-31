@@ -6,8 +6,9 @@
 package fransis.mpm.controller;
 
 import fransis.mpm.config.MemoryDBConfig;
-import fransis.mpm.model.EstadoReserva;
-import fransis.mpm.model.Reserva;
+import fransis.mpm.model.*;
+import fransis.mpm.repository.ArticuloRepository;
+import fransis.mpm.repository.ItemRepository;
 import fransis.mpm.repository.ReservaRepository;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -44,17 +45,31 @@ public class ReservaControllerTest {
     private ReservaRepository reservaRepository;
 
     @Autowired
+    private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
+
+
+    @Autowired
     private ReservaController reservaController;
 
     private Reserva reserva;
+    private Articulo articulo;
 
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(reservaController).setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
+
+        articulo = new Articulo("articulo 1", "articulo 1 rojo");
+        articuloRepository.saveAndFlush(articulo);
     }
 
     @After
     public void tearDown() throws Exception {
+
+        itemRepository.deleteAll();
+        articuloRepository.deleteAll();
         reservaRepository.deleteAll();
     }
 
@@ -81,12 +96,12 @@ public class ReservaControllerTest {
         reserva = reservaRepository.saveAndFlush(reserva);
 
         mockMvc.perform(
-                get("/reservas/"+reserva.getReservaId()).accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                get("/reservas/"+reserva.getId()).accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.descripcion").value("reserva 1"))
                 .andExpect(jsonPath("$.email").value("demo@demo.com"))
-                .andExpect(jsonPath("$.reservaId").value(is(reserva.getReservaId().intValue())));
+                .andExpect(jsonPath("$.id").value(is(reserva.getId().intValue())));
     }
 
     @Test
@@ -111,7 +126,7 @@ public class ReservaControllerTest {
         Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
         Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
         Assert.assertThat(page.getContent().get(0).getEstado(),is(EstadoReserva.ACTIVA));
-        Assert.assertThat(page.getContent().get(0).getReservaId(),is(reserva.getReservaId()));
+        Assert.assertThat(page.getContent().get(0).getId(),is(reserva.getId()));
 
     }
 
@@ -122,19 +137,64 @@ public class ReservaControllerTest {
         reserva = reservaRepository.saveAndFlush(reserva);
         reserva.setEstado(EstadoReserva.CONFIRMADA);
 
-        ResponseEntity<Void> responseEntity = reservaController.put(reserva);
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
 
-        Reserva reserva1 = reservaRepository.findOne(reserva.getReservaId());
+        Reserva reserva1 = reservaRepository.findOne(reserva.getId());
         Assert.assertThat(reserva1.getEstado(),is(reserva.getEstado()));
 
     }
 
     @Test
+    public void test_put_cerrada_reserva_by_controller_method() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = reservaRepository.saveAndFlush(reserva);
+
+        Item item = new Item();
+        item.setReserva(reserva);
+        item.setEstado(Estado.RESERVADO);
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        reserva.setEstado(EstadoReserva.CERRADA);
+
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva);
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
+
+        Item item2 = itemRepository.findOne(item.getId());
+
+        Assert.assertThat(item2.getEstado(),is(Estado.VENDIDO));
+    }
+
+    @Test
+    public void test_put_cancelada_reserva_by_controller_method() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = reservaRepository.saveAndFlush(reserva);
+
+        Item item = new Item();
+        item.setReserva(reserva);
+        item.setEstado(Estado.RESERVADO);
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        reserva.setEstado(EstadoReserva.CANCELADA);
+
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva);
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
+
+        Item item2 = itemRepository.findOne(item.getId());
+
+        Assert.assertThat(item2.getEstado(),is(Estado.DISPONIBLE));
+    }
+
+
+    @Test
     public void test_put_put_not_found_by_controller_method() throws Exception {
 
         reserva = new Reserva("reserva 1", "demo@demo.com", null);
-        ResponseEntity<Void> responseEntity = reservaController.put(reserva);
+        ResponseEntity<Void> responseEntity = reservaController.put(9L, reserva);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NOT_FOUND));
 
     }
@@ -145,13 +205,18 @@ public class ReservaControllerTest {
         reserva = new Reserva("reserva 1", "demo@demo.com", null);
         reservaRepository.saveAndFlush(reserva);
 
-        Page<Reserva> page = reservaController.filtrarReservas("cualquier_cosa",new PageRequest(0,10));
+        Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10));
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
         Assert.assertThat(page.getNumberOfElements(),is(1));
         Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
         Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
+
+        page = reservaController.filtrarReservas("cualquier_cosa",new PageRequest(0,10));
+
+        Assert.assertThat(page.getTotalPages(),is(0));
+        Assert.assertThat(page.getTotalElements(),is(0L));
 
     }
 
@@ -165,7 +230,7 @@ public class ReservaControllerTest {
 
         URI location = responseEntity.getHeaders().getLocation();
         reserva = responseEntity.getBody();
-        Assert.assertThat(location.toString(),is("/reservas/"+reserva.getReservaId()));
+        Assert.assertThat(location.toString(),is("/reservas/"+reserva.getId()));
 
         Page<Reserva> page = reservaController.obtenerLista(new PageRequest(0,10));
 
@@ -186,7 +251,7 @@ public class ReservaControllerTest {
         reserva = responseEntity.getBody();
 
 
-        ResponseEntity<Void> responseDelete = reservaController.borrarArticulo(reserva.getReservaId());
+        ResponseEntity<Void> responseDelete = reservaController.borrarArticulo(reserva.getId());
         Assert.assertThat(responseDelete.getStatusCode(),is(HttpStatus.METHOD_NOT_ALLOWED));
 
     }

@@ -70,4 +70,8 @@ public class Item {
     public void setTipo(Tipo tipo) {
         this.tipo = tipo;
     }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
 }

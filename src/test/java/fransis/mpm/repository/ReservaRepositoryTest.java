@@ -6,7 +6,6 @@
 package fransis.mpm.repository;
 
 import fransis.mpm.config.MemoryDBConfig;
-import fransis.mpm.model.Articulo;
 import fransis.mpm.model.EstadoReserva;
 import fransis.mpm.model.Reserva;
 import org.junit.After;
@@ -43,7 +42,7 @@ public class ReservaRepositoryTest {
     public void test_insert() throws Exception {
         Reserva rsv = new Reserva("reserva 1", "email@email.com", null);
         reservaRepository.save(rsv);
-        Reserva r = reservaRepository.findOne(rsv.getReservaId());
+        Reserva r = reservaRepository.findOne(rsv.getId());
         Assert.assertThat(r.getDescripcion(),is("reserva 1"));
         Assert.assertThat(r.getEmail(),is("email@email.com"));
         Assert.assertThat(r.getEstado(),is(EstadoReserva.ACTIVA));
@@ -53,12 +52,30 @@ public class ReservaRepositoryTest {
     public void test_update() throws Exception {
         Reserva rsv = new Reserva("reserva 1", "email@email.com", null);
         reservaRepository.save(rsv);
-        Reserva r = reservaRepository.findOne(rsv.getReservaId());
+        Reserva r = reservaRepository.findOne(rsv.getId());
         Assert.assertThat(r.getEstado(),is(EstadoReserva.ACTIVA));
         r.setEstado(EstadoReserva.CONFIRMADA);
         reservaRepository.save(r);
-        r = reservaRepository.findOne(rsv.getReservaId());
+        r = reservaRepository.findOne(rsv.getId());
         Assert.assertThat(r.getEstado(),is(EstadoReserva.CONFIRMADA));
+    }
+
+    @Test
+    public void test_findByDescripcionOrEmail() throws Exception {
+        Reserva rsv = new Reserva("reserva 1", "email@email.com", null);
+        reservaRepository.save(rsv);
+        Page<Reserva> reservaPage = reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase("reserva", "reserva", new PageRequest(0, 10));
+        Assert.assertThat(reservaPage.getTotalElements(),is(1L));
+        Assert.assertThat(reservaPage.getContent().get(0).getDescripcion(),is(rsv.getDescripcion()));
+        Assert.assertThat(reservaPage.getContent().get(0).getEmail(),is(rsv.getEmail()));
+
+        reservaPage = reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase("email@email.co", "email@email.co", new PageRequest(0, 10));
+        Assert.assertThat(reservaPage.getTotalElements(),is(1L));
+        Assert.assertThat(reservaPage.getContent().get(0).getDescripcion(),is(rsv.getDescripcion()));
+        Assert.assertThat(reservaPage.getContent().get(0).getEmail(),is(rsv.getEmail()));
+
+        reservaPage = reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase("cualquier", "cualquier", new PageRequest(0, 10));
+        Assert.assertThat(reservaPage.getTotalElements(),is(0L));
     }
 
 }

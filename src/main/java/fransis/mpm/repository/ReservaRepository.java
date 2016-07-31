@@ -14,4 +14,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Created by francisco on 7/2/16.
  */
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
+    Page<Reserva> findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase(String descripcion, String email, Pageable pageable);
 }
