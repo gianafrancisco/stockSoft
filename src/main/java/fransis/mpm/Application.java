@@ -6,8 +6,10 @@
 package fransis.mpm;
 
 import fransis.mpm.model.Articulo;
+import fransis.mpm.model.Item;
 import fransis.mpm.model.Vendedor;
 
+import fransis.mpm.repository.ItemRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +18,7 @@ import org.springframework.context.annotation.ComponentScan;
 import fransis.mpm.repository.ArticuloRepository;
 import fransis.mpm.repository.VendedorRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -27,7 +30,7 @@ public class Application {
 	}
 
 	@Bean
-	public CommandLineRunner loadData(VendedorRepository vendedorRepository, ArticuloRepository articuloRepository) {
+	public CommandLineRunner loadData(VendedorRepository vendedorRepository, ArticuloRepository articuloRepository, ItemRepository itemRepository) {
 		return (args) -> {
 			List<Vendedor> list = vendedorRepository.findAll();
 			if(list.isEmpty()){
@@ -40,11 +43,19 @@ public class Application {
 
 			List<Articulo> articulos = articuloRepository.findAll();
 			if(articulos.isEmpty()){
-				articuloRepository.save(new Articulo("N.CREDITO","Nota de credito por la diferencia"));
-				articuloRepository.save(new Articulo("100001","Remera"));
-				articuloRepository.save(new Articulo("100002","Pantalon"));
-				articuloRepository.save(new Articulo("100003","Campera"));
-				articuloRepository.save(new Articulo("100004","Zapatilla"));
+				articuloRepository.save(new Articulo("100000","Caudalimetro"));
+				articuloRepository.save(new Articulo("100001","Sensor de presion"));
+				articuloRepository.save(new Articulo("100002","Sensor de temperatura"));
+				articuloRepository.save(new Articulo("100003","Sensor de luz"));
+				articuloRepository.save(new Articulo("100004","Rectificador"));
+				List<Item> itemList = new ArrayList<>();
+				for(int i = 0; i<1000; i++){
+					Item item = new Item();
+					item.setArticulo(articuloRepository.getOne(((long)(Math.random()*5) + 1)));
+					itemList.add(item);
+				}
+				itemRepository.save(itemList);
+
 			}
 
 
