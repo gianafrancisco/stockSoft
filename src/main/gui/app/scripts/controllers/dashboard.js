@@ -54,6 +54,15 @@ angular.module('stockApp')
         });
 
      };
+     $scope.cancelar = function(reserva){
+     	reserva.estado = "CANCELADA";	
+     	reserva.put();
+     };
+
+     $scope.cerrar = function(reserva){
+     	reserva.estado = "CERRADA";	
+     	reserva.put();
+     };
 
      $scope.init = function(){
         $scope.buscar("");
