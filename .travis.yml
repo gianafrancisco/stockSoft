@@ -12,7 +12,7 @@ install:
 # - mvn install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -B -V
 
 before_install:
-  - apt-get update && apt-get install nodejs npm
+  - sudo apt-get update && sudo apt-get install nodejs npm
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 
 after_success:
