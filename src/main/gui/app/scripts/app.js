@@ -48,7 +48,7 @@ angular
         controllerAs: 'dashboard'
       })
       .otherwise({
-        redirectTo: '/articulo'
+        redirectTo: '/dashboard'
       });
   }).config(function(RestangularProvider) {
 
