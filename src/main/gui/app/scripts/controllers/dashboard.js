@@ -72,5 +72,9 @@ angular.module('stockApp')
          return ($scope.articulo.articuloId === null || $scope.articulo.articuloId === undefined);
      };
 
+     $scope.mostrarAcciones = function(reserva){
+     	return reserva.estado === "ACTIVA" || reserva.estado === "CONFIRMADA";
+     };
+
      $scope.init();
   });
