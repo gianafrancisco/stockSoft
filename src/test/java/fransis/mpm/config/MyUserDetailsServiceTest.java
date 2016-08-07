@@ -6,10 +6,7 @@
 package fransis.mpm.config;
 
 import fransis.mpm.model.Vendedor;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -58,6 +55,7 @@ public class MyUserDetailsServiceTest {
     }
 
     @Test
+    @Ignore
     public void test_loadUserByUsername_not_administrador() throws Exception {
 
         UserDetails userDetails = myUserDetailsService.loadUserByUsername("username1");

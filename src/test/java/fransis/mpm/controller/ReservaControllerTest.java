@@ -20,12 +20,19 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.net.URI;
+import java.security.Principal;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -50,6 +57,19 @@ public class ReservaControllerTest {
     @Autowired
     private ItemRepository itemRepository;
 
+    /*
+    @Autowired
+    private WebApplicationContext context;
+
+    @Autowired
+    private ComponentScan.Filter springSecurityFilterChain;
+    */
+    private Principal principal = new Principal() {
+        @Override
+        public String getName() {
+            return "usuario1";
+        }
+    };
 
     @Autowired
     private ReservaController reservaController;
@@ -57,30 +77,43 @@ public class ReservaControllerTest {
     private Reserva reserva;
     private Articulo articulo;
 
+    private Authentication authentication;
+
     @Before
     public void setUp() throws Exception {
-        mockMvc = MockMvcBuilders.standaloneSetup(reservaController).setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
 
+        mockMvc = MockMvcBuilders.standaloneSetup(reservaController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .build();
+
+
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("USER");
+        authentication =
+                new UsernamePasswordAuthenticationToken("usuario1","password", authorities);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        /*mockMvc = MockMvcBuilders.webAppContextSetup(context)
+                .build();*/
         articulo = new Articulo("articulo 1", "articulo 1 rojo");
         articuloRepository.saveAndFlush(articulo);
     }
 
     @After
     public void tearDown() throws Exception {
-
         itemRepository.deleteAll();
         articuloRepository.deleteAll();
         reservaRepository.deleteAll();
+        SecurityContextHolder.clearContext();
     }
 
     @Test
     public void test_get_reservas() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName());
         reservaRepository.saveAndFlush(reserva);
 
         mockMvc.perform(
-                get("/reservas").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                get("/reservas").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).principal(principal))
         .andExpect(status().isOk())
         .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.content[0].descripcion").value("reserva 1"))
@@ -115,10 +148,10 @@ public class ReservaControllerTest {
     @Test
     public void test_request_reserva_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName());
         reserva = reservaRepository.saveAndFlush(reserva);
 
-        Page<Reserva> page = reservaController.obtenerLista(new PageRequest(0,10));
+        Page<Reserva> page = reservaController.obtenerLista(new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
@@ -202,10 +235,10 @@ public class ReservaControllerTest {
     @Test
     public void test_search_reserva_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName());
         reservaRepository.saveAndFlush(reserva);
 
-        Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10));
+        Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
@@ -213,7 +246,7 @@ public class ReservaControllerTest {
         Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
         Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
 
-        page = reservaController.filtrarReservas("cualquier_cosa",new PageRequest(0,10));
+        page = reservaController.filtrarReservas("cualquier_cosa",new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(0));
         Assert.assertThat(page.getTotalElements(),is(0L));
@@ -225,20 +258,21 @@ public class ReservaControllerTest {
 
         reserva = new Reserva("reserva 1", "demo@demo.com", null);
 
-        ResponseEntity<Reserva> responseEntity = reservaController.agregar(reserva);
+        ResponseEntity<Reserva> responseEntity = reservaController.agregar(reserva, principal);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.CREATED));
 
         URI location = responseEntity.getHeaders().getLocation();
         reserva = responseEntity.getBody();
         Assert.assertThat(location.toString(),is("/reservas/"+reserva.getId()));
 
-        Page<Reserva> page = reservaController.obtenerLista(new PageRequest(0,10));
+        Page<Reserva> page = reservaController.obtenerLista(new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
         Assert.assertThat(page.getNumberOfElements(),is(1));
         Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
         Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
+        Assert.assertThat(page.getContent().get(0).getVendedor(),is(principal.getName()));
 
     }
 
@@ -247,9 +281,8 @@ public class ReservaControllerTest {
 
         reserva = new Reserva("reserva 1", "demo@demo.com", null);
 
-        ResponseEntity<Reserva> responseEntity = reservaController.agregar(reserva);
+        ResponseEntity<Reserva> responseEntity = reservaController.agregar(reserva, principal);
         reserva = responseEntity.getBody();
-
 
         ResponseEntity<Void> responseDelete = reservaController.borrarArticulo(reserva.getId());
         Assert.assertThat(responseDelete.getStatusCode(),is(HttpStatus.METHOD_NOT_ALLOWED));

@@ -26,6 +26,7 @@ import java.util.Set;
 public class MyUserDetailsService implements UserDetailsService {
 
     public static final String ADMINISTRADOR = "Administrador";
+    public static final String USER_ROLE = "USER";
 
     @Autowired
     private VendedorRepository vendedorRepository;
@@ -43,8 +44,11 @@ public class MyUserDetailsService implements UserDetailsService {
             if (ADMINISTRADOR.equals(user.getUsername())) {
                 authorities =
                         buildUserAuthority(ADMINISTRADOR);
-                u = buildUserForAuthentication(user, authorities);
+            }else{
+                authorities =
+                        buildUserAuthority(USER_ROLE);
             }
+            u = buildUserForAuthentication(user, authorities);
             return u;
         }else {
             throw new RuntimeException("Username not found");

@@ -35,10 +35,7 @@ public class Application {
 			List<Vendedor> list = vendedorRepository.findAll();
 			if(list.isEmpty()){
 				vendedorRepository.save(new Vendedor("Administrador","1qaz2wsx","Administrador","Administrador"));
-				vendedorRepository.save(new Vendedor("vendedor1","123456","Vendedor","1"));
-				vendedorRepository.save(new Vendedor("vendedor2","123456","Vendedor","2"));
-				vendedorRepository.save(new Vendedor("vendedor3","123456","Vendedor","3"));
-				vendedorRepository.save(new Vendedor("vendedor4","123456","Vendedor","4"));
+				vendedorRepository.save(new Vendedor("egrande","123456","Emiliano","Grande"));
 			}
 
 			List<Articulo> articulos = articuloRepository.findAll();
@@ -51,6 +48,7 @@ public class Application {
 				List<Item> itemList = new ArrayList<>();
 				for(int i = 0; i<1000; i++){
 					Item item = new Item();
+					item.setOrdenDeCompra("0001");
 					item.setArticulo(articuloRepository.getOne(((long)(Math.random()*5) + 1)));
 					itemList.add(item);
 				}

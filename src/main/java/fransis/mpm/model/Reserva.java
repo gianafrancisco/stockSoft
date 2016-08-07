@@ -22,8 +22,7 @@ public class Reserva {
     private String orderCompraCliente;
     private LocalDate fechaReserva;
     private LocalDate fechaCierre;
-    @ManyToOne
-    private Vendedor vendedor;
+    private String vendedor;
     private EstadoReserva estado;
 
     public Reserva() {
@@ -32,7 +31,7 @@ public class Reserva {
         this.estado = EstadoReserva.ACTIVA;
     }
 
-    public Reserva(String descripcion, String email, Vendedor vendedor) {
+    public Reserva(String descripcion, String email, String vendedor) {
         this.descripcion = descripcion;
         this.email = email;
         this.vendedor = vendedor;
@@ -55,7 +54,7 @@ public class Reserva {
         return email;
     }
 
-    public Vendedor getVendedor() {
+    public String getVendedor() {
         return vendedor;
     }
 

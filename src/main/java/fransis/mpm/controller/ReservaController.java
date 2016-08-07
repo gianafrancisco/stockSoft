@@ -6,6 +6,7 @@
 package fransis.mpm.controller;
 
 import fransis.mpm.model.Estado;
+import fransis.mpm.model.EstadoReserva;
 import fransis.mpm.model.Reserva;
 import fransis.mpm.repository.ItemRepository;
 import fransis.mpm.repository.ReservaRepository;
@@ -19,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static fransis.mpm.model.EstadoReserva.*;
 
@@ -47,20 +51,28 @@ public class ReservaController {
     }
 
     @RequestMapping(value = "/reservas", method = RequestMethod.GET)
-    public Page<Reserva> obtenerLista(Pageable pageRequest){
-        return reservaRepository.findAll(pageRequest);
+    public Page<Reserva> obtenerLista(Pageable pageRequest, Principal principal){
+        List<EstadoReserva> estadoReservaList = new ArrayList<>();
+        estadoReservaList.add(EstadoReserva.ACTIVA);
+        estadoReservaList.add(EstadoReserva.CONFIRMADA);
+        return reservaRepository.findByVendedorAndEstadoIn(principal.getName(), estadoReservaList, pageRequest);
     }
 
     @RequestMapping(value = "/reservas", method = RequestMethod.GET, params = {"search"})
-    public Page<Reserva> filtrarReservas(@RequestParam(value = "") String search, Pageable pageRequest){
-        return reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageRequest);
+    public Page<Reserva> filtrarReservas(@RequestParam(value = "") String search, Pageable pageRequest, Principal principal){
+        List<EstadoReserva> estadoReservaList = new ArrayList<>();
+        estadoReservaList.add(EstadoReserva.ACTIVA);
+        estadoReservaList.add(EstadoReserva.CONFIRMADA);
+        estadoReservaList.add(EstadoReserva.CANCELADA);
+        estadoReservaList.add(EstadoReserva.CERRADA);
+        return reservaRepository.findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn(principal.getName(), search, search, estadoReservaList, pageRequest);
     }
 
-
     @RequestMapping(value = "/reservas", method = RequestMethod.POST)
-    public ResponseEntity<Reserva> agregar(@RequestBody Reserva reserva){
-        reserva.setEstado(ACTIVA);
-        Reserva r = reservaRepository.saveAndFlush(reserva);
+    public ResponseEntity<Reserva> agregar(@RequestBody Reserva reserva, Principal principal){
+        Reserva reserva1 = new Reserva(reserva.getDescripcion(), reserva.getEmail(), principal.getName());
+        reserva1.setEstado(ACTIVA);
+        Reserva r = reservaRepository.saveAndFlush(reserva1);
         URI location = null;
         try {
             location = new URI("/reservas/" + r.getId());

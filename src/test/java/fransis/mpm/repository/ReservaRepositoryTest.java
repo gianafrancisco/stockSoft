@@ -19,6 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 
@@ -62,19 +65,42 @@ public class ReservaRepositoryTest {
 
     @Test
     public void test_findByDescripcionOrEmail() throws Exception {
-        Reserva rsv = new Reserva("reserva 1", "email@email.com", null);
+        Reserva rsv = new Reserva("reserva 1", "email@email.com", "usuario1");
         reservaRepository.save(rsv);
-        Page<Reserva> reservaPage = reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase("reserva", "reserva", new PageRequest(0, 10));
+
+        Reserva rsv1 = new Reserva("reserva 2", "email@email.com", "usuario2");
+        reservaRepository.save(rsv1);
+
+        List<EstadoReserva> estadoReservaList = new ArrayList<>();
+        estadoReservaList.add(EstadoReserva.ACTIVA);
+        Page<Reserva> reservaPage = reservaRepository.findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn("usuario1", "reserva", "reserva", estadoReservaList, new PageRequest(0, 10));
         Assert.assertThat(reservaPage.getTotalElements(),is(1L));
         Assert.assertThat(reservaPage.getContent().get(0).getDescripcion(),is(rsv.getDescripcion()));
         Assert.assertThat(reservaPage.getContent().get(0).getEmail(),is(rsv.getEmail()));
 
-        reservaPage = reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase("email@email.co", "email@email.co", new PageRequest(0, 10));
+        reservaPage = reservaRepository.findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn("usuario1", "email@email.co", "email@email.co", estadoReservaList, new PageRequest(0, 10));
         Assert.assertThat(reservaPage.getTotalElements(),is(1L));
         Assert.assertThat(reservaPage.getContent().get(0).getDescripcion(),is(rsv.getDescripcion()));
         Assert.assertThat(reservaPage.getContent().get(0).getEmail(),is(rsv.getEmail()));
 
-        reservaPage = reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase("cualquier", "cualquier", new PageRequest(0, 10));
+        reservaPage = reservaRepository.findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn("usuario1", "cualquier", "cualquier", estadoReservaList, new PageRequest(0, 10));
+        Assert.assertThat(reservaPage.getTotalElements(),is(0L));
+    }
+
+    @Test
+    public void test_findAllAndEstadoIn() throws Exception {
+        Reserva rsv = new Reserva("reserva 1", "email@email.com", "username1");
+        reservaRepository.save(rsv);
+        List<EstadoReserva> estadoReservaList = new ArrayList<>();
+        estadoReservaList.add(EstadoReserva.ACTIVA);
+        Page<Reserva> reservaPage = reservaRepository.findByVendedorAndEstadoIn("username1", estadoReservaList, new PageRequest(0, 10));
+        Assert.assertThat(reservaPage.getTotalElements(),is(1L));
+        Assert.assertThat(reservaPage.getContent().get(0).getDescripcion(),is(rsv.getDescripcion()));
+        Assert.assertThat(reservaPage.getContent().get(0).getEmail(),is(rsv.getEmail()));
+
+        estadoReservaList.remove(0);
+        estadoReservaList.add(EstadoReserva.CANCELADA);
+        reservaPage = reservaRepository.findByVendedorAndEstadoIn("username1", estadoReservaList, new PageRequest(0, 10));
         Assert.assertThat(reservaPage.getTotalElements(),is(0L));
     }
 
