@@ -34,17 +34,17 @@ public class Application {
 		return (args) -> {
 			List<Vendedor> list = vendedorRepository.findAll();
 			if(list.isEmpty()){
-				vendedorRepository.save(new Vendedor("Administrador","1qaz2wsx","Administrador","Administrador"));
-				vendedorRepository.save(new Vendedor("egrande","123456","Emiliano","Grande"));
+				vendedorRepository.saveAndFlush(new Vendedor("Administrador","1qaz2wsx","Administrador","Administrador"));
+				vendedorRepository.saveAndFlush(new Vendedor("egrande","123456","Emiliano","Grande"));
 			}
 
 			List<Articulo> articulos = articuloRepository.findAll();
 			if(articulos.isEmpty()){
-				articuloRepository.save(new Articulo("100000","Caudalimetro"));
-				articuloRepository.save(new Articulo("100001","Sensor de presion"));
-				articuloRepository.save(new Articulo("100002","Sensor de temperatura"));
-				articuloRepository.save(new Articulo("100003","Sensor de luz"));
-				articuloRepository.save(new Articulo("100004","Rectificador"));
+				articuloRepository.saveAndFlush(new Articulo("100000","Caudalimetro"));
+				articuloRepository.saveAndFlush(new Articulo("100001","Sensor de presion"));
+				articuloRepository.saveAndFlush(new Articulo("100002","Sensor de temperatura"));
+				articuloRepository.saveAndFlush(new Articulo("100003","Sensor de luz"));
+				articuloRepository.saveAndFlush(new Articulo("100004","Rectificador"));
 				List<Item> itemList = new ArrayList<>();
 				for(int i = 0; i<1000; i++){
 					Item item = new Item();
@@ -53,6 +53,7 @@ public class Application {
 					itemList.add(item);
 				}
 				itemRepository.save(itemList);
+				itemRepository.flush();
 
 			}
 
