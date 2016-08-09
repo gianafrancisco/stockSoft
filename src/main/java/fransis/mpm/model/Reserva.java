@@ -12,6 +12,7 @@ import java.time.LocalDate;
  * Created by francisco on 6/30/16.
  */
 @Entity
+@Table(name="reserva")
 public class Reserva {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserva_id", unique = true, nullable = false)
