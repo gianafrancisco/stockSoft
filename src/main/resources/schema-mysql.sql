@@ -1,128 +1,145 @@
--- phpMyAdmin SQL Dump
--- version 4.3.12
--- http://www.phpmyadmin.net
+-- MySQL dump 10.13  Distrib 5.5.50, for linux2.6 (x86_64)
 --
--- Servidor: localhost
--- Tiempo de generación: 12-01-2016 a las 22:16:45
--- Versión del servidor: 5.5.46-0+deb7u1
--- Versión de PHP: 5.4.45-0+deb7u2
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: stock
+-- ------------------------------------------------------
+-- Server version       5.5.50
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Base de datos: `yporque`
+-- Current Database: `stock`
 --
 
--- --------------------------------------------------------
+-- CREATE DATABASE /*!32312 IF NOT EXISTS*/ `stock` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+USE `stock`;
 
 --
--- Estructura de tabla para la tabla `articulo`
+-- Table structure for table `articulo`
 --
 
-CREATE TABLE IF NOT EXISTS `articulo` (
-  `articulo_id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE KEY,
-  `precio_lista` double NOT NULL,
-  `factor1` double NOT NULL,
-  `factor2` double NOT NULL,
-  `descripcion` varchar(512) NOT NULL,
-  `cantidad_stock` bigint(20) NOT NULL,
-  `codigo` varchar(256) NOT NULL,
-  INDEX (`codigo`)
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `articulo` (
+  `articulo_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(255) DEFAULT NULL,
+  `descripcion` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`articulo_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `articulo`
+--
+
+LOCK TABLES `articulo` WRITE;
+/*!40000 ALTER TABLE `articulo` DISABLE KEYS */;
+INSERT INTO `articulo` VALUES (1,'100000','Caudalimetro'),(2,'100001','Sensor de presion'),(3,'100002','Sensor de temperatura'),(4,'100003','Sensor de luz'),(5,'100004','Rectificador');
+/*!40000 ALTER TABLE `articulo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `item`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `item` (
+  `item_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `estado` int(11) DEFAULT NULL,
+  `fechaIngreso` date DEFAULT NULL,
+  `fechaRegistro` date DEFAULT NULL,
+  `ordenDeCompra` varchar(255) DEFAULT NULL,
+  `tipo` int(11) DEFAULT NULL,
+  `articulo_articulo_id` bigint(20) DEFAULT NULL,
+  `reserva_reserva_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `FK2d9elr49e7f9gb2qgn6187lvg` (`articulo_articulo_id`),
+  KEY `FKgc2nhwewvsqlpllbj1g2pdjle` (`reserva_reserva_id`),
+  CONSTRAINT `FKgc2nhwewvsqlpllbj1g2pdjle` FOREIGN KEY (`reserva_reserva_id`) REFERENCES `reserva` (`reserva_id`),
+  CONSTRAINT `FK2d9elr49e7f9gb2qgn6187lvg` FOREIGN KEY (`articulo_articulo_id`) REFERENCES `articulo` (`articulo_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Estructura de tabla para la tabla `caja`
+-- Dumping data for table `item`
 --
 
-CREATE TABLE IF NOT EXISTS `caja` (
-  `caja_id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE KEY,
-  `apertura` datetime DEFAULT NULL,
-  `apertura_username` varchar(100) NOT NULL,
-  `cierre` datetime DEFAULT NULL,
-  `cierre_username` varchar(100) NOT NULL,
-  `efectivo` double NOT NULL,
-  `tarjeta` double NOT NULL,
-  `total_venta_dia` double NOT NULL,
-  `efectivo_dia_siguiente` double NOT NULL
+LOCK TABLES `item` WRITE;
+/*!40000 ALTER TABLE `item` DISABLE KEYS */;
+/*!40000 ALTER TABLE `item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reserva`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reserva` (
+  `reserva_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `descripcion` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `estado` int(11) DEFAULT NULL,
+  `fechaCierre` date DEFAULT NULL,
+  `fechaReserva` date DEFAULT NULL,
+  `orderCompraCliente` varchar(255) DEFAULT NULL,
+  `vendedor` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`reserva_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `retiro`
---
-
-CREATE TABLE IF NOT EXISTS `retiro` (
-  `retiro_id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE KEY,
-  `monto` double NOT NULL,
-  `descripcion` varchar(512) NOT NULL,
-  `fecha` datetime DEFAULT NULL,
-  `username` varchar(100) NOT NULL,
-  INDEX (`fecha`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Estructura de tabla para la tabla `vendedor`
+-- Dumping data for table `reserva`
 --
 
-CREATE TABLE IF NOT EXISTS `vendedor` (
-  `vendedor_id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE KEY,
-  `username` varchar(100) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `apellido` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+LOCK TABLES `reserva` WRITE;
+/*!40000 ALTER TABLE `reserva` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reserva` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Estructura de tabla para la tabla `venta`
+-- Table structure for table `vendedor`
 --
 
-CREATE TABLE IF NOT EXISTS `venta` (
-  `venta_id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE KEY,
-  `fecha` datetime DEFAULT NULL,
-  `codigo` varchar(256) NOT NULL,
-  `descripcion` varchar(512) NOT NULL,
-  `cantidad` bigint(20) NOT NULL,
-  `factor1` double NOT NULL,
-  `factor2` double NOT NULL,
-  `precio_lista` double NOT NULL,
-  `precio` double NOT NULL,
-  `tipo_pago` varchar(100) NOT NULL,
-  `username` varchar(100) NOT NULL,
-  `nro_cupon` varchar(100) NOT NULL,
-  `codigo_devolucion` varchar(100) NOT NULL,
-  `devuelto` boolean NOT NULL,
-  INDEX (`fecha`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vendedor` (
+  `vendedor_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `apellido` varchar(255) DEFAULT NULL,
+  `nombre` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`vendedor_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Estructura de tabla para la tabla `resumen`
+-- Dumping data for table `vendedor`
 --
 
-CREATE TABLE IF NOT EXISTS `resumen` (
-  `resumen_id` bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY UNIQUE KEY,
-  `fecha` datetime DEFAULT NULL,
-  `tipo_pago` varchar(100) NOT NULL,
-  `efectivo` double NOT NULL,
-  `tarjeta` double NOT NULL,
-  INDEX (`fecha`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+LOCK TABLES `vendedor` WRITE;
+/*!40000 ALTER TABLE `vendedor` DISABLE KEYS */;
+INSERT INTO `vendedor` VALUES (1,'Administrador','Administrador','1qaz2wsx','Administrador'),(2,'Grande','Emiliano','123456','egrande');
+/*!40000 ALTER TABLE `vendedor` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2016-08-09 14:49:20
