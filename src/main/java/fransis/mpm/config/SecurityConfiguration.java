@@ -20,6 +20,7 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
@@ -48,7 +49,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/venta.html","/vender.html","/articulo.html","/index.html", "/js/**","/articulos","/articulo/**","/vendedores","/venta/**","/ventas",
                 "/retiro.html","/retiro/**","/caja.html","/caja/**").permitAll()
                 .anyRequest().authenticated().and()
-                .logout().logoutUrl("/logout").invalidateHttpSession(true).and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/").invalidateHttpSession(true).and()
                 .csrf().csrfTokenRepository(csrfTokenRepository()).and()
                 .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
     }
