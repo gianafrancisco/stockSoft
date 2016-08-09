@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import fransis.mpm.config.MemoryDBConfig;
 import fransis.mpm.repository.VendedorRepository;
 
+import java.security.Principal;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -40,6 +42,13 @@ public class VendedorControllerTest {
     @Autowired
     private VendedorController vendedorController;
 
+    private Principal principal = new Principal() {
+        @Override
+        public String getName() {
+            return "Administrador";
+        }
+    };
+
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(vendedorController).setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
@@ -55,7 +64,7 @@ public class VendedorControllerTest {
 
         vendedorRepository.save(new Vendedor("username1","1234","nombre1","apellido1"));
 
-        Page<Vendedor> page = vendedorController.obtenerLista(new PageRequest(0,10));
+        Page<Vendedor> page = vendedorController.obtenerLista(new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
@@ -73,7 +82,7 @@ public class VendedorControllerTest {
 
         vendedorRepository.save(new Vendedor("username1","1234","nombre1","apellido1"));
 
-        Page<Vendedor> page = vendedorController.filtrar("name1",new PageRequest(0,10));
+        Page<Vendedor> page = vendedorController.filtrar("name1",new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
@@ -91,9 +100,9 @@ public class VendedorControllerTest {
 
         Vendedor vendedor = new Vendedor("username1","1234","nombre1","apellido1");
 
-        vendedorController.agregar(vendedor);
+        vendedorController.agregar(vendedor, principal);
 
-        Page<Vendedor> page = vendedorController.obtenerLista(new PageRequest(0,10));
+        Page<Vendedor> page = vendedorController.obtenerLista(new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
@@ -110,9 +119,9 @@ public class VendedorControllerTest {
 
         Vendedor vendedor = new Vendedor("username1","1234","nombre1","apellido1");
 
-        vendedor = vendedorController.agregar(vendedor);
+        vendedor = vendedorController.agregar(vendedor, principal);
 
-        Page<Vendedor> page = vendedorController.obtenerLista(new PageRequest(0,10));
+        Page<Vendedor> page = vendedorController.obtenerLista(new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
@@ -123,9 +132,9 @@ public class VendedorControllerTest {
         Assert.assertThat(page.getContent().get(0).getApellido(),is("apellido1"));
 
 
-        vendedorController.delete(vendedor.getVendedorId());
+        vendedorController.delete(vendedor.getVendedorId(), principal);
 
-        page = vendedorController.obtenerLista(new PageRequest(0,10));
+        page = vendedorController.obtenerLista(new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(0));
         Assert.assertThat(page.getTotalElements(),is(0L));
@@ -142,9 +151,9 @@ public class VendedorControllerTest {
 
         vendedor = vendedorRepository.save(vendedor);
 
-        vendedorController.delete(vendedor.getVendedorId());
+        vendedorController.delete(vendedor.getVendedorId(), principal);
 
-        Page<Vendedor> page = vendedorController.obtenerLista(new PageRequest(0,10));
+        Page<Vendedor> page = vendedorController.obtenerLista(new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
         Assert.assertThat(page.getTotalElements(),is(1L));
