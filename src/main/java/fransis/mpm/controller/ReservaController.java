@@ -54,18 +54,26 @@ public class ReservaController {
     public Page<Reserva> obtenerLista(Pageable pageRequest, Principal principal){
         List<EstadoReserva> estadoReservaList = new ArrayList<>();
         estadoReservaList.add(EstadoReserva.ACTIVA);
-        estadoReservaList.add(EstadoReserva.CONFIRMADA);
-        return reservaRepository.findByVendedorAndEstadoIn(principal.getName(), estadoReservaList, pageRequest);
+        estadoReservaList.add(EstadoReserva.CANCELADA);
+        estadoReservaList.add(EstadoReserva.CERRADA);
+        if(!"Administrador".equals(principal.getName())) {
+            return reservaRepository.findByVendedorAndEstadoIn(principal.getName(), estadoReservaList, pageRequest);
+        }else{
+            return reservaRepository.findAll(pageRequest);
+        }
     }
 
     @RequestMapping(value = "/reservas", method = RequestMethod.GET, params = {"search"})
     public Page<Reserva> filtrarReservas(@RequestParam(value = "") String search, Pageable pageRequest, Principal principal){
         List<EstadoReserva> estadoReservaList = new ArrayList<>();
         estadoReservaList.add(EstadoReserva.ACTIVA);
-        estadoReservaList.add(EstadoReserva.CONFIRMADA);
         estadoReservaList.add(EstadoReserva.CANCELADA);
         estadoReservaList.add(EstadoReserva.CERRADA);
-        return reservaRepository.findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn(principal.getName(), search, search, estadoReservaList, pageRequest);
+        if(!"Administrador".equals(principal.getName())) {
+            return reservaRepository.findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn(principal.getName(), search, search, estadoReservaList, pageRequest);
+        }else{
+            return reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageRequest);
+        }
     }
 
     @RequestMapping(value = "/reservas", method = RequestMethod.POST)
@@ -111,5 +119,5 @@ public class ReservaController {
     public ResponseEntity<Void> borrarArticulo(@PathVariable Long reservaId){
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
-
+    //TODO: Add a new resource in order to get a reserva detail with each item include in the Reserva.
 }

@@ -23,5 +23,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
             countQuery = "SELECT count(r) FROM Reserva r WHERE r.vendedor = ?1 AND (r.descripcion LIKE %?2% OR r.email LIKE %?3%) AND estado IN ?4",
             nativeQuery = false)
     Page<Reserva> findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn(String vendedor, String descripcion, String email, List<EstadoReserva> estado, Pageable pageable);
+    Page<Reserva> findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase(String descripcion, String email, Pageable pageable);
     Page<Reserva> findByVendedorAndEstadoIn(String vendedor, List<EstadoReserva> estado, Pageable pageable);
 }

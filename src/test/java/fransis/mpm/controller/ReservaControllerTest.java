@@ -57,13 +57,6 @@ public class ReservaControllerTest {
     @Autowired
     private ItemRepository itemRepository;
 
-    /*
-    @Autowired
-    private WebApplicationContext context;
-
-    @Autowired
-    private ComponentScan.Filter springSecurityFilterChain;
-    */
     private Principal principal = new Principal() {
         @Override
         public String getName() {
@@ -92,8 +85,6 @@ public class ReservaControllerTest {
                 new UsernamePasswordAuthenticationToken("usuario1","password", authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        /*mockMvc = MockMvcBuilders.webAppContextSetup(context)
-                .build();*/
         articulo = new Articulo("articulo 1", "articulo 1 rojo");
         articuloRepository.saveAndFlush(articulo);
     }
@@ -162,6 +153,7 @@ public class ReservaControllerTest {
         Assert.assertThat(page.getContent().get(0).getId(),is(reserva.getId()));
 
     }
+
 
     @Test
     public void test_put_not_content_by_controller_method() throws Exception {
@@ -293,6 +285,68 @@ public class ReservaControllerTest {
     public void test_delete_verb_not_found_by_controller_method() throws Exception {
         ResponseEntity<Void>  responseEntity = reservaController.borrarArticulo(10L);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.METHOD_NOT_ALLOWED));
+    }
+
+    @Test
+    public void test_request_reserva_by_controller_method_admin() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", "cualquiera");
+        reserva = reservaRepository.saveAndFlush(reserva);
+
+        Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), principal);
+
+        Assert.assertThat(page.getTotalPages(),is(0));
+
+
+        Principal admin = new Principal() {
+            @Override
+            public String getName() {
+                return "Administrador";
+            }
+        };
+
+        page = reservaController.obtenerLista(new PageRequest(0,10), admin);
+
+        Assert.assertThat(page.getTotalPages(),is(1));
+        Assert.assertThat(page.getTotalElements(),is(1L));
+        Assert.assertThat(page.getNumberOfElements(),is(1));
+        Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
+        Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
+        Assert.assertThat(page.getContent().get(0).getEstado(),is(EstadoReserva.ACTIVA));
+        Assert.assertThat(page.getContent().get(0).getId(),is(reserva.getId()));
+
+    }
+
+    @Test
+    public void test_search_reserva_by_controller_method_admin() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", "cualquiera");
+        reservaRepository.saveAndFlush(reserva);
+
+        Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), principal);
+
+        Assert.assertThat(page.getTotalPages(),is(0));
+
+        Principal admin = new Principal() {
+            @Override
+            public String getName() {
+                return "Administrador";
+            }
+        };
+
+        page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), admin);
+
+        Assert.assertThat(page.getTotalPages(),is(1));
+        Assert.assertThat(page.getTotalElements(),is(1L));
+        Assert.assertThat(page.getNumberOfElements(),is(1));
+        Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
+        Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
+
+        page = reservaController.filtrarReservas("cualquier_cosa",new PageRequest(0,10), principal);
+
+        Assert.assertThat(page.getTotalPages(),is(0));
+        Assert.assertThat(page.getTotalElements(),is(0L));
+
     }
 
 }
