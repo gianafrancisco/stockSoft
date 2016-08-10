@@ -40,6 +40,7 @@
             <div class="list-group">
               <a class="list-group-item" ng-repeat="reserva in listado">
                 <h4 class="list-group-item-heading">{{reserva.descripcion}}</h4>
+                <h5 class="list-group-item-heading">{{reserva.vendedor}}</h5>
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
                         <p class="list-group-item-text">{{reserva.email}}</p>
@@ -47,6 +48,7 @@
                     <div class="col-md-4 col-sm-4">
                     </div>
                     <div class="col-md-2 col-sm-2">
+                        <h6><span class="label" ng-class="{ 'label-primary': reserva.estado == 'ACTIVA', 'label-success': reserva.estado == 'CERRADA', 'label-danger': reserva.estado == 'CANCELADA'}">{{reserva.estado}}</span></h6>
                         <p class="list-group-item-text">
                             <div class="btn-group" ng-show="mostrarAcciones(reserva);">
                               <button ng-click="cerrar(reserva);" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-ok-circle"></span>  Cerrar</button>

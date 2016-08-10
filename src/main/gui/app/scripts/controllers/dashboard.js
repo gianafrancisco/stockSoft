@@ -44,7 +44,7 @@ angular.module('stockApp')
 
      $scope.buscar = function(buscar){
 
-        var params = {page: $scope.pageNumber-1};
+        var params = {page: $scope.pageNumber-1, sort: 'id,desc'};
         if(buscar !== "" && buscar !== undefined){
             params.search = buscar;
         }

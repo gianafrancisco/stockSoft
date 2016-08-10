@@ -47,6 +47,11 @@ angular
         controller: 'DashboardController',
         controllerAs: 'dashboard'
       })
+      .when('/usuario', {
+        templateUrl: 'views/vendedor.html',
+        controller: 'VendedorController',
+        controllerAs: 'usuario'
+      })
       .otherwise({
         redirectTo: '/dashboard'
       });
