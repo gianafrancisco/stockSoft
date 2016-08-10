@@ -20,7 +20,9 @@ public class Reserva {
     private Long id;
     private String descripcion;
     private String email;
-    private String orderCompraCliente;
+    //TODO: Implement ordenCompraCliente
+    private String ordenCompraCliente;
+    //TODO: Implement fechaReserva and fechaCierre
     private LocalDate fechaReserva;
     private LocalDate fechaCierre;
     private String vendedor;
