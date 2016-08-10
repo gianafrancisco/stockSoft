@@ -19,10 +19,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -43,32 +45,38 @@ public class ReservaRepositoryTest {
 
     @Test
     public void test_insert() throws Exception {
-        Reserva rsv = new Reserva("reserva 1", "email@email.com", null);
+        LocalDate now = LocalDate.now();
+        Reserva rsv = new Reserva("reserva 1", "email@email.com", null, now.toEpochDay());
         reservaRepository.save(rsv);
         Reserva r = reservaRepository.findOne(rsv.getId());
         Assert.assertThat(r.getDescripcion(),is("reserva 1"));
         Assert.assertThat(r.getEmail(),is("email@email.com"));
         Assert.assertThat(r.getEstado(),is(EstadoReserva.ACTIVA));
+        Assert.assertThat(r.getFechaReserva(), is(now.toEpochDay()));
     }
 
     @Test
     public void test_update() throws Exception {
-        Reserva rsv = new Reserva("reserva 1", "email@email.com", null);
+        Reserva rsv = new Reserva("reserva 1", "email@email.com", null, LocalDate.now().toEpochDay());
         reservaRepository.save(rsv);
         Reserva r = reservaRepository.findOne(rsv.getId());
+        Assert.assertThat(r.getFechaCierre(), is(0L));
         Assert.assertThat(r.getEstado(),is(EstadoReserva.ACTIVA));
         r.setEstado(EstadoReserva.CONFIRMADA);
+        LocalDate nowCierre = LocalDate.now();
+        r.setFechaCierre(nowCierre.toEpochDay());
         reservaRepository.save(r);
         r = reservaRepository.findOne(rsv.getId());
         Assert.assertThat(r.getEstado(),is(EstadoReserva.CONFIRMADA));
+        Assert.assertThat(r.getFechaCierre(), is(nowCierre.toEpochDay()));
     }
 
     @Test
     public void test_findByDescripcionOrEmail() throws Exception {
-        Reserva rsv = new Reserva("reserva 1", "email@email.com", "usuario1");
+        Reserva rsv = new Reserva("reserva 1", "email@email.com", "usuario1", LocalDate.now().toEpochDay());
         reservaRepository.save(rsv);
 
-        Reserva rsv1 = new Reserva("reserva 2", "email@email.com", "usuario2");
+        Reserva rsv1 = new Reserva("reserva 2", "email@email.com", "usuario2", LocalDate.now().toEpochDay());
         reservaRepository.save(rsv1);
 
         List<EstadoReserva> estadoReservaList = new ArrayList<>();
@@ -89,7 +97,7 @@ public class ReservaRepositoryTest {
 
     @Test
     public void test_findAllAndEstadoIn() throws Exception {
-        Reserva rsv = new Reserva("reserva 1", "email@email.com", "username1");
+        Reserva rsv = new Reserva("reserva 1", "email@email.com", "username1", LocalDate.now().toEpochDay());
         reservaRepository.save(rsv);
         List<EstadoReserva> estadoReservaList = new ArrayList<>();
         estadoReservaList.add(EstadoReserva.ACTIVA);

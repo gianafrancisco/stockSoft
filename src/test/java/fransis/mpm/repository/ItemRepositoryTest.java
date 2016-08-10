@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -61,7 +62,7 @@ public class ItemRepositoryTest {
         articulo = new Articulo();
         articulo.setDescripcion("Articulo 1");
         articulo = articuloRepository.saveAndFlush(articulo);
-        reserva = new Reserva("Reserva 1", "r@domain.com", null);
+        reserva = new Reserva("Reserva 1", "r@domain.com", null, LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
     }
 

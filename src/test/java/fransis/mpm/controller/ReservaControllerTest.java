@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.net.URI;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -100,7 +101,7 @@ public class ReservaControllerTest {
     @Test
     public void test_get_reservas() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName());
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
         reservaRepository.saveAndFlush(reserva);
 
         mockMvc.perform(
@@ -116,7 +117,7 @@ public class ReservaControllerTest {
     @Test
     public void test_get_reserva() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
 
         mockMvc.perform(
@@ -139,7 +140,7 @@ public class ReservaControllerTest {
     @Test
     public void test_request_reserva_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName());
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
 
         Page<Reserva> page = reservaController.obtenerLista(new PageRequest(0,10), principal);
@@ -158,7 +159,7 @@ public class ReservaControllerTest {
     @Test
     public void test_put_not_content_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
         reserva.setEstado(EstadoReserva.CONFIRMADA);
 
@@ -173,7 +174,7 @@ public class ReservaControllerTest {
     @Test
     public void test_put_cerrada_reserva_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
 
         Item item = new Item();
@@ -195,7 +196,7 @@ public class ReservaControllerTest {
     @Test
     public void test_put_cancelada_reserva_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
 
         Item item = new Item();
@@ -218,7 +219,7 @@ public class ReservaControllerTest {
     @Test
     public void test_put_put_not_found_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
         ResponseEntity<Void> responseEntity = reservaController.put(9L, reserva);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NOT_FOUND));
 
@@ -227,7 +228,7 @@ public class ReservaControllerTest {
     @Test
     public void test_search_reserva_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName());
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
         reservaRepository.saveAndFlush(reserva);
 
         Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), principal);
@@ -248,7 +249,7 @@ public class ReservaControllerTest {
     @Test
     public void test_get_articulo_by_id_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
 
         ResponseEntity<Reserva> responseEntity = reservaController.agregar(reserva, principal);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.CREATED));
@@ -271,7 +272,7 @@ public class ReservaControllerTest {
     @Test
     public void test_delete_verb_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null);
+        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
 
         ResponseEntity<Reserva> responseEntity = reservaController.agregar(reserva, principal);
         reserva = responseEntity.getBody();
@@ -290,7 +291,7 @@ public class ReservaControllerTest {
     @Test
     public void test_request_reserva_by_controller_method_admin() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", "cualquiera");
+        reserva = new Reserva("reserva 1", "demo@demo.com", "cualquiera", LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
 
         Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), principal);
@@ -320,7 +321,7 @@ public class ReservaControllerTest {
     @Test
     public void test_search_reserva_by_controller_method_admin() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", "cualquiera");
+        reserva = new Reserva("reserva 1", "demo@demo.com", "cualquiera", LocalDate.now().toEpochDay());
         reservaRepository.saveAndFlush(reserva);
 
         Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), principal);

@@ -20,11 +20,9 @@ public class Reserva {
     private Long id;
     private String descripcion;
     private String email;
-    //TODO: Implement ordenCompraCliente
     private String ordenCompraCliente;
-    //TODO: Implement fechaReserva and fechaCierre
-    private LocalDate fechaReserva;
-    private LocalDate fechaCierre;
+    private long fechaReserva;
+    private long fechaCierre;
     private String vendedor;
     private EstadoReserva estado;
 
@@ -34,11 +32,12 @@ public class Reserva {
         this.estado = EstadoReserva.ACTIVA;
     }
 
-    public Reserva(String descripcion, String email, String vendedor) {
+    public Reserva(String descripcion, String email, String vendedor, long fechaReserva) {
         this.descripcion = descripcion;
         this.email = email;
         this.vendedor = vendedor;
         this.estado = EstadoReserva.ACTIVA;
+        this.fechaReserva = fechaReserva;
     }
 
     public void setEstado(EstadoReserva estado) {
@@ -63,5 +62,17 @@ public class Reserva {
 
     public EstadoReserva getEstado() {
         return estado;
+    }
+
+    public long getFechaReserva() {
+        return fechaReserva;
+    }
+
+    public long getFechaCierre() {
+        return fechaCierre;
+    }
+
+    public void setFechaCierre(long fechaCierre) {
+        this.fechaCierre = fechaCierre;
     }
 }

@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +81,7 @@ public class ReservaController {
 
     @RequestMapping(value = "/reservas", method = RequestMethod.POST)
     public ResponseEntity<Reserva> agregar(@RequestBody Reserva reserva, Principal principal){
-        Reserva reserva1 = new Reserva(reserva.getDescripcion(), reserva.getEmail(), principal.getName());
+        Reserva reserva1 = new Reserva(reserva.getDescripcion(), reserva.getEmail(), principal.getName(), Instant.now().toEpochMilli());
         reserva1.setEstado(ACTIVA);
         Reserva r = reservaRepository.saveAndFlush(reserva1);
         URI location = null;
@@ -93,22 +96,24 @@ public class ReservaController {
     @RequestMapping(value = "/reservas/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Void> put(@PathVariable() Long id, @RequestBody Reserva reserva){
         if(reserva.getId() != null && reservaRepository.exists(reserva.getId())) {
-            Reserva r = reservaRepository.saveAndFlush(reserva);
-            switch (r.getEstado()){
+            switch (reserva.getEstado()){
                 case CANCELADA:
-                    itemRepository.findByReserva(r).forEach(item -> {
+                    itemRepository.findByReserva(reserva).forEach(item -> {
                         item.setEstado(Estado.DISPONIBLE);
                         item.setReserva(null);
                         itemRepository.saveAndFlush(item);
                     });
+                    reserva.setFechaCierre(Instant.now().toEpochMilli());
                     break;
                 case CERRADA:
-                    itemRepository.findByReserva(r).forEach(item -> {
+                    itemRepository.findByReserva(reserva).forEach(item -> {
                         item.setEstado(Estado.VENDIDO);
                         itemRepository.saveAndFlush(item);
                     });
+                    reserva.setFechaCierre(Instant.now().toEpochMilli());
                     break;
             }
+            reservaRepository.saveAndFlush(reserva);
             return (ResponseEntity.status(HttpStatus.NO_CONTENT)).build();
         }else{
             return (ResponseEntity.status(HttpStatus.NOT_FOUND)).build();
