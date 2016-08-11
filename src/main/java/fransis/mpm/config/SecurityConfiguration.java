@@ -43,17 +43,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.httpBasic()
-                .and()
+        //http.httpBasic()
+                http
                 .authorizeRequests()
-                .antMatchers("/", "/venta.html","/vender.html","/articulo.html","/index.html", "/js/**","/articulos","/articulo/**","/vendedores","/venta/**","/ventas",
-                "/retiro.html","/retiro/**","/caja.html","/caja/**").permitAll()
+                .antMatchers("/login.html","/scripts/**","/styles/**").permitAll()
                 .anyRequest().authenticated().and()
+                .formLogin()
+                    .loginPage("/login.html")
+                    .permitAll()
+                .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").invalidateHttpSession(true).and()
-                .csrf().csrfTokenRepository(csrfTokenRepository()).and()
-                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+                    .permitAll()
+                .and().csrf().disable();
+                /*.csrf().csrfTokenRepository(csrfTokenRepository()).and()
+                .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);*/
     }
 
     @Autowired
