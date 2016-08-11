@@ -1,13 +1,7 @@
 <!doctype html>
-<!--
-  ~ Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
-  ~
-  -->
-
-<html>
-  <head>
+<head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Login</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -21,7 +15,8 @@
     <link rel="stylesheet" href="styles/cloak.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="stockApp">
+</head>
+  <body>
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -32,45 +27,35 @@
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-collapse" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
             <a class="navbar-brand" href="#">MPM</a>
           </div>
           <div class="collapse navbar-collapse" id="menu-collapse">
-            <ul class="nav navbar-nav">
-              <li><a href="#dashboard">Dashboard</a></li>
-              <li><a href="#articulo">Stock</a></li>
-              <li><a href="#reserva">Reservar Stock</a></li>
-              <li><a href="#ingreso">Ingreso Stock</a></li>
-              <li><a href="#vendedor">Usuarios</a></li>
-            </ul>
-            <form method="post" action="/logout" class="navbar-form navbar-right">
-              <div class="form-group"><input type="submit" value="Salir" class="btn btn-default" /></div>
-            </form>
-            <!--
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="/logout"">Cerrar Session</a></li>
-            </ul>
-            -->
           </div>
         </div>
       </nav>
     </div>
 
-    <div class="container-fluid">
-    <div ng-view=""></div>
+
+    <div class="container">
+	    <div class="row">
+		    <div class="col-md-12">
+			    <form method="post" action="/login.html">
+				    <input type="text" id="username" class="form-control" name="username" placeholder="Usuario">
+   				    <input type="password" id="password" class="form-control" name="password" placeholder="Password">
+			  		<div class="input-group">
+			  			<input type="submit"  class="btn btn-default navbar-btn" value="Ingresar" />
+			  		</div>
+				</form>
+			</div>
+		</div>
     </div>
+
 
     <div class="footer">
       <div class="container-fluid">
         <p>MPM</p>
       </div>
     </div>
-
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
       <!--
@@ -103,13 +88,7 @@
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/articulo.js"></script>
-        <script src="scripts/controllers/vendedor.js"></script>
-        <script src="scripts/controllers/reserva.js"></script>
-        <script src="scripts/services/reservaservice.js"></script>
-        <script src="scripts/controllers/ingreso.js"></script>
-        <script src="scripts/controllers/dashboard.js"></script>
+
         <!-- endbuild -->
 </body>
 </html>
