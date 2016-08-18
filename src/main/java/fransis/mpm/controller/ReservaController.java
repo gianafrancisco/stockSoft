@@ -7,6 +7,7 @@ package fransis.mpm.controller;
 
 import fransis.mpm.model.Estado;
 import fransis.mpm.model.EstadoReserva;
+import fransis.mpm.model.Item;
 import fransis.mpm.model.Reserva;
 import fransis.mpm.repository.ItemRepository;
 import fransis.mpm.repository.ReservaRepository;
@@ -124,5 +125,17 @@ public class ReservaController {
     public ResponseEntity<Void> borrarArticulo(@PathVariable Long reservaId){
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
-    //TODO: Add a new resource in order to get a reserva detail with each item include in the Reserva.
+
+    @RequestMapping(value = "/reservas/{reservaId}/items", method = RequestMethod.GET)
+    public ResponseEntity<List<Item>> obtenerItem(@PathVariable Long reservaId){
+        Reserva one = reservaRepository.findOne(reservaId);
+        if(one != null) {
+            List<Item> items = itemRepository.findByReserva(one);
+            return (ResponseEntity.status(HttpStatus.OK)).body(items);
+        }else{
+            return (ResponseEntity.status(HttpStatus.NOT_FOUND)).body(null);
+        }
+
+    }
+
 }

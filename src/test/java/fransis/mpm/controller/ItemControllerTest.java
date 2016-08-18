@@ -101,6 +101,7 @@ public class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.content[0].estado").value(Estado.DISPONIBLE.toString()))
+                .andExpect(jsonPath("$.content[0].reserva").doesNotExist())
                 .andExpect(jsonPath("$.content[0].id").value(is(itemId.intValue())));
     }
 

@@ -35,6 +35,8 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -129,6 +131,7 @@ public class ReservaControllerTest {
                 .andExpect(jsonPath("$.id").value(is(reserva.getId().intValue())));
     }
 
+
     @Test
     public void test_get_reserva_not_found() throws Exception {
 
@@ -213,6 +216,7 @@ public class ReservaControllerTest {
         Item item2 = itemRepository.findOne(item.getId());
 
         Assert.assertThat(item2.getEstado(),is(Estado.DISPONIBLE));
+        Assert.assertThat(item2.getReserva(),nullValue());
     }
 
 
@@ -349,5 +353,28 @@ public class ReservaControllerTest {
         Assert.assertThat(page.getTotalElements(),is(0L));
 
     }
+
+    @Test
+    public void test_get_reserva_items() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
+        reserva = reservaRepository.saveAndFlush(reserva);
+        Item item = new Item();
+        item.setEstado(Estado.RESERVADO);
+        item.setReserva(reserva);
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        mockMvc.perform(
+                get("/reservas/"+reserva.getId()+"/items").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$[0].estado").value(Estado.RESERVADO.toString()))
+                .andExpect(jsonPath("$[0].id").value(is(item.getId().intValue())))
+                .andExpect(jsonPath("$[0].reserva").doesNotExist())
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+
 
 }
