@@ -5,6 +5,7 @@
 
 package fransis.mpm.repository;
 
+import fransis.mpm.model.Estado;
 import fransis.mpm.model.EstadoReserva;
 import fransis.mpm.model.Reserva;
 import org.springframework.data.domain.Page;
@@ -25,4 +26,5 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     Page<Reserva> findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn(String vendedor, String descripcion, String email, List<EstadoReserva> estado, Pageable pageable);
     Page<Reserva> findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase(String descripcion, String email, Pageable pageable);
     Page<Reserva> findByVendedorAndEstadoIn(String vendedor, List<EstadoReserva> estado, Pageable pageable);
+    List<Reserva> findByEstadoIn(EstadoReserva estadoReserva);
 }
