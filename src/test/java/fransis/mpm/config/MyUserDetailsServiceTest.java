@@ -34,7 +34,7 @@ public class MyUserDetailsServiceTest {
     @Before
     public void setUp() throws Exception {
         vendedorRepository.save(new Vendedor("Administrador","123456","Admin","Admin"));
-        vendedorRepository.save(new Vendedor("username1","123456","Admin","Admin"));
+        vendedorRepository.save(new Vendedor("username1","123456","User","User"));
     }
 
     @After
@@ -50,17 +50,15 @@ public class MyUserDetailsServiceTest {
 
         Assert.assertThat(userDetails.getUsername(),is("Administrador"));
         Assert.assertThat(userDetails.getPassword(),is("123456"));
-
-
     }
 
     @Test
-    @Ignore
     public void test_loadUserByUsername_not_administrador() throws Exception {
 
         UserDetails userDetails = myUserDetailsService.loadUserByUsername("username1");
 
-        Assert.assertThat(userDetails,nullValue());
+        Assert.assertThat(userDetails.getUsername(),is("username1"));
+        Assert.assertThat(userDetails.getPassword(),is("123456"));
 
     }
 
