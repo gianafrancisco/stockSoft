@@ -17,12 +17,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import fransis.mpm.repository.ArticuloRepository;
 import fransis.mpm.repository.VendedorRepository;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
 @ComponentScan("fransis.mpm")
+@EnableScheduling
 public class Application {
 
 	public static void main(String[] args) {
