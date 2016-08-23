@@ -22,8 +22,8 @@ import java.util.Properties;
 /**
  * Created by francisco on 04/12/2015.
  */
-//@Configuration
-@EnableJpaRepositories("fransis.mpm.repository")
+@Configuration
+//@EnableJpaRepositories("fransis.mpm.repository")
 class ApplicationConfigurationMysql extends ApplicationConfiguration {
 
     @Value("${spring.datasource.driverClassName:'com.mysql.jdbc.Driver'}")
@@ -124,7 +124,7 @@ class ApplicationConfigurationMysql extends ApplicationConfiguration {
 
         Properties ps = new Properties();
         ps.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        ps.put("hibernate.hbm2ddl.auto", "create-drop");
+        ps.put("hibernate.hbm2ddl.auto", "update");
         ps.put("hibernate.archive.autodetection","class");
         ps.put("hibernate.show_sql","true");
 
