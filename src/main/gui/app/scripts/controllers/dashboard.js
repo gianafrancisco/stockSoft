@@ -55,13 +55,17 @@ angular.module('stockApp')
 
      };
      $scope.cancelar = function(reserva){
-     	reserva.estado = "CANCELADA";	
-     	reserva.put();
+        if(confirm("Quiere cancelar la reserva?") === true){
+     	  reserva.estado = "CANCELADA";	
+     	  reserva.put();
+        }
      };
 
      $scope.cerrar = function(reserva){
-     	reserva.estado = "CERRADA";	
-     	reserva.put();
+        if(confirm("Quiere cerrar la reserva?") === true){
+     	  reserva.estado = "CERRADA";	
+     	  reserva.put();
+        }
      };
 
      $scope.init = function(){
