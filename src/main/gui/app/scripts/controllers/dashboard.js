@@ -51,9 +51,27 @@ angular.module('stockApp')
         Reservas.getList(params).then(function(a){
              $scope.listado = a;
              $scope.pageNumber = $scope.listado.number+1;
+             $scope.listado.forEach(function(current, index, array){
+
+                var promise = new Promise(function(done, error){
+                    console.log(current);
+
+                    current.getList("items").then(function(items){
+                        done({"r": current, "i": items});
+                    });
+                }).then(function(data){
+                    data.r.resumen = data.i;
+                    console.info(data.r);
+                    console.info(data.i);
+                    $scope.$apply();
+                });
+             });
         });
 
      };
+
+     //TODO: Check if all the items are FISICO and not VIRTUAL
+
      $scope.cancelar = function(reserva){
         if(confirm("Quiere cancelar la reserva?") === true){
      	  reserva.estado = "CANCELADA";	
@@ -80,5 +98,33 @@ angular.module('stockApp')
      	return reserva.estado === "ACTIVA" || reserva.estado === "CONFIRMADA";
      };
 
+     $scope.mostrarResumenItems = function(items){
+
+        if(items == undefined){return "";}
+
+        var summary = [];
+        
+        items.forEach(function (current,index){
+            var i = -1;
+            summary.forEach(function(cur, index2){
+                console.log(cur);
+                console.log(current);
+                if(cur.articulo.articuloId === current.articulo.articuloId){
+                    i = index2;
+                    return;
+                }
+            });
+            if(i === -1){
+                summary.push({"articulo": current.articulo, "cant": 1});
+            }else{
+                summary[i].cant++;
+            }
+        });
+        var text = "Cantidad - Codigo - Productos\n";
+        summary.forEach(function(current){
+            text += current.cant + " - " + current.articulo.codigo +" - " + current.articulo.descripcion+"\n";
+        });
+        return text;
+     };
      $scope.init();
   });

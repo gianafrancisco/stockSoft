@@ -64,16 +64,20 @@ angular
       if (operation === "getList") {
         // .. and handle the data and meta data
         //extractedData = data.content;
-        extractedData = data.content;
-        extractedData.content = data.content;
-        extractedData.number = data.number;
-        extractedData.totalPages = data.totalPages;
-        extractedData.totalElements = data.totalElements;
-        extractedData.last = data.last;
-        extractedData.size = data.size;
-        extractedData.sort = data.sort;
-        extractedData.first = data.first;
-        extractedData.numberOfElements = data.numberOfElements;
+        if(data.content != undefined){
+          extractedData = data.content;
+          extractedData.content = data.content;
+          extractedData.number = data.number;
+          extractedData.totalPages = data.totalPages;
+          extractedData.totalElements = data.totalElements;
+          extractedData.last = data.last;
+          extractedData.size = data.size;
+          extractedData.sort = data.sort;
+          extractedData.first = data.first;
+          extractedData.numberOfElements = data.numberOfElements;          
+        }else{
+          extractedData = data;  
+        }
       } else {
         extractedData = data;
       }
