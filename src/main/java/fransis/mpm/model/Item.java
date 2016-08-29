@@ -77,7 +77,6 @@ public class Item {
         this.reserva = reserva;
     }
 
-    @JsonIgnore
     public Reserva getReserva() {
         return reserva;
     }

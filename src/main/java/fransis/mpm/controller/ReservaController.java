@@ -127,11 +127,13 @@ public class ReservaController {
     }
 
     @RequestMapping(value = "/reservas/{reservaId}/items", method = RequestMethod.GET)
-    public ResponseEntity<List<Item>> obtenerItem(@PathVariable Long reservaId){
+    public ResponseEntity<List<fransis.mpm.model.web.Item>> obtenerItem(@PathVariable Long reservaId){
         Reserva one = reservaRepository.findOne(reservaId);
         if(one != null) {
             List<Item> items = itemRepository.findByReserva(one);
-            return (ResponseEntity.status(HttpStatus.OK)).body(items);
+            final List<fransis.mpm.model.web.Item> itemList = new ArrayList<>();
+            items.forEach(item -> itemList.add(new fransis.mpm.model.web.Item(item)));
+            return (ResponseEntity.status(HttpStatus.OK)).body(itemList);
         }else{
             return (ResponseEntity.status(HttpStatus.NOT_FOUND)).body(null);
         }

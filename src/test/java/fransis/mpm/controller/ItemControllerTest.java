@@ -7,11 +7,10 @@ package fransis.mpm.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fransis.mpm.config.MemoryDBConfig;
-import fransis.mpm.model.Articulo;
-import fransis.mpm.model.Estado;
-import fransis.mpm.model.Item;
+import fransis.mpm.model.*;
 import fransis.mpm.repository.ArticuloRepository;
 import fransis.mpm.repository.ItemRepository;
+import fransis.mpm.repository.ReservaRepository;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -54,11 +54,15 @@ public class ItemControllerTest {
     @Autowired
     private ItemRepository itemRepository;
 
+    @Autowired
+    private ReservaRepository reservaRepository;
 
     @Autowired
     private ItemController itemController;
 
     private Articulo articulo = null;
+
+    private Reserva reserva = null;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -68,6 +72,12 @@ public class ItemControllerTest {
         articulo = new Articulo();
         articulo.setDescripcion("Articulo 1");
         articulo = articuloRepository.saveAndFlush(articulo);
+
+        reserva = new Reserva("Reserva 1", "g@gmail.com", "Usuario 1", Instant.now().toEpochMilli());
+        reserva.setEstado(EstadoReserva.ACTIVA);
+        reserva = reservaRepository.saveAndFlush(reserva);
+
+
     }
 
     @After
@@ -293,6 +303,7 @@ public class ItemControllerTest {
         item = itemRepository.saveAndFlush(item);
 
         item.setEstado(Estado.RESERVADO);
+        item.setReserva(reserva);
 
         String itemJson = mapper.writeValueAsString(item);
 
@@ -304,6 +315,10 @@ public class ItemControllerTest {
 
         mockMvc.perform(accept)
                 .andExpect(status().isNoContent());
+
+        Item item1 = itemRepository.findOne(item.getId());
+        Assert.assertThat(item1.getReserva().getId(), is(reserva.getId()));
+
     }
 
     @Test
