@@ -48,7 +48,7 @@ public class Application {
 				articuloRepository.saveAndFlush(new Articulo("100003","Sensor de luz"));
 				articuloRepository.saveAndFlush(new Articulo("100004","Rectificador"));
 				List<Item> itemList = new ArrayList<>();
-				for(int i = 0; i<1000; i++){
+				for(int i = 0; i<50; i++){
 					Item item = new Item();
 					item.setOrdenDeCompra("0001");
 					item.setArticulo(articuloRepository.getOne(((long)(Math.random()*5) + 1)));
