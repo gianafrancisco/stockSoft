@@ -50,7 +50,6 @@ Section "GG Intenieria - Control de Stock"
   File "run.bat"
   File "icon.ico"
   File /nonfatal /a /r "jre"
-  File /nonfatal /a /r "..\src\main\webapp"
   WriteUninstaller "uninstall.exe"
   
 SectionEnd
