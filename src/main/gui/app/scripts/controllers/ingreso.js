@@ -19,7 +19,7 @@ angular.module('stockApp')
      $scope.listado = {
      };
      $scope.maxSize = 100;
-     $scope.ipp = 20;
+     $scope.ipp = 50;
      $scope.pageNumber = 1;
 
      $scope.messageDanger = "";
@@ -45,7 +45,7 @@ angular.module('stockApp')
 
      $scope.buscar = function(){
 
-        var params = {page: $scope.pageNumber - 1};
+        var params = {page: $scope.pageNumber - 1, size: $scope.ipp };
         if($scope.search !== "" && $scope.search !== undefined){
             params.ordenDeCompra = $scope.search;
             Items.getList(params).then(function(a){

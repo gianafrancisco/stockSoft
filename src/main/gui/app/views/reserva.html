@@ -70,7 +70,7 @@
                     <label for="buscar">Buscar</label>
                     <input type="text" id="buscar" class="form-control" placeholder="buscar articulo"  ng-model="search" ng-change="buscarArticulo();"/>
                 </div>
-                <uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerListaArticulo();"></uib-pagination>
+                <ul uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerListaArticulo();"></ul>
                 <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
             </div>
             <div class="table-responsive">

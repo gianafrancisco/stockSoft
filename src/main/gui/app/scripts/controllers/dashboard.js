@@ -26,7 +26,7 @@ angular.module('stockApp')
      $scope.listadoCodigo = {};
      $scope.articulo = {};
      $scope.codigo = {};
-     $scope.ipp = 20;
+     $scope.ipp = 50;
      $scope.pageNumber = 1;
      $scope.cantidad = 0;
      $scope.descripcionError = false;
@@ -44,7 +44,7 @@ angular.module('stockApp')
 
      $scope.buscar = function(buscar){
 
-        var params = {page: $scope.pageNumber-1, sort: 'id,desc'};
+        var params = {page: $scope.pageNumber-1, sort: 'id,desc', size: $scope.ipp };
         if(buscar !== "" && buscar !== undefined){
             params.search = buscar;
         }
@@ -54,15 +54,20 @@ angular.module('stockApp')
              $scope.listado.forEach(function(current, index, array){
 
                 var promise = new Promise(function(done, error){
-                    console.log(current);
-
                     current.getList("items").then(function(items){
                         done({"r": current, "i": items});
                     });
                 }).then(function(data){
                     data.r.resumen = data.i;
-                    console.info(data.r);
-                    console.info(data.i);
+                    data.r.inStock = true;
+                    if(data.r.resumen != undefined){
+                        data.r.resumen.forEach(function(current){
+                            console.info(current.tipo);
+                            if(current.tipo == "VIRTUAL"){
+                                data.r.inStock = false;
+                            }
+                        });
+                    }
                     $scope.$apply();
                 });
              });
@@ -107,8 +112,6 @@ angular.module('stockApp')
         items.forEach(function (current,index){
             var i = -1;
             summary.forEach(function(cur, index2){
-                console.log(cur);
-                console.log(current);
                 if(cur.articulo.articuloId === current.articulo.articuloId){
                     i = index2;
                     return;

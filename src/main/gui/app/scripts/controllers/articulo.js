@@ -25,7 +25,7 @@ angular.module('stockApp')
      $scope.listadoCodigo = {};
      $scope.articulo = {};
      $scope.codigo = {};
-     $scope.ipp = 20;
+     $scope.ipp = 50;
      $scope.pageNumber = 1;
 
      $scope.messageDanger = "";
@@ -51,7 +51,7 @@ angular.module('stockApp')
 
      $scope.obtenerListaArticulo = function(){
 
-        var params = {page: $scope.pageNumber-1};
+        var params = {page: $scope.pageNumber-1, size: $scope.ipp };
         if($scope.search !== "" && $scope.search !== undefined){
             params.search = $scope.search;
         }

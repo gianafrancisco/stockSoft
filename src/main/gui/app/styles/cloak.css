@@ -9,3 +9,5 @@
         display: none !important;
     }
 }
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

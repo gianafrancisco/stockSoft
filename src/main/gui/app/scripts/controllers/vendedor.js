@@ -18,7 +18,7 @@ angular.module('stockApp')
      $scope.maxSize = 100;
      $scope.vendedor = {};
      $scope.codigo = {};
-     $scope.ipp = 20;
+     $scope.ipp = 50;
      $scope.pageNumber = 1;
 
      $scope.obtenerListaVendedor = function(){
