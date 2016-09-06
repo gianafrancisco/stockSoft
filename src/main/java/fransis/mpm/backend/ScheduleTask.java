@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
+
 package fransis.mpm.backend;
 
 import fransis.mpm.repository.ItemRepository;
@@ -15,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class ScheduleTask {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduleTask.class);
-    public static final int DAYS = 7;
+    public static final int DAYS = 14;
 
     @Autowired
     private ItemRepository itemRepository;

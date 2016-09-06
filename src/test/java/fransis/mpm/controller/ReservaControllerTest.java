@@ -217,6 +217,12 @@ public class ReservaControllerTest {
 
         Assert.assertThat(item2.getEstado(),is(Estado.DISPONIBLE));
         Assert.assertThat(item2.getReserva(),nullValue());
+
+        List<Item> list = itemRepository.findByReserva(reserva);
+
+        Assert.assertThat(list.size(), is(1));
+        Assert.assertThat(list.get(0).getEstado(), is(Estado.CANCELADO));
+        Assert.assertThat(itemRepository.findAll().size(),is(2));
     }
 
 

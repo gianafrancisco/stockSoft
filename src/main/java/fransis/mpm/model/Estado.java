@@ -11,5 +11,6 @@ package fransis.mpm.model;
 public enum Estado {
     DISPONIBLE,
     RESERVADO,
-    VENDIDO
+    VENDIDO,
+    CANCELADO
 }

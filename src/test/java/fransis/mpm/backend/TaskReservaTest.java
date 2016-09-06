@@ -90,9 +90,12 @@ public class TaskReservaTest {
         TaskReserva.cerrarReserva(reservaRepository, itemRepository, 7);
 
         List<Item> itemsList = itemRepository.findAll();
-        Assert.assertThat(itemsList.size(),is(1));
+        Assert.assertThat(itemsList.size(),is(2)); // Because we crate a new Item in order to hold a summary
         Assert.assertThat(itemsList.get(0).getEstado(),is(Estado.DISPONIBLE));
         Assert.assertThat(itemsList.get(0).getArticulo().getDescripcion(),is(articulo.getDescripcion()));
+
+        Assert.assertThat(itemsList.get(1).getEstado(),is(Estado.CANCELADO));
+        Assert.assertThat(itemsList.get(1).getArticulo().getDescripcion(),is(articulo.getDescripcion()));
     }
 
     @Test

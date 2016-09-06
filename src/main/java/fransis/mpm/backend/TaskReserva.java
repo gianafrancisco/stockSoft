@@ -1,7 +1,13 @@
+/*
+ * Copyright (C) 2016-2016 Francisco Giana <gianafrancisco@gmail.com>
+ *
+ */
+
 package fransis.mpm.backend;
 
 import fransis.mpm.model.Estado;
 import fransis.mpm.model.EstadoReserva;
+import fransis.mpm.model.Item;
 import fransis.mpm.repository.ItemRepository;
 import fransis.mpm.repository.ReservaRepository;
 
@@ -21,6 +27,18 @@ public class TaskReserva {
         }).forEach(
                 reserva -> {
                     itemRepository.findByReserva(reserva).forEach(item -> {
+
+                        /*
+                            Make a copy in order to see a summary when the reserva is cancelada
+                        */
+                        Item itemSummary = new Item();
+                        itemSummary.setReserva(reserva);
+                        itemSummary.setTipo(item.getTipo());
+                        itemSummary.setEstado(item.getEstado());
+                        itemSummary.setArticulo(item.getArticulo());
+                        itemSummary.setEstado(Estado.CANCELADO);
+                        itemRepository.saveAndFlush(itemSummary);
+
                         item.setEstado(Estado.DISPONIBLE);
                         item.setReserva(null);
                         itemRepository.saveAndFlush(item);

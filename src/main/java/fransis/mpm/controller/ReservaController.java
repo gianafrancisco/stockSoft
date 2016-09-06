@@ -100,6 +100,18 @@ public class ReservaController {
             switch (reserva.getEstado()){
                 case CANCELADA:
                     itemRepository.findByReserva(reserva).forEach(item -> {
+                        /*
+                            Make a copy in order to see a summary when the reserva is cancelada
+                         */
+                        Item itemSummary = new Item();
+                        itemSummary.setReserva(reserva);
+                        itemSummary.setTipo(item.getTipo());
+                        itemSummary.setEstado(item.getEstado());
+                        //itemSummary.setOrdenDeCompra(item.getOrdenDeCompra());
+                        itemSummary.setArticulo(item.getArticulo());
+                        itemSummary.setEstado(Estado.CANCELADO);
+                        itemRepository.saveAndFlush(itemSummary);
+
                         item.setEstado(Estado.DISPONIBLE);
                         item.setReserva(null);
                         itemRepository.saveAndFlush(item);
