@@ -85,7 +85,7 @@ public class TaskReservaTest {
         item.setArticulo(articulo);
         item.setEstado(Estado.RESERVADO);
         item.setReserva(reserva);
-        Item item1 = itemRepository.save(item);
+        Item item1 = itemRepository.saveAndFlush(item);
 
         TaskReserva.cerrarReserva(reservaRepository, itemRepository, 7);
 
