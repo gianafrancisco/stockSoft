@@ -36,7 +36,7 @@ public class Application {
 		return (args) -> {
 			List<Vendedor> list = vendedorRepository.findAll();
 			if(list.isEmpty()){
-				vendedorRepository.saveAndFlush(new Vendedor("Administrador","1qaz2wsx","Administrador","Administrador"));
+				vendedorRepository.saveAndFlush(new Vendedor("Administrador","mpm.2010","Administrador","Administrador"));
 				vendedorRepository.saveAndFlush(new Vendedor("egrande","123456","Emiliano","Grande"));
 			}
 
