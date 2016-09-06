@@ -78,7 +78,7 @@ public class TaskReservaTest {
         articulo.setDescripcion("Articulo 1");
         articulo = articuloRepository.saveAndFlush(articulo);
 
-        reserva = new Reserva("Reserva 1", "r@domain.com", null, LocalDateTime.now().minusDays(7).toInstant(ZoneOffset.UTC).toEpochMilli());
+        reserva = new Reserva("Reserva 1", "r@domain.com", null, LocalDateTime.now().minusDays(8).toInstant(ZoneOffset.UTC).toEpochMilli());
         reserva = reservaRepository.saveAndFlush(reserva);
 
         Item item = new Item();
