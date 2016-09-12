@@ -29,6 +29,7 @@
                 <table id="tablaListaArticulo" class="table">
                     <thead>
                     <tr>
+                        <th>Order de compra</th>
                         <th>Código</th>
                         <th>Descripción</th>
                         <th>Stock</th>
@@ -38,9 +39,10 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="item in listado">
-                        <td style="width: 20%">{{item.articulo.codigo}}</td>
-                        <td style="width: 30%">{{item.articulo.descripcion}}</td>
-                        <td style="width: 20%">{{item.tipo}}</td>
+                        <td style="width: 20%">{{item.ordenDeCompra}}</td>
+                        <td style="width: 15%">{{item.articulo.codigo}}</td>
+                        <td style="width: 25%">{{item.articulo.descripcion}}</td>
+                        <td style="width: 10%">{{item.tipo}}</td>
                         <td style="width: 20%">{{item.reserva.vendedor}}</td>
                         <td style="width: 10%">
                             <div class="btn-group">
