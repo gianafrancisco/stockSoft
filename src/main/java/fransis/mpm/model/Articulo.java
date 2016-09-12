@@ -24,6 +24,10 @@ public class Articulo {
     private Long stockFisico;
     @Transient
     private Long stockVirtual;
+    @Transient
+    private Long stockVirtualReservado;
+    @Transient
+    private Long stockFisicoReservado;
 
     public Articulo() {
         this.descripcion = "";
@@ -69,6 +73,22 @@ public class Articulo {
 
     public void setStockVirtual(Long stockVirtual) {
         this.stockVirtual = stockVirtual;
+    }
+
+    public void setStockVirtualReservado(long stockVirtualReservado) {
+        this.stockVirtualReservado = stockVirtualReservado;
+    }
+
+    public Long getStockVirtualReservado() {
+        return stockVirtualReservado;
+    }
+
+    public void setStockFisicoReservado(long stockFisicoReservado) {
+        this.stockFisicoReservado = stockFisicoReservado;
+    }
+
+    public Long getStockFisicoReservado() {
+        return stockFisicoReservado;
     }
 }
 

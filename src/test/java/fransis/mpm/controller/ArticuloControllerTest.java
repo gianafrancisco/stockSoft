@@ -152,6 +152,14 @@ public class ArticuloControllerTest {
         item.setEstado(Estado.RESERVADO);
         itemRepository.saveAndFlush(item);
 
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123453");
+        item.setEstado(Estado.RESERVADO);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+
         Page<Articulo> page = articuloController.obtenerListaArticulos(new PageRequest(0,10));
 
         Assert.assertThat(page.getTotalPages(),is(1));
@@ -161,6 +169,8 @@ public class ArticuloControllerTest {
         Assert.assertThat(page.getContent().get(0).getDescripcion(),is("articulo 1"));
         Assert.assertThat(page.getContent().get(0).getStockVirtual(),is(1L));
         Assert.assertThat(page.getContent().get(0).getStockFisico(),is(1L));
+        Assert.assertThat(page.getContent().get(0).getStockVirtualReservado(),is(1L));
+        Assert.assertThat(page.getContent().get(0).getStockFisicoReservado(),is(1L));
 
     }
 

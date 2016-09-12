@@ -55,8 +55,13 @@ public class ArticuloController {
             List<Item> items = itemRepository.findByArticuloAndEstado(articulo, Estado.DISPONIBLE);
             long virtual = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
             long fisico = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
+            items = itemRepository.findByArticuloAndEstado(articulo, Estado.RESERVADO);
+            long fisicoReservados = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
+            long virtualReservados = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
             articulo.setStockVirtual(virtual);
             articulo.setStockFisico(fisico);
+            articulo.setStockVirtualReservado(virtualReservados);
+            articulo.setStockFisicoReservado(fisicoReservados);
         });
         return articulos;
     }
