@@ -23,8 +23,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,11 +58,7 @@ public class ReservaController {
         estadoReservaList.add(EstadoReserva.ACTIVA);
         estadoReservaList.add(EstadoReserva.CANCELADA);
         estadoReservaList.add(EstadoReserva.CERRADA);
-        if(!"Administrador".equals(principal.getName())) {
-            return reservaRepository.findByVendedorAndEstadoIn(principal.getName(), estadoReservaList, pageRequest);
-        }else{
-            return reservaRepository.findAll(pageRequest);
-        }
+        return reservaRepository.findAll(pageRequest);
     }
 
     @RequestMapping(value = "/reservas", method = RequestMethod.GET, params = {"search"})
@@ -73,11 +67,7 @@ public class ReservaController {
         estadoReservaList.add(EstadoReserva.ACTIVA);
         estadoReservaList.add(EstadoReserva.CANCELADA);
         estadoReservaList.add(EstadoReserva.CERRADA);
-        if(!"Administrador".equals(principal.getName())) {
-            return reservaRepository.findByVendedorAndDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCaseAndEstadoIn(principal.getName(), search, search, estadoReservaList, pageRequest);
-        }else{
-            return reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageRequest);
-        }
+        return reservaRepository.findByDescripcionContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageRequest);
     }
 
     @RequestMapping(value = "/reservas", method = RequestMethod.POST)
@@ -95,39 +85,42 @@ public class ReservaController {
     }
 
     @RequestMapping(value = "/reservas/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> put(@PathVariable() Long id, @RequestBody Reserva reserva){
+    public ResponseEntity<Void> put(@PathVariable() Long id, @RequestBody Reserva reserva, Principal principal){
         if(reserva.getId() != null && reservaRepository.exists(reserva.getId())) {
-            switch (reserva.getEstado()){
-                case CANCELADA:
-                    itemRepository.findByReserva(reserva).forEach(item -> {
+            if(principal.getName().equals(reserva.getVendedor()) || "Administrador".equals(principal.getName())) {
+                switch (reserva.getEstado()) {
+                    case CANCELADA:
+                        itemRepository.findByReserva(reserva).forEach(item -> {
                         /*
                             Make a copy in order to see a summary when the reserva is cancelada
                          */
-                        Item itemSummary = new Item();
-                        itemSummary.setReserva(reserva);
-                        itemSummary.setTipo(item.getTipo());
-                        itemSummary.setEstado(item.getEstado());
-                        //itemSummary.setOrdenDeCompra(item.getOrdenDeCompra());
-                        itemSummary.setArticulo(item.getArticulo());
-                        itemSummary.setEstado(Estado.CANCELADO);
-                        itemRepository.saveAndFlush(itemSummary);
+                            Item itemSummary = new Item();
+                            itemSummary.setReserva(reserva);
+                            itemSummary.setTipo(item.getTipo());
+                            itemSummary.setEstado(item.getEstado());
+                            itemSummary.setArticulo(item.getArticulo());
+                            itemSummary.setEstado(Estado.CANCELADO);
+                            itemRepository.saveAndFlush(itemSummary);
 
-                        item.setEstado(Estado.DISPONIBLE);
-                        item.setReserva(null);
-                        itemRepository.saveAndFlush(item);
-                    });
-                    reserva.setFechaCierre(Instant.now().toEpochMilli());
-                    break;
-                case CERRADA:
-                    itemRepository.findByReserva(reserva).forEach(item -> {
-                        item.setEstado(Estado.VENDIDO);
-                        itemRepository.saveAndFlush(item);
-                    });
-                    reserva.setFechaCierre(Instant.now().toEpochMilli());
-                    break;
+                            item.setEstado(Estado.DISPONIBLE);
+                            item.setReserva(null);
+                            itemRepository.saveAndFlush(item);
+                        });
+                        reserva.setFechaCierre(Instant.now().toEpochMilli());
+                        break;
+                    case CERRADA:
+                        itemRepository.findByReserva(reserva).forEach(item -> {
+                            item.setEstado(Estado.VENDIDO);
+                            itemRepository.saveAndFlush(item);
+                        });
+                        reserva.setFechaCierre(Instant.now().toEpochMilli());
+                        break;
+                }
+                reservaRepository.saveAndFlush(reserva);
+                return (ResponseEntity.status(HttpStatus.NO_CONTENT)).build();
+            }else{
+                return (ResponseEntity.status(HttpStatus.NOT_MODIFIED)).build();
             }
-            reservaRepository.saveAndFlush(reserva);
-            return (ResponseEntity.status(HttpStatus.NO_CONTENT)).build();
         }else{
             return (ResponseEntity.status(HttpStatus.NOT_FOUND)).build();
         }

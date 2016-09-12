@@ -145,16 +145,26 @@ public class ReservaControllerTest {
 
         reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
+        Reserva reserva2 = new Reserva("reserva 2", "demo@demo.com", "username2", LocalDate.now().toEpochDay());
+        reserva2 = reservaRepository.saveAndFlush(reserva2);
 
         Page<Reserva> page = reservaController.obtenerLista(new PageRequest(0,10), principal);
 
         Assert.assertThat(page.getTotalPages(),is(1));
-        Assert.assertThat(page.getTotalElements(),is(1L));
-        Assert.assertThat(page.getNumberOfElements(),is(1));
+        Assert.assertThat(page.getTotalElements(),is(2L));
+        Assert.assertThat(page.getNumberOfElements(),is(2));
         Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
         Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
         Assert.assertThat(page.getContent().get(0).getEstado(),is(EstadoReserva.ACTIVA));
         Assert.assertThat(page.getContent().get(0).getId(),is(reserva.getId()));
+        Assert.assertThat(page.getContent().get(0).getVendedor(),is(principal.getName()));
+
+        Assert.assertThat(page.getContent().get(1).getDescripcion(),is("reserva 2"));
+        Assert.assertThat(page.getContent().get(1).getEmail(),is("demo@demo.com"));
+        Assert.assertThat(page.getContent().get(1).getEstado(),is(EstadoReserva.ACTIVA));
+        Assert.assertThat(page.getContent().get(1).getId(),is(reserva2.getId()));
+        Assert.assertThat(page.getContent().get(1).getVendedor(),is("username2"));
+
 
     }
 
@@ -162,11 +172,11 @@ public class ReservaControllerTest {
     @Test
     public void test_put_not_content_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
         reserva.setEstado(EstadoReserva.CONFIRMADA);
 
-        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva);
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva, principal);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
 
         Reserva reserva1 = reservaRepository.findOne(reserva.getId());
@@ -177,7 +187,7 @@ public class ReservaControllerTest {
     @Test
     public void test_put_cerrada_reserva_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
 
         Item item = new Item();
@@ -188,7 +198,7 @@ public class ReservaControllerTest {
 
         reserva.setEstado(EstadoReserva.CERRADA);
 
-        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva);
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva, principal);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
 
         Item item2 = itemRepository.findOne(item.getId());
@@ -199,7 +209,7 @@ public class ReservaControllerTest {
     @Test
     public void test_put_cancelada_reserva_by_controller_method() throws Exception {
 
-        reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
 
         Item item = new Item();
@@ -210,7 +220,7 @@ public class ReservaControllerTest {
 
         reserva.setEstado(EstadoReserva.CANCELADA);
 
-        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva);
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva, principal);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
 
         Item item2 = itemRepository.findOne(item.getId());
@@ -225,12 +235,113 @@ public class ReservaControllerTest {
         Assert.assertThat(itemRepository.findAll().size(),is(2));
     }
 
+    @Test
+    public void test_put_cerrada_reserva_by_controller_method_by_admin() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
+        reserva = reservaRepository.saveAndFlush(reserva);
+
+        Item item = new Item();
+        item.setReserva(reserva);
+        item.setEstado(Estado.RESERVADO);
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        reserva.setEstado(EstadoReserva.CERRADA);
+
+        Principal admin = () -> "Administrador";
+
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva, admin);
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
+
+        Item item2 = itemRepository.findOne(item.getId());
+
+        Assert.assertThat(item2.getEstado(),is(Estado.VENDIDO));
+    }
+
+    @Test
+    public void test_put_cancelada_reserva_by_controller_method_by_admin() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", principal.getName(), LocalDate.now().toEpochDay());
+        reserva = reservaRepository.saveAndFlush(reserva);
+
+        Item item = new Item();
+        item.setReserva(reserva);
+        item.setEstado(Estado.RESERVADO);
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        reserva.setEstado(EstadoReserva.CANCELADA);
+
+        Principal admin = () -> "Administrador";
+
+
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva, admin);
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
+
+        Item item2 = itemRepository.findOne(item.getId());
+
+        Assert.assertThat(item2.getEstado(),is(Estado.DISPONIBLE));
+        Assert.assertThat(item2.getReserva(),nullValue());
+
+        List<Item> list = itemRepository.findByReserva(reserva);
+
+        Assert.assertThat(list.size(), is(1));
+        Assert.assertThat(list.get(0).getEstado(), is(Estado.CANCELADO));
+        Assert.assertThat(itemRepository.findAll().size(),is(2));
+    }
+
+    @Test
+    public void test_put_cerrada_reserva_by_controller_method_by_another_username() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", "username2", LocalDate.now().toEpochDay());
+        reserva = reservaRepository.saveAndFlush(reserva);
+
+        Item item = new Item();
+        item.setReserva(reserva);
+        item.setEstado(Estado.RESERVADO);
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        reserva.setEstado(EstadoReserva.CERRADA);
+
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva, principal);
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NOT_MODIFIED));
+
+        Item item2 = itemRepository.findOne(item.getId());
+        Assert.assertThat(item2.getEstado(),is(Estado.RESERVADO));
+    }
+
+    @Test
+    public void test_put_cancelada_reserva_by_controller_method_by_another_username() throws Exception {
+
+        reserva = new Reserva("reserva 1", "demo@demo.com", "username2", LocalDate.now().toEpochDay());
+        reserva = reservaRepository.saveAndFlush(reserva);
+
+        Item item = new Item();
+        item.setReserva(reserva);
+        item.setEstado(Estado.RESERVADO);
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        reserva.setEstado(EstadoReserva.CANCELADA);
+
+        ResponseEntity<Void> responseEntity = reservaController.put(reserva.getId(), reserva, principal);
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NOT_MODIFIED));
+
+        Item item2 = itemRepository.findOne(item.getId());
+
+        Assert.assertThat(item2.getEstado(),is(Estado.RESERVADO));
+        Assert.assertThat(item2.getReserva().getId(),is(reserva.getId()));
+
+    }
+
 
     @Test
     public void test_put_put_not_found_by_controller_method() throws Exception {
 
         reserva = new Reserva("reserva 1", "demo@demo.com", null, LocalDate.now().toEpochDay());
-        ResponseEntity<Void> responseEntity = reservaController.put(9L, reserva);
+        ResponseEntity<Void> responseEntity = reservaController.put(9L, reserva, principal);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NOT_FOUND));
 
     }
@@ -296,68 +407,6 @@ public class ReservaControllerTest {
     public void test_delete_verb_not_found_by_controller_method() throws Exception {
         ResponseEntity<Void>  responseEntity = reservaController.borrarArticulo(10L);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.METHOD_NOT_ALLOWED));
-    }
-
-    @Test
-    public void test_request_reserva_by_controller_method_admin() throws Exception {
-
-        reserva = new Reserva("reserva 1", "demo@demo.com", "cualquiera", LocalDate.now().toEpochDay());
-        reserva = reservaRepository.saveAndFlush(reserva);
-
-        Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), principal);
-
-        Assert.assertThat(page.getTotalPages(),is(0));
-
-
-        Principal admin = new Principal() {
-            @Override
-            public String getName() {
-                return "Administrador";
-            }
-        };
-
-        page = reservaController.obtenerLista(new PageRequest(0,10), admin);
-
-        Assert.assertThat(page.getTotalPages(),is(1));
-        Assert.assertThat(page.getTotalElements(),is(1L));
-        Assert.assertThat(page.getNumberOfElements(),is(1));
-        Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
-        Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
-        Assert.assertThat(page.getContent().get(0).getEstado(),is(EstadoReserva.ACTIVA));
-        Assert.assertThat(page.getContent().get(0).getId(),is(reserva.getId()));
-
-    }
-
-    @Test
-    public void test_search_reserva_by_controller_method_admin() throws Exception {
-
-        reserva = new Reserva("reserva 1", "demo@demo.com", "cualquiera", LocalDate.now().toEpochDay());
-        reservaRepository.saveAndFlush(reserva);
-
-        Page<Reserva> page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), principal);
-
-        Assert.assertThat(page.getTotalPages(),is(0));
-
-        Principal admin = new Principal() {
-            @Override
-            public String getName() {
-                return "Administrador";
-            }
-        };
-
-        page = reservaController.filtrarReservas("demo@demo.co",new PageRequest(0,10), admin);
-
-        Assert.assertThat(page.getTotalPages(),is(1));
-        Assert.assertThat(page.getTotalElements(),is(1L));
-        Assert.assertThat(page.getNumberOfElements(),is(1));
-        Assert.assertThat(page.getContent().get(0).getEmail(),is("demo@demo.com"));
-        Assert.assertThat(page.getContent().get(0).getDescripcion(),is("reserva 1"));
-
-        page = reservaController.filtrarReservas("cualquier_cosa",new PageRequest(0,10), principal);
-
-        Assert.assertThat(page.getTotalPages(),is(0));
-        Assert.assertThat(page.getTotalElements(),is(0L));
-
     }
 
     @Test
