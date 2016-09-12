@@ -79,7 +79,7 @@
                     <tr>
                         <th>Código</th>
                         <th>Descripción</th>
-                        <th>Stock (F/V)</th>
+                        <th>Stock (F-FR / V-VR) </th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
@@ -87,7 +87,7 @@
                     <tr ng-repeat="articulo in listado">
                         <td style="width: 20%">{{articulo.codigo}}</td>
                         <td style="width: 30%">{{articulo.descripcion}}</td>
-                        <td style="width: 10%">{{articulo.stockFisico}} / {{articulo.stockVirtual}}</td>
+                        <td style="width: 10%">{{articulo.stockFisico}} - {{articulo.stockFisicoReservado}} / {{articulo.stockVirtual}} - {{articulo.stockVirtualReservado}}</td>
                         <td style="width: 20%">
                             <div class="btn-group">
                               <button ng-click="agregarReserva(reserva, articulo);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span></button>
