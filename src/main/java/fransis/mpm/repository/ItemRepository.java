@@ -23,5 +23,5 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findByArticuloAndEstado(Articulo articulo, Estado estado, Pageable pageable);
     List<Item> findByArticuloAndEstado(Articulo articulo, Estado estado);
     List<Item> findByReserva(Reserva reserva);
-    Page<Item> findByOrdenDeCompra(String ordenDeCompra, Pageable pageable);
+    Page<Item> findByOrdenDeCompraContainingIgnoreCase(String ordenDeCompra, Pageable pageable);
 }

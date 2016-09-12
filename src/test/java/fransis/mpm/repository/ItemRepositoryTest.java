@@ -150,7 +150,7 @@ public class ItemRepositoryTest {
         item.setOrdenDeCompra("X-0001");
         item.setArticulo(articulo);
         Item item1 = itemRepository.save(item);
-        Page<Item> itemsList = itemRepository.findByOrdenDeCompra("X-0001", new PageRequest(0, 10));
+        Page<Item> itemsList = itemRepository.findByOrdenDeCompraContainingIgnoreCase("-000", new PageRequest(0, 10));
         Assert.assertThat(itemsList.getContent().size(),is(1));
         Assert.assertThat(itemsList.getContent().get(0).getId(),is(item1.getId()));
     }
@@ -161,7 +161,7 @@ public class ItemRepositoryTest {
         item.setOrdenDeCompra("X-0002");
         item.setArticulo(articulo);
         Item item1 = itemRepository.save(item);
-        Page<Item> itemsList = itemRepository.findByOrdenDeCompra("X-0001", new PageRequest(0, 10));
+        Page<Item> itemsList = itemRepository.findByOrdenDeCompraContainingIgnoreCase("X-0001", new PageRequest(0, 10));
         Assert.assertThat(itemsList.getContent().size(),is(0));
     }
 

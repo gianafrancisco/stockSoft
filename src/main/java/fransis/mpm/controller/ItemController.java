@@ -72,7 +72,7 @@ public class ItemController {
         }
         */
 
-        return ResponseEntity.ok(repository.findByOrdenDeCompra(ordenDeCompra, pageRequest));
+        return ResponseEntity.ok(repository.findByOrdenDeCompraContainingIgnoreCase(ordenDeCompra, pageRequest));
     }
 
     @RequestMapping(value = "/articulos/{articuloId}/items", method = RequestMethod.POST)
@@ -128,7 +128,7 @@ public class ItemController {
 
     @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"ordenDeCompra"})
     public ResponseEntity<Page<Item>> obtener(Pageable pageRequest,  @RequestParam() String ordenDeCompra){
-        return ResponseEntity.ok(repository.findByOrdenDeCompra(ordenDeCompra, pageRequest));
+        return ResponseEntity.ok(repository.findByOrdenDeCompraContainingIgnoreCase(ordenDeCompra, pageRequest));
     }
 
 }
