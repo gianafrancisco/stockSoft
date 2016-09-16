@@ -175,6 +175,53 @@ public class ArticuloControllerTest {
     }
 
     @Test
+    public void test_request_articulo_controller() throws Exception {
+
+        Articulo articulo = new Articulo("1234","articulo 1");
+        articulo = articuloRepository.saveAndFlush(articulo);
+
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123456");
+        item.setEstado(Estado.DISPONIBLE);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123459");
+        item.setEstado(Estado.DISPONIBLE);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123458");
+        item.setEstado(Estado.RESERVADO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123453");
+        item.setEstado(Estado.RESERVADO);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+
+        ResponseEntity<Articulo> responseEntity = articuloController.obtener(articulo.getArticuloId());
+        Articulo articulo1 = responseEntity.getBody();
+
+        Assert.assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+        Assert.assertThat(articulo1.getCodigo(),is("1234"));
+        Assert.assertThat(articulo1.getDescripcion(),is("articulo 1"));
+        Assert.assertThat(articulo1.getStockVirtual(),is(1L));
+        Assert.assertThat(articulo1.getStockFisico(),is(1L));
+        Assert.assertThat(articulo1.getStockVirtualReservado(),is(1L));
+        Assert.assertThat(articulo1.getStockFisicoReservado(),is(1L));
+
+    }
+
+
+    @Test
     public void test_request_articulos_put_not_content() throws Exception {
 
         Articulo articulo = new Articulo("1234","articulo 1");
@@ -205,6 +252,33 @@ public class ArticuloControllerTest {
         Articulo articulo = new Articulo("1234","articulo 1");
         articuloRepository.saveAndFlush(articulo);
 
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123456");
+        item.setEstado(Estado.DISPONIBLE);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123459");
+        item.setEstado(Estado.DISPONIBLE);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123458");
+        item.setEstado(Estado.RESERVADO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123453");
+        item.setEstado(Estado.RESERVADO);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+
         Page<Articulo> page = articuloController.filtrarArticulos("ticulo",new PageRequest(0,10));
 
         Assert.assertThat(page.getTotalPages(),is(1));
@@ -212,6 +286,10 @@ public class ArticuloControllerTest {
         Assert.assertThat(page.getNumberOfElements(),is(1));
         Assert.assertThat(page.getContent().get(0).getCodigo(),is("1234"));
         Assert.assertThat(page.getContent().get(0).getDescripcion(),is("articulo 1"));
+        Assert.assertThat(page.getContent().get(0).getStockFisico(),is(1L));
+        Assert.assertThat(page.getContent().get(0).getStockVirtual(),is(1L));
+        Assert.assertThat(page.getContent().get(0).getStockFisicoReservado(),is(1L));
+        Assert.assertThat(page.getContent().get(0).getStockVirtualReservado(),is(1L));
 
     }
 

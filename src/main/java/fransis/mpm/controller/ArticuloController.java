@@ -41,6 +41,7 @@ public class ArticuloController {
     public ResponseEntity<Articulo> obtener(@PathVariable Long articuloId){
         Articulo one = articuloRepository.findOne(articuloId);
         if(one != null) {
+            populateStock(one);
             return (ResponseEntity.status(HttpStatus.OK)).body(one);
         }else{
             return (ResponseEntity.status(HttpStatus.NOT_FOUND)).body(null);
@@ -52,23 +53,29 @@ public class ArticuloController {
     public Page<Articulo> obtenerListaArticulos(Pageable pageRequest){
         Page<Articulo> articulos = articuloRepository.findAll(pageRequest);
         articulos.forEach(articulo -> {
-            List<Item> items = itemRepository.findByArticuloAndEstado(articulo, Estado.DISPONIBLE);
-            long virtual = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
-            long fisico = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
-            items = itemRepository.findByArticuloAndEstado(articulo, Estado.RESERVADO);
-            long fisicoReservados = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
-            long virtualReservados = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
-            articulo.setStockVirtual(virtual);
-            articulo.setStockFisico(fisico);
-            articulo.setStockVirtualReservado(virtualReservados);
-            articulo.setStockFisicoReservado(fisicoReservados);
+            populateStock(articulo);
         });
         return articulos;
     }
 
+    private void populateStock(Articulo articulo) {
+        List<Item> items = itemRepository.findByArticuloAndEstado(articulo, Estado.DISPONIBLE);
+        long virtual = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
+        long fisico = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
+        items = itemRepository.findByArticuloAndEstado(articulo, Estado.RESERVADO);
+        long fisicoReservados = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
+        long virtualReservados = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
+        articulo.setStockVirtual(virtual);
+        articulo.setStockFisico(fisico);
+        articulo.setStockVirtualReservado(virtualReservados);
+        articulo.setStockFisicoReservado(fisicoReservados);
+    }
+
     @RequestMapping(value = "/articulos", method = RequestMethod.GET, params = {"search"})
     public Page<Articulo> filtrarArticulos(@RequestParam(value = "") String search, Pageable pageRequest){
-        return articuloRepository.findByDescripcionContainingIgnoreCaseOrCodigoContainingIgnoreCase(search, search, pageRequest);
+        Page<Articulo> list = articuloRepository.findByDescripcionContainingIgnoreCaseOrCodigoContainingIgnoreCase(search, search, pageRequest);
+        list.forEach(articulo -> populateStock(articulo));
+        return list;
     }
 
 
@@ -81,6 +88,7 @@ public class ArticuloController {
         } catch (URISyntaxException e) {
             return (ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)).body(null);
         }
+        populateStock(a);
         return (ResponseEntity.status(HttpStatus.CREATED)).location(location).body(a);
     }
 
@@ -88,6 +96,7 @@ public class ArticuloController {
     public ResponseEntity<Void> put(@RequestBody Articulo articulo){
         if(articulo.getArticuloId() != null && articuloRepository.exists(articulo.getArticuloId())) {
             Articulo a = articuloRepository.saveAndFlush(articulo);
+            populateStock(a);
             return (ResponseEntity.status(HttpStatus.NO_CONTENT)).build();
         }else{
             return (ResponseEntity.status(HttpStatus.NOT_FOUND)).build();
