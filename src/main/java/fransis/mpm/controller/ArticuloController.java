@@ -22,6 +22,7 @@ import fransis.mpm.repository.ArticuloRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -95,8 +96,11 @@ public class ArticuloController {
     @RequestMapping(value = "/articulos", method = RequestMethod.PUT)
     public ResponseEntity<Void> put(@RequestBody Articulo articulo){
         if(articulo.getArticuloId() != null && articuloRepository.exists(articulo.getArticuloId())) {
-            Articulo a = articuloRepository.saveAndFlush(articulo);
-            populateStock(a);
+            Articulo a = articuloRepository.findOne(articulo.getArticuloId());
+            if(a.getPrecioDeInventario() != articulo.getPrecioDeInventario()){
+                articulo.setFechaActualizacion(Instant.now().toEpochMilli());
+            }
+            articuloRepository.saveAndFlush(articulo);
             return (ResponseEntity.status(HttpStatus.NO_CONTENT)).build();
         }else{
             return (ResponseEntity.status(HttpStatus.NOT_FOUND)).build();

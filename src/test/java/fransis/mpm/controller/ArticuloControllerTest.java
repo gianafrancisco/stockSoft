@@ -29,6 +29,7 @@ import fransis.mpm.repository.ArticuloRepository;
 
 import java.net.URI;
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
@@ -227,12 +228,16 @@ public class ArticuloControllerTest {
         Articulo articulo = new Articulo("1234","articulo 1");
         articulo = articuloRepository.saveAndFlush(articulo);
         articulo.setDescripcion("articulo 20");
+        articulo.setPrecioDeInventario(30.90);
+        long actualizacion = articulo.getFechaActualizacion();
 
         ResponseEntity<Void> responseEntity = articuloController.put(articulo);
-        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
-
         Articulo articulo1 = articuloRepository.findOne(articulo.getArticuloId());
+
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NO_CONTENT));
         Assert.assertThat(articulo1.getDescripcion(),is(articulo.getDescripcion()));
+        Assert.assertThat(articulo1.getPrecioDeInventario(), is(articulo.getPrecioDeInventario()));
+        Assert.assertThat(articulo1.getFechaActualizacion(), is(not(actualizacion)));
 
     }
 
@@ -339,5 +344,6 @@ public class ArticuloControllerTest {
         ResponseEntity<Void>  responseEntity = articuloController.borrarArticulo(10L);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NOT_FOUND));
     }
+
 
 }

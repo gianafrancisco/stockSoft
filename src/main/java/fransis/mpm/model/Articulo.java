@@ -6,6 +6,7 @@
 package fransis.mpm.model;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 /**
  * Created by francisco on 21/11/15.
@@ -29,11 +30,17 @@ public class Articulo {
     @Transient
     private Long stockFisicoReservado;
 
+    private Long fechaActualizacion;
+    private Double precioDeInventario;
+
+
     public Articulo() {
         this.descripcion = "";
         this.codigo = "";
         this.stockFisico = 0L;
         this.stockVirtual = 0L;
+        this.fechaActualizacion = Instant.now().toEpochMilli();
+        this.precioDeInventario = 0.0;
     }
 
     public Articulo(String codigo, String descripcion) {
@@ -41,6 +48,8 @@ public class Articulo {
         this.descripcion = descripcion;
         this.stockFisico = 0L;
         this.stockVirtual = 0L;
+        this.fechaActualizacion = Instant.now().toEpochMilli();
+        this.precioDeInventario = 0.0;
     }
 
     public Long getArticuloId() {
@@ -89,6 +98,22 @@ public class Articulo {
 
     public Long getStockFisicoReservado() {
         return stockFisicoReservado;
+    }
+
+    public Double getPrecioDeInventario() {
+        return precioDeInventario;
+    }
+
+    public void setPrecioDeInventario(Double precioDeInventario) {
+        this.precioDeInventario = precioDeInventario;
+    }
+
+    public Long getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaActualizacion(Long fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
 }
 

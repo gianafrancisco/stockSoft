@@ -27,6 +27,14 @@
                         <label for="descripcion">Descripción</label>
                         <input type="text" id="descripcion" class="form-control" placeholder="Descripcion" ng-model="articulo.descripcion" />
                     </div>
+                    <div class="form-group-sm">
+                        <label for="precioInventario">Precio de Inventario</label>
+                        <input type="number" id="precioInventario" class="form-control" ng-model="articulo.precioDeInventario" min="0" step="0.01"/>
+                    </div>
+                    <div class="form-group-sm">
+                        <label for="ultimaActualizacion">Precio de Inventario fecha de la &uacute;ltima actualizaci&oacute;n</label>
+                        <div> {{articulo.fechaActualizacion | date:'short'}} </div>
+                    </div>
                     <div style="margin-top: 10px;">
                         <button ng-click="agregarArticulo();" class="btn btn-success" ng-disabled="!isModificable();"><span class="glyphicon glyphicon-plus"></span> Agregar nuevo</button>
                         <button ng-click="modificarArticulo();" class="btn btn-primary" ng-disabled="isModificable();"><span class="glyphicon glyphicon-edit"></span> Modificar</button>
@@ -77,6 +85,7 @@
                     <thead>
                     <tr>
                         <th>Código</th>
+                        <th>Precio</th>
                         <th>Stock (F-FR / V-VR) </th>
                         <th>Descripción</th>
                         <th>Acciones</th>
@@ -84,7 +93,8 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="articulo in listado">
-                        <td style="width: 20%">{{articulo.codigo}}</td>
+                        <td style="width: 15%">{{articulo.codigo}}</td>
+                        <td style="width: 5%">{{articulo.precioDeInventario}}</td>
                         <td style="width: 10%">{{articulo.stockFisico}} - {{articulo.stockFisicoReservado}} / {{articulo.stockVirtual}} - {{articulo.stockVirtualReservado}}</td>
                         <td style="width: 30%">{{articulo.descripcion}}</td>
                         <td style="width: 20%">
