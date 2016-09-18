@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by francisco on 18/12/15.
@@ -128,7 +130,15 @@ public class ItemController {
 
     @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"ordenDeCompra"})
     public ResponseEntity<Page<Item>> obtener(Pageable pageRequest,  @RequestParam() String ordenDeCompra){
-        return ResponseEntity.ok(repository.findByOrdenDeCompraContainingIgnoreCase(ordenDeCompra, pageRequest));
+        return obtenerSearch(pageRequest, ordenDeCompra);
+    }
+
+    @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"search"})
+    public ResponseEntity<Page<Item>> obtenerSearch(Pageable pageRequest,  @RequestParam() String search){
+        List<Estado> estados = new ArrayList<Estado>();
+        estados.add(Estado.RESERVADO);
+        estados.add(Estado.DISPONIBLE);
+        return ResponseEntity.ok(repository.search(search, estados, pageRequest));
     }
 
 }

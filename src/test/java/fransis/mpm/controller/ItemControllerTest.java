@@ -69,8 +69,7 @@ public class ItemControllerTest {
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.standaloneSetup(itemController).setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
-        articulo = new Articulo();
-        articulo.setDescripcion("Articulo 1");
+        articulo = new Articulo("codigo 1", "Articulo 1");
         articulo = articuloRepository.saveAndFlush(articulo);
 
         reserva = new Reserva("Reserva 1", "g@gmail.com", "Usuario 1", Instant.now().toEpochMilli());
@@ -516,6 +515,104 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.content[0].ordenDeCompra").value(is("X-0001")));
     }
 
+    @Test
+    public void test_get_items_filtered_by_articulo_codigo() throws Exception {
 
+        Articulo articulo1 = new Articulo("codigo 2", "articulo 2");
+        articuloRepository.saveAndFlush(articulo1);
+
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Item item2 = new Item();
+        item2.setOrdenDeCompra("X-0002");
+        item2.setArticulo(articulo1);
+        itemRepository.saveAndFlush(item2);
+
+        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),"odigo 1");
+
+        Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
+        Assert.assertThat(response.getBody().getTotalElements(),is(1L));
+        Assert.assertThat(response.getBody().getContent().get(0).getId(),is(item.getId()));
+        Assert.assertThat(response.getBody().getContent().get(0).getOrdenDeCompra(),is("X-0001"));
+
+    }
+
+    @Test
+    public void test_get_items_filtered_by_articulo_codigo_integration() throws Exception {
+
+        Articulo articulo1 = new Articulo("codigo 2", "articulo 2");
+        articuloRepository.saveAndFlush(articulo1);
+
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Item item2 = new Item();
+        item2.setOrdenDeCompra("X-0002");
+        item2.setArticulo(articulo1);
+        itemRepository.saveAndFlush(item2);
+
+        Long itemId = item.getId();
+        mockMvc.perform(get("/items?ordenDeCompra=codigo 1").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].estado").value(Estado.DISPONIBLE.toString()))
+                .andExpect(jsonPath("$.content[0].ordenDeCompra").value(is("X-0001")));
+    }
+
+    @Test
+    public void test_get_items_filtered_by_articulo_descripcion() throws Exception {
+
+        Articulo articulo1 = new Articulo("codigo 2", "articulo 2");
+        articuloRepository.saveAndFlush(articulo1);
+
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Item item2 = new Item();
+        item2.setOrdenDeCompra("X-0002");
+        item2.setArticulo(articulo1);
+        itemRepository.saveAndFlush(item2);
+
+        ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),"ticulo 1");
+
+        Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
+        Assert.assertThat(response.getBody().getTotalElements(),is(1L));
+        Assert.assertThat(response.getBody().getContent().get(0).getId(),is(item.getId()));
+        Assert.assertThat(response.getBody().getContent().get(0).getOrdenDeCompra(),is("X-0001"));
+
+    }
+
+    @Test
+    public void test_get_items_filtered_by_articulo_descripcion_integration() throws Exception {
+
+        Articulo articulo1 = new Articulo("codigo 2", "articulo 2");
+        articuloRepository.saveAndFlush(articulo1);
+
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item = itemRepository.saveAndFlush(item);
+
+        Item item2 = new Item();
+        item2.setOrdenDeCompra("X-0002");
+        item2.setArticulo(articulo1);
+        itemRepository.saveAndFlush(item2);
+
+        Long itemId = item.getId();
+        mockMvc.perform(get("/items?ordenDeCompra=ticulo 1").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].estado").value(Estado.DISPONIBLE.toString()))
+                .andExpect(jsonPath("$.content[0].ordenDeCompra").value(is("X-0001")));
+    }
 
 }

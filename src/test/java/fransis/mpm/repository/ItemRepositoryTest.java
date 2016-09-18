@@ -23,6 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -59,8 +60,7 @@ public class ItemRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        articulo = new Articulo();
-        articulo.setDescripcion("Articulo 1");
+        articulo = new Articulo("codigo 1", "Articulo 1");
         articulo = articuloRepository.saveAndFlush(articulo);
         reserva = new Reserva("Reserva 1", "r@domain.com", null, LocalDate.now().toEpochDay());
         reserva = reservaRepository.saveAndFlush(reserva);
@@ -186,5 +186,91 @@ public class ItemRepositoryTest {
         List<Item> itemsList = itemRepository.findByReserva(reserva);
         Assert.assertThat(itemsList.size(),is(0));
     }
+
+    @Test
+    public void test_item_search_by_orden_de_compra() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+
+        item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item.setEstado(Estado.VENDIDO);
+        itemRepository.save(item);
+
+        item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item.setEstado(Estado.CANCELADO);
+        itemRepository.save(item);
+
+
+        ArrayList<Estado> estados = new ArrayList<>();
+        estados.add(Estado.DISPONIBLE);
+        estados.add(Estado.RESERVADO);
+        Page<Item> itemsList = itemRepository.search("-000", estados, new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(1));
+        Assert.assertThat(itemsList.getContent().get(0).getId(),is(item1.getId()));
+    }
+
+    @Test
+    public void test_item_search_by_articulo_by_codigo() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+
+        item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item.setEstado(Estado.VENDIDO);
+        itemRepository.save(item);
+
+        item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item.setEstado(Estado.CANCELADO);
+        itemRepository.save(item);
+
+
+        ArrayList<Estado> estados = new ArrayList<>();
+        estados.add(Estado.DISPONIBLE);
+        estados.add(Estado.RESERVADO);
+        Page<Item> itemsList = itemRepository.search("odigo 1", estados, new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(1));
+        Assert.assertThat(itemsList.getContent().get(0).getId(),is(item1.getId()));
+    }
+
+    @Test
+    public void test_item_search_by_articulo_by_descripcion() throws Exception {
+        Item item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        Item item1 = itemRepository.save(item);
+
+        item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item.setEstado(Estado.VENDIDO);
+        itemRepository.save(item);
+
+        item = new Item();
+        item.setOrdenDeCompra("X-0001");
+        item.setArticulo(articulo);
+        item.setEstado(Estado.CANCELADO);
+        itemRepository.save(item);
+
+
+        ArrayList<Estado> estados = new ArrayList<>();
+        estados.add(Estado.DISPONIBLE);
+        estados.add(Estado.RESERVADO);
+        Page<Item> itemsList = itemRepository.search("ticulo 1", estados, new PageRequest(0, 10));
+        Assert.assertThat(itemsList.getContent().size(),is(1));
+        Assert.assertThat(itemsList.getContent().get(0).getId(),is(item1.getId()));
+    }
+
+
 
 }
