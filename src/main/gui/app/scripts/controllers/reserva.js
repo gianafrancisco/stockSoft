@@ -164,25 +164,27 @@ angular.module('stockApp')
                             size : current.cantidad,
                             estado: "DISPONIBLE",
                         };
-                    Articulo.one(current.articulo.articuloId).getList('items', params).then(function(list){
-                        if(list.length < current.cantidad){
-                            alert("La cantidad solicitada del articulo "+current.articulo.codigo+" no se encuentra disponible en stock");
-                        }else{
-                            list.forEach(function(itemCurr){
-                                console.log(itemCurr);
-                                itemCurr.reserva = r;
-                                itemCurr.estado = "RESERVADO";
-                                itemCurr.put();
-                            });
-                        }
-                        if(index == array.length - 1){
-                            $scope.showSuccess("La reserva ha sido creada con exito.", true, 5000);
-                            $scope.reserva.descripcion = "";
-                            $scope.reserva.email = "";
-                            $scope.reserva.items = [];
-                            $scope.obtenerListaArticulo();
-                        }
-                    });
+                    if(current.cantidad > 0) {
+                        Articulo.one(current.articulo.articuloId).getList('items', params).then(function(list){
+                            if(list.length < current.cantidad){
+                                alert("La cantidad solicitada del articulo "+current.articulo.codigo+" no se encuentra disponible en stock");
+                            }else{
+                                list.forEach(function(itemCurr){
+                                    console.log(itemCurr);
+                                    itemCurr.reserva = r;
+                                    itemCurr.estado = "RESERVADO";
+                                    itemCurr.put();
+                                });
+                            }
+                            if(index == array.length - 1){
+                                $scope.showSuccess("La reserva ha sido creada con exito.", true, 5000);
+                                $scope.reserva.descripcion = "";
+                                $scope.reserva.email = "";
+                                $scope.reserva.items = [];
+                                $scope.obtenerListaArticulo();
+                            }
+                        });
+                    }
                 });
             });
         })
