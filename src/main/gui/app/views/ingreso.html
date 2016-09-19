@@ -22,7 +22,7 @@
                     <label for="buscar">Buscar </label>
                     <input type="text" id="buscar" class="form-control" placeholder="buscar stock"  ng-model="search" ng-change="buscar();"/>
                 </div>
-                <ul uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="obtenerLista();"></ul>
+                <ul uib-pagination total-items="listado.totalElements" ng-model="pageNumber" max-size="maxSize" items-per-page="listado.size" class="pagination-sm" boundary-links="true" ng-change="buscar();"></ul>
                 <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
             </div>
             <div class="table-responsive">
