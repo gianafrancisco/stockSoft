@@ -20,7 +20,7 @@ public class Articulo {
     @Id
     private Long articuloId;
     private String descripcion;
-    private final String codigo;
+    private String codigo;
     @Transient
     private Long stockFisico;
     @Transient
@@ -32,7 +32,7 @@ public class Articulo {
 
     private Long fechaActualizacion;
     private Double precioDeInventario;
-
+    private Moneda moneda;
 
     public Articulo() {
         this.descripcion = "";
@@ -41,15 +41,13 @@ public class Articulo {
         this.stockVirtual = 0L;
         this.fechaActualizacion = Instant.now().toEpochMilli();
         this.precioDeInventario = 0.0;
+        this.moneda = Moneda.DOLAR;
     }
 
     public Articulo(String codigo, String descripcion) {
+        this();
         this.codigo = codigo;
         this.descripcion = descripcion;
-        this.stockFisico = 0L;
-        this.stockVirtual = 0L;
-        this.fechaActualizacion = Instant.now().toEpochMilli();
-        this.precioDeInventario = 0.0;
     }
 
     public Long getArticuloId() {
@@ -114,6 +112,14 @@ public class Articulo {
 
     public void setFechaActualizacion(Long fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public Moneda getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(Moneda moneda) {
+        this.moneda = moneda;
     }
 }
 

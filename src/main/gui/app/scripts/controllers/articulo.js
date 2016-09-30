@@ -13,6 +13,8 @@ angular.module('stockApp')
      var Articulo = Restangular.all('articulos');
 
      $scope.tipos = [{id: 0, label: "Virtual"}, {id: 1, label: "Físico"}];
+     //$scope.monedas = [{id: 0, label: "DOLAR"}, {id: 1, label: "Euro"}, {id: 2, label: "Peso"}];
+     $scope.monedas = ["DOLAR", "EURO","PESO"];
      $scope.tipo = $scope.tipos[0];
      $scope.cantidad = 0;
 
@@ -24,6 +26,7 @@ angular.module('stockApp')
      $scope.maxSize = 100;
      $scope.listadoCodigo = {};
      $scope.articulo = {};
+     $scope.articulo.moneda = $scope.monedas[0];
      $scope.codigo = {};
      $scope.ipp = 50;
      $scope.pageNumber = 1;

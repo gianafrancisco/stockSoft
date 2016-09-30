@@ -27,9 +27,19 @@
                         <label for="descripcion">Descripción</label>
                         <input type="text" id="descripcion" class="form-control" placeholder="Descripcion" ng-model="articulo.descripcion" />
                     </div>
-                    <div class="form-group-sm">
-                        <label for="precioInventario">Precio de Inventario</label>
-                        <input type="number" id="precioInventario" class="form-control" ng-model="articulo.precioDeInventario" min="0" step="0.01"/>
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <div class="form-group-sm">
+                                <label for="monedaInventario">Moneda</label>
+                                <select class="form-control" ng-options="moneda for moneda in monedas" ng-model="articulo.moneda"></select>
+                            </div>
+                        </div>
+                        <div class="col-xs-10">
+                            <div class="form-group-sm">
+                                <label for="precioInventario">Precio de Inventario</label>
+                                <input type="number" id="precioInventario" class="form-control" ng-model="articulo.precioDeInventario" min="0" step="0.01"/>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group-sm">
                         <label for="ultimaActualizacion">Precio de Inventario fecha de la &uacute;ltima actualizaci&oacute;n</label>
@@ -85,6 +95,7 @@
                     <thead>
                     <tr>
                         <th>Código</th>
+                        <th>Moneda</th>
                         <th>Precio</th>
                         <th>Stock (F-FR / V-VR) </th>
                         <th>Descripción</th>
@@ -93,7 +104,8 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="articulo in listado">
-                        <td style="width: 15%">{{articulo.codigo}}</td>
+                        <td style="width: 10%">{{articulo.codigo}}</td>
+                        <td style="width: 5%">{{articulo.moneda}}</td>
                         <td style="width: 5%">{{articulo.precioDeInventario}}</td>
                         <td style="width: 10%">{{articulo.stockFisico}} - {{articulo.stockFisicoReservado}} / {{articulo.stockVirtual}} - {{articulo.stockVirtualReservado}}</td>
                         <td style="width: 30%">{{articulo.descripcion}}</td>

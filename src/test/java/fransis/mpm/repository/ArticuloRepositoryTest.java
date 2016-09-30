@@ -6,6 +6,7 @@
 package fransis.mpm.repository;
 
 import fransis.mpm.model.Articulo;
+import fransis.mpm.model.Moneda;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,6 +44,7 @@ public class ArticuloRepositoryTest {
         articuloRepository.save(art);
         Articulo a = articuloRepository.findOne(art.getArticuloId());
         Assert.assertThat(a.getDescripcion(),is("articulo 1"));
+        Assert.assertThat(a.getMoneda(),is(Moneda.DOLAR));
     }
 
     @Test
@@ -51,12 +53,15 @@ public class ArticuloRepositoryTest {
         articuloRepository.save(art);
         Articulo a = articuloRepository.findOne(art.getArticuloId());
         Assert.assertThat(a.getDescripcion(),is("articulo 1"));
+        Assert.assertThat(a.getMoneda(),is(Moneda.DOLAR));
 
         a.setDescripcion("articulo x");
+        a.setMoneda(Moneda.EURO);
         articuloRepository.save(a);
 
         a = articuloRepository.findOne(art.getArticuloId());
         Assert.assertThat(a.getDescripcion(),is("articulo x"));
+        Assert.assertThat(a.getMoneda(),is(Moneda.EURO));
     }
 
     @Test
@@ -72,8 +77,6 @@ public class ArticuloRepositoryTest {
         Assert.assertThat(page.getContent(),hasSize(1));
         Assert.assertThat(page.getContent().get(0).getCodigo(),is("1234"));
 
-
     }
-
 
 }
