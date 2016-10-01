@@ -26,7 +26,6 @@ angular.module('stockApp')
      $scope.maxSize = 100;
      $scope.listadoCodigo = {};
      $scope.articulo = {};
-     $scope.articulo.moneda = $scope.monedas[0];
      $scope.codigo = {};
      $scope.ipp = 50;
      $scope.pageNumber = 1;
@@ -75,10 +74,13 @@ angular.module('stockApp')
              $scope.articulo = {};
          });
      };
-
+     $scope.limpiar = function(){
+         $scope.articulo = {};
+         $scope.articulo.moneda = $scope.monedas[0];
+     };
      $scope.modificarArticulo = function(){
          $scope.save(function(){
-             $scope.articulo = {};
+                $scope.limpiar();
          });
      };
      $scope.modificar = function(articulo){
@@ -98,7 +100,11 @@ angular.module('stockApp')
      $scope.save = function(callback){
 
         if($scope.articulo.articuloId === null){
-            Articulo.post($scope.articulo).then(function(){
+            Articulo.post($scope.articulo).then(function(res){
+                console.log(res);
+                if($scope.cantidad > 0 ){
+                    $scope.agregarItems(res, $scope.cantidad, $scope.tipo, $scope.ordenDeCompra);
+                }
                 $scope.obtenerListaArticulo();
                  if(callback !== undefined){
                      callback();
@@ -133,7 +139,9 @@ angular.module('stockApp')
              $location.path("/index.html");
          });
      };
-
+     $scope.itemACargar = function(){
+        return !$scope.isModificable() && $scope.cantidad > 0;
+     };
      $scope.agregarItems = function(articulo, cantidad, tipo, ordenDeCompra){
         var item = {
                 tipo: tipo.id,
@@ -142,7 +150,7 @@ angular.module('stockApp')
          };
         var i;
         for(i = 0; i<cantidad;i++){
-            Restangular.one("articulos",articulo.articuloId).all("items").post(item);
+            Restangular.one("articulos", articulo.articuloId).all("items").post(item);
         }
         if(i == cantidad){
             $scope.showSuccess("Se han agregado todos los item al stock", true, 5000);

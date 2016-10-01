@@ -21,7 +21,7 @@
                 <form>
                     <div class="form-group-sm">
                         <label for="descripcion">Art&iacute;culo</label>
-                        <input type="text" id="codigo" class="form-control" placeholder="Codigo de barra" ng-model="articulo.codigo" />
+                        <input type="text" id="codigo" class="form-control" placeholder="Codigo" ng-model="articulo.codigo" />
                     </div>
                     <div class="form-group-sm">
                         <label for="descripcion">Descripción</label>
@@ -31,7 +31,7 @@
                         <div class="col-xs-2">
                             <div class="form-group-sm">
                                 <label for="monedaInventario">Moneda</label>
-                                <select class="form-control" ng-options="moneda for moneda in monedas" ng-model="articulo.moneda"></select>
+                                <select class="form-control" ng-options="moneda for moneda in monedas" ng-model="articulo.moneda" ng-init="articulo.moneda = monedas[0]"></select>
                             </div>
                         </div>
                         <div class="col-xs-10">
@@ -71,7 +71,7 @@
                         <input type="number" id="candidad" class="form-control" min="0" max="99999" ng-model="cantidad"  />
                     </div>
                     <div style="margin-top: 10px;">
-                        <button ng-click="agregarItems(articulo, cantidad, tipo, ordenDeCompra);" class="btn btn-success" ng-disabled="!(!isModificable() && cantidad > 0)"><span class="glyphicon glyphicon-plus"></span> Agregar</button>
+                        <button ng-click="agregarItems(articulo, cantidad, tipo, ordenDeCompra);" class="btn btn-success" ng-disabled="!(itemACargar())"><span class="glyphicon glyphicon-plus"></span> Agregar</button>
                     </div>
                 </form>
             </div>
