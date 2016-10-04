@@ -58,7 +58,7 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        return ResponseEntity.ok(repository.findByArticuloAndEstado(articulo, estado, pageRequest));
+        return ResponseEntity.ok(repository.findByArticuloAndEstadoOrderByTipoDesc(articulo, estado, pageRequest));
     }
 
     @RequestMapping(value = "/articulos/{articuloId}/items", method = RequestMethod.GET, params = {"ordenDeCompra"})
@@ -135,7 +135,7 @@ public class ItemController {
 
     @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"search"})
     public ResponseEntity<Page<Item>> obtenerSearch(Pageable pageRequest,  @RequestParam() String search){
-        List<Estado> estados = new ArrayList<Estado>();
+        List<Estado> estados = new ArrayList<>();
         estados.add(Estado.RESERVADO);
         estados.add(Estado.DISPONIBLE);
         return ResponseEntity.ok(repository.search(search, estados, pageRequest));

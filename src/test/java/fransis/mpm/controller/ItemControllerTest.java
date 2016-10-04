@@ -118,13 +118,28 @@ public class ItemControllerTest {
     public void test_items_filter_by_estado_by_controller() throws Exception {
         Item item = new Item();
         item.setArticulo(articulo);
-        item = itemRepository.saveAndFlush(item);
+        item.setTipo(Tipo.VIRTUAL);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setTipo(Tipo.FISICO);
+        item.setEstado(Estado.RESERVADO);
+        itemRepository.saveAndFlush(item);
+
 
         ResponseEntity<Page<Item>> response = itemController.obtener(new PageRequest(0,10),articulo.getArticuloId(), Estado.DISPONIBLE);
 
         Assert.assertThat(response.getStatusCode(),is(HttpStatus.OK));
-        Assert.assertThat(response.getBody().getTotalElements(),is(1L));
-        Assert.assertThat(response.getBody().getContent().get(0).getId(),is(item.getId()));
+        Assert.assertThat(response.getBody().getTotalElements(),is(2L));
+        Assert.assertThat(response.getBody().getContent().get(0).getTipo(),is(Tipo.FISICO));
+        Assert.assertThat(response.getBody().getContent().get(1).getTipo(),is(Tipo.VIRTUAL));
+
 
     }
 

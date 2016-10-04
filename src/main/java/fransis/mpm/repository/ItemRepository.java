@@ -22,8 +22,8 @@ import java.util.List;
  */
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findByArticulo(Articulo articulo, Pageable pageable);
-    Page<Item> findByArticuloAndEstado(Articulo articulo, Estado estado, Pageable pageable);
-    List<Item> findByArticuloAndEstado(Articulo articulo, Estado estado);
+    Page<Item> findByArticuloAndEstadoOrderByTipoDesc(Articulo articulo, Estado estado, Pageable pageable);
+    List<Item> findByArticuloAndEstadoOrderByTipoDesc(Articulo articulo, Estado estado);
     List<Item> findByReserva(Reserva reserva);
     Page<Item> findByOrdenDeCompraContainingIgnoreCase(String ordenDeCompra, Pageable pageable);
     @Query(value = "SELECT i FROM Item i WHERE ( ordenDeCompra LIKE %?1% OR i.articulo.codigo LIKE %?1% OR i.articulo.descripcion LIKE %?1% ) AND i.estado IN ?2 ",

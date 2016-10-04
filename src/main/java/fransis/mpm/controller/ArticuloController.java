@@ -12,7 +12,6 @@ import fransis.mpm.model.Tipo;
 import fransis.mpm.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,10 +59,10 @@ public class ArticuloController {
     }
 
     private void populateStock(Articulo articulo) {
-        List<Item> items = itemRepository.findByArticuloAndEstado(articulo, Estado.DISPONIBLE);
+        List<Item> items = itemRepository.findByArticuloAndEstadoOrderByTipoDesc(articulo, Estado.DISPONIBLE);
         long virtual = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
         long fisico = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
-        items = itemRepository.findByArticuloAndEstado(articulo, Estado.RESERVADO);
+        items = itemRepository.findByArticuloAndEstadoOrderByTipoDesc(articulo, Estado.RESERVADO);
         long fisicoReservados = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
         long virtualReservados = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
         articulo.setStockVirtual(virtual);
