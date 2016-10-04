@@ -2,7 +2,7 @@ FROM java:8-jre-alpine
 
 RUN mkdir -p /opt/target && mkdir -p /opt/src/main
 
-COPY target/mpmStock-0.1.2.jar /opt/target/mpmStock-0.1.2.jar
+COPY target/mpmStock-0.1.3.jar /opt/target/mpmStock-0.1.3.jar
 COPY src/main/webapp /opt/src/main/webapp
 COPY mysqlSchema.sh /opt/mysqlSchema.sh
 COPY init.sh /opt/init.sh
