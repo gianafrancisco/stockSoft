@@ -48,6 +48,7 @@
                             <div class="btn-group">
                               <button ng-click="ingresar(item);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-log-in"></span></button>
                               <button ng-click="cancelar(item);" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-log-out"></span></button>
+                              <button ng-click="eliminar(item);" ng-show="esEliminable(item);" class="btn btn-danger btn-sm"><span class="glyphicon glyphicon-trash"></span></button>
                             </div>
                         </td>
                     </tr>

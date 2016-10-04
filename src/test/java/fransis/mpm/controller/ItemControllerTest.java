@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.net.URI;
+import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
 
@@ -445,24 +446,28 @@ public class ItemControllerTest {
 
 
     @Test
-    public void test_request_borrar_articulo() throws Exception {
+    public void test_request_borrar_item() throws Exception {
+
+        Principal principal = () -> "Administrador";
 
         Item item = new Item();
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        ResponseEntity<Void>  responseEntity = itemController.borrar(item.getId());
+        ResponseEntity<Void>  responseEntity = itemController.borrar(item.getId(), principal);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.OK));
     }
 
     @Test
-    public void test_request_borrar_articulo_integration() throws Exception {
+    public void test_request_borrar_item_integration() throws Exception {
         Item item = new Item();
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/articulos/" + articulo.getArticuloId() + "/items/"+item.getId())
-                .contentType(MediaType.APPLICATION_JSON);
+        Principal principal = () -> "Administrador";
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/items/"+item.getId())
+                .contentType(MediaType.APPLICATION_JSON).principal(principal);
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
@@ -470,19 +475,58 @@ public class ItemControllerTest {
 
 
     @Test
-    public void test_request_borrar_articulo_not_found() throws Exception {
-        ResponseEntity<Void>  responseEntity = itemController.borrar(10L);
+    public void test_request_borrar_item_not_found() throws Exception {
+
+        Principal principal = () -> "Administrador";
+
+        ResponseEntity<Void>  responseEntity = itemController.borrar(10L, principal);
         Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.NOT_FOUND));
     }
 
     @Test
+    public void test_request_borrar_item_not_found_integration() throws Exception {
+
+        Principal principal = () -> "Administrador";
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/items/10")
+                .contentType(MediaType.APPLICATION_JSON).principal(principal);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void test_request_borrar_item_method_not_allowed() throws Exception {
+
+        Principal principal = () -> "Usuario1";
+
+        ResponseEntity<Void>  responseEntity = itemController.borrar(10L, principal);
+        Assert.assertThat(responseEntity.getStatusCode(),is(HttpStatus.METHOD_NOT_ALLOWED));
+    }
+
+    @Test
+    public void test_request_borrar_item_method_not_allowed_integration() throws Exception {
+
+        Principal principal = () -> "Usuario";
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/items/10")
+                .contentType(MediaType.APPLICATION_JSON).principal(principal);
+
+        mockMvc.perform(request)
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
     public void test_request_borrar_articulo_not_found_integration() throws Exception {
+
+        Principal principal = () -> "Administrador";
+
         Item item = new Item();
         item.setArticulo(articulo);
         item = itemRepository.saveAndFlush(item);
 
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/articulos/" + articulo.getArticuloId() + "/items/"+item.getId()+1)
-                .contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.delete("/items/" + item.getId() + 1)
+                .contentType(MediaType.APPLICATION_JSON).principal(principal);
 
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());

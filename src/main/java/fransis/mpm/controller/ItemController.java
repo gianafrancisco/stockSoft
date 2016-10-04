@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,16 +117,18 @@ public class ItemController {
         }
     }
 
-    @RequestMapping(value = "/articulos/{articuloId}/items/{itemId}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> borrar(@PathVariable Long itemId){
-
-        if(repository.exists(itemId)){
-            repository.delete(itemId);
-            return ResponseEntity.status(HttpStatus.OK).build();
+    @RequestMapping(value = "/items/{itemId}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> borrar(@PathVariable Long itemId, Principal principal){
+        if("Administrador".equals(principal.getName())){
+            if(repository.exists(itemId)){
+                repository.delete(itemId);
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }else{
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
         }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
         }
-
     }
 
     @RequestMapping(value = "/items", method = RequestMethod.GET, params = {"ordenDeCompra"})

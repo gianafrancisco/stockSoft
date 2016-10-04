@@ -65,6 +65,16 @@ angular.module('stockApp')
         item.put();
      };
 
+     $scope.esEliminable = function(item){
+        return item.estado != "RESERVADO";
+     };
+
+     $scope.eliminar = function (item){
+        if(confirm("Quiere eliminar la mercaderia?") === true){
+            item.remove();
+        }
+     };
+
      $scope.init = function(){
 
      };
