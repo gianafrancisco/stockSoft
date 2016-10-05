@@ -84,4 +84,19 @@ angular
       }
       return extractedData;
     });
+
+    RestangularProvider.setErrorInterceptor(
+    function ( response ) {
+        if ( response.status == 405 ) {
+            alert("Operacion no permitida, solo el Administrador puede realizar esta accion.");
+        }
+        else {
+            // Some other unknown Error.
+            console.log( response );
+        }
+        // Stop the promise chain.
+        return false;
+    }
+);
+
 });
