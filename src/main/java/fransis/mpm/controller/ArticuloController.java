@@ -9,7 +9,9 @@ import fransis.mpm.model.Articulo;
 import fransis.mpm.model.Estado;
 import fransis.mpm.model.Item;
 import fransis.mpm.model.Tipo;
+import fransis.mpm.function.ExportarService;
 import fransis.mpm.repository.ItemRepository;
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +21,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import fransis.mpm.repository.ArticuloRepository;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
@@ -33,6 +40,9 @@ public class ArticuloController {
 
     @Autowired
     private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private ExportarService exportarService;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -116,6 +126,17 @@ public class ArticuloController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
+    }
+
+    @RequestMapping(value = "/articulos/export", method = RequestMethod.GET)
+    public void exportar(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition","attachment;filename=articulos.xls");
+        exportarService.exportar("articulos.xls");
+        File file = new File("articulos.xls");
+        FileInputStream fis = new FileInputStream(file);
+        IOUtils.copy(fis, response.getOutputStream());
+        response.flushBuffer();
     }
 
 }

@@ -5,6 +5,8 @@
 
 package fransis.mpm.controller;
 
+import fransis.mpm.function.Excel;
+import fransis.mpm.function.ExportarService;
 import fransis.mpm.model.Articulo;
 import fransis.mpm.model.Estado;
 import fransis.mpm.model.Item;
@@ -41,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ComponentScan("yporque")
-@ContextConfiguration(classes = {MemoryDBConfig.class, ArticuloController.class})
+@ContextConfiguration(classes = {MemoryDBConfig.class, ArticuloController.class, Excel.class})
 public class ArticuloControllerTest {
 
     private MockMvc mockMvc;
