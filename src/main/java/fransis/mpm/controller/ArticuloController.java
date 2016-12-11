@@ -132,10 +132,7 @@ public class ArticuloController {
     public void exportar(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition","attachment;filename=articulos.xls");
-        exportarService.exportar("articulos.xls");
-        File file = new File("articulos.xls");
-        FileInputStream fis = new FileInputStream(file);
-        IOUtils.copy(fis, response.getOutputStream());
+        exportarService.exportar(response.getOutputStream());
         response.flushBuffer();
     }
 

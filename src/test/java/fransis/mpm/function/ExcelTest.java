@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
@@ -76,7 +77,9 @@ public class ExcelTest {
 
     @Test
     public void create_excel() throws Exception {
-        exportarService.exportar("test.xls");
+        FileOutputStream fos = new FileOutputStream(new File("test.xls"));
+        exportarService.exportar(fos);
+        fos.close();
         File file = new File("test.xls");
         Assert.assertThat(file.exists(), is(true));
         FileInputStream f = new FileInputStream(file);

@@ -5,9 +5,12 @@
 
 package fransis.mpm.function;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
  * Created by francisco on 12/10/16.
  */
 public interface ExportarService {
-    String exportar(String filename);
+    void exportar(OutputStream filename) throws IOException;
 }

@@ -13,16 +13,14 @@ import fransis.mpm.repository.ArticuloRepository;
 import fransis.mpm.repository.ItemRepository;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -40,50 +38,39 @@ public class Excel implements ExportarService {
     private ItemRepository itemRepository;
 
     @Override
-    public String exportar(String filename) {
+    public void exportar(OutputStream output) throws IOException {
         Workbook wb = new HSSFWorkbook();
-        FileOutputStream fileOut = null;
-        try {
-            fileOut = new FileOutputStream(filename);
-            Sheet sheet = wb.createSheet("articulos");
-            List<Articulo> articuloList = articuloRepository.findAll();
-            Integer rowIndex = 0;
-            Row title = sheet.createRow(rowIndex);
-            CellStyle cellStyle = wb.createCellStyle();
+        Sheet sheet = wb.createSheet("articulos");
+        List<Articulo> articuloList = articuloRepository.findAll();
+        Integer rowIndex = 0;
+        Row title = sheet.createRow(rowIndex);
 
-            title.createCell(0).setCellValue("Codigo");
-            title.createCell(1).setCellValue("Descripcion");
-            title.createCell(2).setCellValue("Moneda");
-            title.createCell(3).setCellValue("Stock fisico");
-            title.createCell(4).setCellValue("Stock fisico reservado");
-            title.createCell(5).setCellValue("Stock total");
-            for(Articulo articulo: articuloList) {
-                populateStock(articulo);
-                long totalStockFisico = articulo.getStockFisico() + articulo.getStockFisicoReservado();
-                if(totalStockFisico > 0) {
-                    rowIndex++;
-                    Row row = sheet.createRow(rowIndex);
-                    row.createCell(0).setCellValue(articulo.getCodigo());
-                    row.createCell(1).setCellValue(articulo.getDescripcion());
-                    row.createCell(2).setCellValue(articulo.getMoneda().toString());
-                    row.createCell(3).setCellValue(articulo.getStockFisico());
-                    row.createCell(4).setCellValue(articulo.getStockFisicoReservado());
-                    row.createCell(5).setCellValue(totalStockFisico);
-                }
+        title.createCell(0).setCellValue("Codigo");
+        title.createCell(1).setCellValue("Descripcion");
+        title.createCell(2).setCellValue("Moneda");
+        title.createCell(3).setCellValue("Stock fisico");
+        title.createCell(4).setCellValue("Stock fisico reservado");
+        title.createCell(5).setCellValue("Stock total");
+        for(Articulo articulo: articuloList) {
+            populateStock(articulo);
+            long totalStockFisico = articulo.getStockFisico() + articulo.getStockFisicoReservado();
+            if(totalStockFisico > 0) {
+                rowIndex++;
+                Row row = sheet.createRow(rowIndex);
+                row.createCell(0).setCellValue(articulo.getCodigo());
+                row.createCell(1).setCellValue(articulo.getDescripcion());
+                row.createCell(2).setCellValue(articulo.getMoneda().toString());
+                row.createCell(3).setCellValue(articulo.getStockFisico());
+                row.createCell(4).setCellValue(articulo.getStockFisicoReservado());
+                row.createCell(5).setCellValue(totalStockFisico);
             }
-            sheet.autoSizeColumn(0);
-            sheet.autoSizeColumn(1);
-            sheet.autoSizeColumn(2);
-            sheet.autoSizeColumn(3);
-            sheet.autoSizeColumn(4);
-            wb.write(fileOut);
-            fileOut.close();
-        } catch (FileNotFoundException e) {
-            logger.error(e);
-        } catch (IOException e) {
-            logger.error(e);
         }
-        return filename;
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
+        sheet.autoSizeColumn(2);
+        sheet.autoSizeColumn(3);
+        sheet.autoSizeColumn(4);
+        wb.write(output);
     }
 
     private void populateStock(Articulo articulo) {
