@@ -22,9 +22,9 @@ import java.time.ZoneOffset;
 public class TaskReserva {
 
     public static void cerrarReserva(ReservaRepository reservaRepository, ItemRepository itemRepository, int days){
-        reservaRepository.findByEstadoIn(EstadoReserva.ACTIVA).stream().filter(reserva -> {
-            return (LocalDateTime.now().minusDays(days).toInstant(ZoneOffset.UTC).toEpochMilli() > reserva.getFechaReserva());
-        }).forEach(
+        reservaRepository.findByEstadoIn(EstadoReserva.ACTIVA).stream().filter(
+                reserva -> (LocalDateTime.now().minusDays(days).toInstant(ZoneOffset.UTC).toEpochMilli() > reserva.getFechaReserva())
+        ).forEach(
                 reserva -> {
                     itemRepository.findByReserva(reserva).forEach(item -> {
 

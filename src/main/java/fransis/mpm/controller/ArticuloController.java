@@ -58,9 +58,7 @@ public class ArticuloController {
     @RequestMapping(value = "/articulos", method = RequestMethod.GET)
     public Page<Articulo> obtenerListaArticulos(Pageable pageRequest){
         Page<Articulo> articulos = articuloRepository.findAll(pageRequest);
-        articulos.forEach(articulo -> {
-            populateStock(articulo);
-        });
+        articulos.forEach(this::populateStock);
         return articulos;
     }
 
@@ -80,7 +78,7 @@ public class ArticuloController {
     @RequestMapping(value = "/articulos", method = RequestMethod.GET, params = {"search"})
     public Page<Articulo> filtrarArticulos(@RequestParam(value = "") String search, Pageable pageRequest){
         Page<Articulo> list = articuloRepository.findByDescripcionContainingIgnoreCaseOrCodigoContainingIgnoreCase(search, search, pageRequest);
-        list.forEach(articulo -> populateStock(articulo));
+        list.forEach(this::populateStock);
         return list;
     }
 
@@ -88,7 +86,7 @@ public class ArticuloController {
     @RequestMapping(value = "/articulos", method = RequestMethod.POST)
     public ResponseEntity<Articulo> agregar(@RequestBody Articulo articulo){
         Articulo a = articuloRepository.saveAndFlush(articulo);
-        URI location = null;
+        URI location;
         try {
             location = new URI("/articulos/" + a.getArticuloId());
         } catch (URISyntaxException e) {

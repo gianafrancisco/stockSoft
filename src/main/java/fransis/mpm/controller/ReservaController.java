@@ -75,7 +75,7 @@ public class ReservaController {
         Reserva reserva1 = new Reserva(reserva.getDescripcion(), reserva.getEmail(), principal.getName(), Instant.now().toEpochMilli());
         reserva1.setEstado(ACTIVA);
         Reserva r = reservaRepository.saveAndFlush(reserva1);
-        URI location = null;
+        URI location;
         try {
             location = new URI("/reservas/" + r.getId());
         } catch (URISyntaxException e) {

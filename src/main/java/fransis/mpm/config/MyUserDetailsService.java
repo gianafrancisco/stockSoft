@@ -40,7 +40,7 @@ public class MyUserDetailsService implements UserDetailsService {
         if(!vendedorList.isEmpty()) {
             Vendedor user = vendedorList.get(0);
             List<GrantedAuthority> authorities;
-            User u = null;
+            User u;
             if (ADMINISTRADOR.equals(user.getUsername())) {
                 authorities =
                         buildUserAuthority(ADMINISTRADOR);

@@ -86,7 +86,7 @@ public class ItemController {
             Item i = item;
             i.setArticulo(a);
             i = repository.saveAndFlush(i);
-            URI location = null;
+            URI location;
             try {
                 location = new URI("/articulos/" + a.getArticuloId()+"/items/"+i.getId());
             } catch (URISyntaxException e) {
@@ -110,7 +110,7 @@ public class ItemController {
 
     private ResponseEntity<Void> updateItem(@PathVariable() Long id, @RequestBody Item item) {
         if(item.getId() != null && repository.exists(id)) {
-            Item i = repository.saveAndFlush(item);
+            repository.saveAndFlush(item);
             return (ResponseEntity.status(HttpStatus.NO_CONTENT)).build();
         }else{
             return (ResponseEntity.status(HttpStatus.NOT_FOUND)).build();
