@@ -6,7 +6,6 @@
 package fransis.mpm.model;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 /**
  * Created by francisco on 6/30/16.

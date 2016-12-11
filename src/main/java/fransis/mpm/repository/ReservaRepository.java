@@ -5,7 +5,6 @@
 
 package fransis.mpm.repository;
 
-import fransis.mpm.model.Estado;
 import fransis.mpm.model.EstadoReserva;
 import fransis.mpm.model.Reserva;
 import org.springframework.data.domain.Page;
