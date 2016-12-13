@@ -5,10 +5,7 @@
 
 package fransis.mpm.function;
 
-import fransis.mpm.model.Articulo;
-import fransis.mpm.model.Estado;
-import fransis.mpm.model.Item;
-import fransis.mpm.model.Tipo;
+import fransis.mpm.model.*;
 import fransis.mpm.repository.ArticuloRepository;
 import fransis.mpm.repository.ItemRepository;
 import org.apache.log4j.Logger;
@@ -48,9 +45,10 @@ public class Excel implements ExportarService {
         title.createCell(0).setCellValue("Codigo");
         title.createCell(1).setCellValue("Descripcion");
         title.createCell(2).setCellValue("Moneda");
-        title.createCell(3).setCellValue("Stock fisico");
-        title.createCell(4).setCellValue("Stock fisico reservado");
-        title.createCell(5).setCellValue("Stock total");
+        title.createCell(3).setCellValue("Precio");
+        title.createCell(4).setCellValue("Stock fisico");
+        title.createCell(5).setCellValue("Stock fisico reservado");
+        title.createCell(6).setCellValue("Stock total");
         for(Articulo articulo: articuloList) {
             populateStock(articulo);
             long totalStockFisico = articulo.getStockFisico() + articulo.getStockFisicoReservado();
@@ -59,10 +57,16 @@ public class Excel implements ExportarService {
                 Row row = sheet.createRow(rowIndex);
                 row.createCell(0).setCellValue(articulo.getCodigo());
                 row.createCell(1).setCellValue(articulo.getDescripcion());
-                row.createCell(2).setCellValue(articulo.getMoneda().toString());
-                row.createCell(3).setCellValue(articulo.getStockFisico());
-                row.createCell(4).setCellValue(articulo.getStockFisicoReservado());
-                row.createCell(5).setCellValue(totalStockFisico);
+                Moneda moneda = articulo.getMoneda();
+                String sMoneda = "";
+                if(moneda != null){
+                    sMoneda = moneda.toString();
+                }
+                row.createCell(2).setCellValue(sMoneda);
+                row.createCell(3).setCellValue(articulo.getPrecioDeInventario());
+                row.createCell(4).setCellValue(articulo.getStockFisico());
+                row.createCell(5).setCellValue(articulo.getStockFisicoReservado());
+                row.createCell(6).setCellValue(totalStockFisico);
             }
         }
         sheet.autoSizeColumn(0);

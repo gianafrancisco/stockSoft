@@ -50,6 +50,7 @@ public class ExcelTest {
     @Before
     public void setUp() throws Exception {
         Articulo art = new Articulo("1234","articulo 1");
+        art.setPrecioDeInventario(10.0);
         art = articuloRepository.saveAndFlush(art);
         Item item = new Item();
         item.setEstado(Estado.DISPONIBLE);
@@ -57,6 +58,7 @@ public class ExcelTest {
         item.setTipo(Tipo.FISICO);
         itemRepository.saveAndFlush(item);
         art = new Articulo("1234","articulo 2");
+        art.setPrecioDeInventario(10.0);
         art.setMoneda(Moneda.EURO);
         art= articuloRepository.saveAndFlush(art);
         item = new Item();
@@ -65,6 +67,7 @@ public class ExcelTest {
         item.setTipo(Tipo.VIRTUAL);
         itemRepository.saveAndFlush(item);
         art = new Articulo("1234","articulo 3");
+        art.setPrecioDeInventario(10.0);
         art.setMoneda(Moneda.PESO);
         art = articuloRepository.saveAndFlush(art);
         item = new Item();
@@ -91,25 +94,28 @@ public class ExcelTest {
         Assert.assertThat(title.getCell(0).getStringCellValue(), is("Codigo"));
         Assert.assertThat(title.getCell(1).getStringCellValue(), is("Descripcion"));
         Assert.assertThat(title.getCell(2).getStringCellValue(), is("Moneda"));
-        Assert.assertThat(title.getCell(3).getStringCellValue(), is("Stock fisico"));
-        Assert.assertThat(title.getCell(4).getStringCellValue(), is("Stock fisico reservado"));
-        Assert.assertThat(title.getCell(5).getStringCellValue(), is("Stock total"));
+        Assert.assertThat(title.getCell(3).getStringCellValue(), is("Precio"));
+        Assert.assertThat(title.getCell(4).getStringCellValue(), is("Stock fisico"));
+        Assert.assertThat(title.getCell(5).getStringCellValue(), is("Stock fisico reservado"));
+        Assert.assertThat(title.getCell(6).getStringCellValue(), is("Stock total"));
 
         Row row1 = articulos.getRow(1);
         Assert.assertThat(row1.getCell(0).getStringCellValue(), is("1234"));
         Assert.assertThat(row1.getCell(1).getStringCellValue(), is("articulo 1"));
         Assert.assertThat(row1.getCell(2).getStringCellValue(), is("DOLAR"));
-        Assert.assertThat(row1.getCell(3).getNumericCellValue(), is(1.0));
-        Assert.assertThat(row1.getCell(4).getNumericCellValue(), is(0.0));
-        Assert.assertThat(row1.getCell(5).getNumericCellValue(), is(1.0));
+        Assert.assertThat(row1.getCell(3).getNumericCellValue(), is(10.0));
+        Assert.assertThat(row1.getCell(4).getNumericCellValue(), is(1.0));
+        Assert.assertThat(row1.getCell(5).getNumericCellValue(), is(0.0));
+        Assert.assertThat(row1.getCell(6).getNumericCellValue(), is(1.0));
 
         row1 = articulos.getRow(2);
         Assert.assertThat(row1.getCell(0).getStringCellValue(), is("1234"));
         Assert.assertThat(row1.getCell(1).getStringCellValue(), is("articulo 3"));
         Assert.assertThat(row1.getCell(2).getStringCellValue(), is("PESO"));
-        Assert.assertThat(row1.getCell(3).getNumericCellValue(), is(0.0));
-        Assert.assertThat(row1.getCell(4).getNumericCellValue(), is(1.0));
+        Assert.assertThat(row1.getCell(3).getNumericCellValue(), is(10.0));
+        Assert.assertThat(row1.getCell(4).getNumericCellValue(), is(0.0));
         Assert.assertThat(row1.getCell(5).getNumericCellValue(), is(1.0));
+        Assert.assertThat(row1.getCell(6).getNumericCellValue(), is(1.0));
 
     }
 
