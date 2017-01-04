@@ -67,10 +67,12 @@ public class Articulo {
     }
 
     public Long getStockFisico() {
+        this.stockFisico = this.stockFisico == null ? 0 : this.stockFisico;
         return stockFisico;
     }
 
     public Long getStockVirtual() {
+        this.stockVirtual = this.stockVirtual == null ? 0 : this.stockVirtual;
         return stockVirtual;
     }
 
@@ -87,6 +89,7 @@ public class Articulo {
     }
 
     public Long getStockVirtualReservado() {
+        this.stockVirtualReservado = this.stockVirtualReservado == null ? 0 : this.stockVirtualReservado;
         return stockVirtualReservado;
     }
 
@@ -95,10 +98,12 @@ public class Articulo {
     }
 
     public Long getStockFisicoReservado() {
+        this.stockFisicoReservado = this.stockFisicoReservado == null ? 0 : this.stockFisicoReservado;
         return stockFisicoReservado;
     }
 
     public Double getPrecioDeInventario() {
+        this.precioDeInventario = this.precioDeInventario == null ? 0.0 : this.precioDeInventario;
         return precioDeInventario;
     }
 
