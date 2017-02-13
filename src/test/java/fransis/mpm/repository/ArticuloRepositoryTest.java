@@ -6,6 +6,8 @@
 package fransis.mpm.repository;
 
 import fransis.mpm.model.Articulo;
+import fransis.mpm.model.Estado;
+import fransis.mpm.model.Item;
 import fransis.mpm.model.Moneda;
 import org.junit.After;
 import org.junit.Assert;
@@ -33,8 +35,12 @@ public class ArticuloRepositoryTest {
     @Autowired
     private ArticuloRepository articuloRepository;
 
+    @Autowired
+    private ItemRepository itemRepository;
+
     @After
     public void tearDown() throws Exception {
+        itemRepository.deleteAll();
         articuloRepository.deleteAll();
     }
 
@@ -76,6 +82,29 @@ public class ArticuloRepositoryTest {
         page = articuloRepository.findByDescripcionContainingIgnoreCaseOrCodigoContainingIgnoreCase("23","23",new PageRequest(0,10));
         Assert.assertThat(page.getContent(),hasSize(1));
         Assert.assertThat(page.getContent().get(0).getCodigo(),is("1234"));
+
+    }
+
+
+    @Test
+    public void test_articulo_articuloWithStock() throws Exception {
+        Articulo art = new Articulo("1234","articulo 1");
+        art = articuloRepository.saveAndFlush(art);
+        Item i = new Item();
+        i.setArticulo(art);
+        i.setEstado(Estado.DISPONIBLE);
+        itemRepository.saveAndFlush(i);
+        i = new Item();
+        i.setArticulo(art);
+        i.setEstado(Estado.DISPONIBLE);
+        itemRepository.saveAndFlush(i);
+
+        art = new Articulo("1235","articulo 2");
+        articuloRepository.saveAndFlush(art);
+
+        Page<Articulo> page = articuloRepository.articulosWithStock("%Rticulo%", new PageRequest(0,10));
+        Assert.assertThat(page.getContent(),hasSize(1));
+        Assert.assertThat(page.getContent().get(0).getDescripcion(),is("articulo 1"));
 
     }
 

@@ -11,6 +11,7 @@ angular.module('stockApp')
   .controller('ReservaController', function ($scope,$http,$window,$location, Restangular, $timeout, ReservaService) {
 
      var Articulo = Restangular.service('articulos');
+     var Disponible = Restangular.service('reservas/articulos');
      var Reservas = Restangular.service('reservas');
 
      //$scope.reserva = ReservaService;
@@ -53,7 +54,7 @@ angular.module('stockApp')
         if($scope.search !== "" && $scope.search !== undefined){
             params.search = $scope.search;
         }
-        Articulo.getList(params).then(function(a){
+        Disponible.getList(params).then(function(a){
              $scope.listado = a;
              $scope.pageNumber = $scope.listado.number+1;
         });

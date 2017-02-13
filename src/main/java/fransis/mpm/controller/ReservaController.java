@@ -5,10 +5,8 @@
 
 package fransis.mpm.controller;
 
-import fransis.mpm.model.Estado;
-import fransis.mpm.model.EstadoReserva;
-import fransis.mpm.model.Item;
-import fransis.mpm.model.Reserva;
+import fransis.mpm.model.*;
+import fransis.mpm.repository.ArticuloRepository;
 import fransis.mpm.repository.ItemRepository;
 import fransis.mpm.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,9 @@ public class ReservaController {
 
     @Autowired
     private ItemRepository itemRepository;
+
+    @Autowired
+    private ArticuloRepository articuloRepository;
 
     @RequestMapping(value = "/reservas/{reservaId}", method = RequestMethod.GET)
     public ResponseEntity<Reserva> obtener(@PathVariable Long reservaId){
@@ -143,6 +144,33 @@ public class ReservaController {
             return (ResponseEntity.status(HttpStatus.NOT_FOUND)).body(null);
         }
 
+    }
+
+    @RequestMapping(value = "/reservas/articulos", method = RequestMethod.GET, params = {"search"})
+    public Page<Articulo> filtrarArticulos(@RequestParam(value = "") String search, Pageable pageRequest){
+        Page<Articulo> list = articuloRepository.articulosWithStock("%" + search + "%", pageRequest);
+        list.forEach(this::populateStock);
+        return list;
+    }
+
+    @RequestMapping(value = "/reservas/articulos", method = RequestMethod.GET)
+    public Page<Articulo> obtenerListaArticulos(Pageable pageRequest){
+        Page<Articulo> articulos = articuloRepository.articulosWithStock("%%",pageRequest);
+        articulos.forEach(this::populateStock);
+        return articulos;
+    }
+
+    private void populateStock(Articulo articulo) {
+        List<Item> items = itemRepository.findByArticuloAndEstadoOrderByTipoDesc(articulo, Estado.DISPONIBLE);
+        long virtual = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
+        long fisico = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
+        items = itemRepository.findByArticuloAndEstadoOrderByTipoDesc(articulo, Estado.RESERVADO);
+        long fisicoReservados = items.stream().filter(item -> item.getTipo() == Tipo.FISICO).count();
+        long virtualReservados = items.stream().filter(item -> item.getTipo() == Tipo.VIRTUAL).count();
+        articulo.setStockVirtual(virtual);
+        articulo.setStockFisico(fisico);
+        articulo.setStockVirtualReservado(virtualReservados);
+        articulo.setStockFisicoReservado(fisicoReservados);
     }
 
 }
