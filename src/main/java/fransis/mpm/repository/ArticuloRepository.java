@@ -20,7 +20,7 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Long> {
     Page<Articulo> findByDescripcionContainingIgnoreCaseOrCodigoContainingIgnoreCase(String descripcion, String codigo, Pageable pageable);
     List<Articulo> findByCodigo(String codigo);
     //select a.* FROM articulo a, item i where a.articulo_id = i.articulo_articulo_id and i.estado < 2;
-    @Query(value = "SELECT a FROM Articulo a, Item i WHERE ( UPPER(a.descripcion) LIKE UPPER(?1) OR UPPER(a.codigo) LIKE UPPER(?1) ) AND  a.articuloId = i.articulo.articuloId AND i.estado < 2",
-            countQuery = "SELECT count(a) FROM Articulo a, Item i WHERE ( UPPER(a.descripcion) LIKE UPPER(?1) OR UPPER(a.codigo) LIKE UPPER(?1) ) AND  a.articuloId = i.articulo.articuloId AND i.estado < 2")
+    @Query(value = "SELECT a FROM Articulo a, Item i WHERE ( UPPER(a.descripcion) LIKE UPPER(?1) OR UPPER(a.codigo) LIKE UPPER(?1) ) AND  a.articuloId = i.articulo.articuloId AND i.estado < 2 GROUP BY a",
+            countQuery = "SELECT count(a) FROM Articulo a, Item i WHERE ( UPPER(a.descripcion) LIKE UPPER(?1) OR UPPER(a.codigo) LIKE UPPER(?1) ) AND  a.articuloId = i.articulo.articuloId AND i.estado < 2 GROUP BY a")
     Page<Articulo> articulosWithStock(String search, Pageable pageable);
 }
