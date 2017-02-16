@@ -21,7 +21,7 @@ import java.util.Properties;
 /**
  * Created by francisco on 04/12/2015.
  */
-@Configuration
+//@Configuration
 //@EnableJpaRepositories("fransis.mpm.repository")
 class ApplicationConfigurationMysql extends ApplicationConfiguration {
 
