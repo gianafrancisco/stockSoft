@@ -21,7 +21,7 @@ angular
     'restangular',
     'ui.bootstrap'
   ])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, $locationProvider) {
     $routeProvider
       .when('/articulo', {
         templateUrl: 'views/articulo.html',
@@ -55,6 +55,10 @@ angular
       })
       .otherwise({
         redirectTo: '/dashboard'
+      });
+      $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: true
       });
   }).config(function(RestangularProvider) {
 

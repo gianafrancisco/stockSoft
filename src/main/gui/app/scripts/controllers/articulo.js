@@ -135,7 +135,7 @@ angular.module('stockApp')
      };
 
      $scope.cerrarSession = function(){
-         $http.post('/logout', {}).success(function() {
+         $http.post('/logout', {}).then(function() {
              $location.path("/index.html");
          });
      };

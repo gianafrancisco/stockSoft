@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/cloak.css">
     <!-- endbuild -->
+    <base href="/">
   </head>
   <body ng-app="stockApp">
     <!--[if lte IE 8]>
@@ -42,11 +43,11 @@
           </div>
           <div class="collapse navbar-collapse" id="menu-collapse">
             <ul class="nav navbar-nav">
-              <li><a href="#dashboard">Dashboard</a></li>
-              <li><a href="#articulo">Stock</a></li>
-              <li><a href="#reserva">Reservar Stock</a></li>
-              <li><a href="#ingreso">Ingreso Stock</a></li>
-              <li><a href="#vendedor">Usuarios</a></li>
+              <li><a href="dashboard">Dashboard</a></li>
+              <li><a href="articulo">Stock</a></li>
+              <li><a href="reserva">Reservar Stock</a></li>
+              <li><a href="ingreso">Ingreso Stock</a></li>
+              <li><a href="vendedor">Usuarios</a></li>
             </ul>
             <form method="post" action="/logout" class="navbar-form navbar-right">
               <div class="form-group"><input type="submit" value="Salir" class="btn btn-default" /></div>

@@ -28,7 +28,7 @@ angular.module('stockApp')
              url = "/vendedor/search?page="+($scope.pageNumber-1)+search;
          }
          $http.get(url)
-         .success(function(data) {
+         .then(function(data) {
              $scope.listado=data;
              $scope.pageNumber = $scope.listado.number+1;
          });
@@ -57,7 +57,7 @@ angular.module('stockApp')
 
      $scope.save = function(callback){
          $http.put("/vendedor/agregar",$scope.vendedor)
-         .success(function(data) {
+         .then(function(data) {
              $scope.vendedor=data;
              $scope.obtenerListaVendedor();
              if(callback !== undefined){
@@ -71,7 +71,7 @@ angular.module('stockApp')
          if(confirm("Esta seguro que quiere elimiar el vendedor?")){
 
              $http.get("/vendedor/delete/"+vendedor.vendedorId)
-             .success(function() {
+             .then(function() {
                  $scope.obtenerListaVendedor();
                  $scope.obtenerListaCodigo(vendedor);
              });
@@ -88,7 +88,7 @@ angular.module('stockApp')
      };
 
      $scope.cerrarSession = function(){
-         $http.post('/logout', {}).success(function() {
+         $http.post('/logout', {}).then(function() {
              $location.path("/index.html");
          });
      };
