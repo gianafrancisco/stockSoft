@@ -17,19 +17,19 @@
             <div class="col-md-4">
                 <div class="form-group-sm" ng-class = "{'has-error': descripcionError}">
                     <label for="nombre">Descripción de reserva</label>
-                    <input type="text" class="form-control" ng-model="reserva.descripcion" />
+                    <input id="nombre" type="text" class="form-control" ng-model="reserva.descripcion" />
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group-sm" ng-class = "{'has-error': emailError}">
                     <label for="email">Dirección de email</label>
-                    <input type="email" class="form-control" ng-model="reserva.email" />
+                    <input id="email" type="email" class="form-control" ng-model="reserva.email" />
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group-sm">
                     <label for="acciones">Acciones</label>
-                    <button class="form-control btn btn-success" ng-click="generarReserva(reserva);"><span class="glyphicon glyphicon-plus"></span> Crear Reserva</button>
+                    <button id="acciones" class="form-control btn btn-success" ng-click="generarReserva(reserva);"><span class="glyphicon glyphicon-plus"></span> Crear Reserva</button>
                 </div>
             </div>
             </div>
@@ -38,8 +38,8 @@
                     <table id="tablaListaArticulo" class="table">
                         <thead>
                         <tr>
-                            <th>Código</th>
-                            <th>Descripción</th>
+                            <th>Artículo MPM</th>
+                            <th>Cód. Material / Descripción</th>
                             <th>Cantidad</th>
                             <th>Acciones</th>
                         </tr>
@@ -64,7 +64,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary" >
-            <div class="panel-heading">Buscar artículos</div>
+            <div class="panel-heading">Buscar artículos MPM</div>
             <div class="panel-body">
                 <div class="form-group-sm">
                     <label for="buscar">Buscar</label>
@@ -74,11 +74,11 @@
                 <pre>Página: {{pageNumber}} / {{listado.totalPages}}</pre>
             </div>
             <div class="table-responsive">
-                <table id="tablaListaArticulo" class="table">
+                <table id="tablaListaArticulo1" class="table">
                     <thead>
                     <tr>
-                        <th>Código</th>
-                        <th>Descripción</th>
+                        <th>Artículo MPM</th>
+                        <th>Cód. Material / Descripción</th>
                         <th>Stock (F-FR / V-VR) </th>
                         <th>Acciones</th>
                     </tr>
