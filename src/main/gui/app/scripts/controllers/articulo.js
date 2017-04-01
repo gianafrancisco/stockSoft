@@ -100,17 +100,39 @@ angular.module('stockApp')
      $scope.save = function(callback){
 
         if($scope.articulo.articuloId === null){
-            Articulo.post($scope.articulo).then(function(res){
-                console.log(res);
-                if($scope.cantidad > 0 ){
-                    $scope.agregarItems(res, $scope.cantidad, $scope.tipo, $scope.ordenDeCompra);
+            if($scope.articulo.codigo === "" || $scope.articulo.codigo === undefined){
+                alert("Debe ingresar el código de articulo para poder seguir.");
+                return;
+            }
+            var params = {codigo: $scope.articulo.codigo };
+            
+            Articulo.getList(params).then(function(a){
+                //alert("El codigo artículo que intenta cargar ya existe en la base de datos.");
+                if(confirm("El codigo artículo que intenta cargar ya existe en la base de datos.\nQuiere utilizar el artículo cargado previamente ?")){
+                    console.log(a);
+                    $scope.modificar(a[0]);
+                }else{
+                    $scope.articulo.codigo = "";
                 }
-                $scope.obtenerListaArticulo();
-                 if(callback !== undefined){
-                     callback();
-                 }
+            },
+            function (err){
+                if(err.status === 404){
+                    Articulo.post($scope.articulo).then(function(res){
+                        if($scope.cantidad > 0 ){
+                            $scope.agregarItems(res, $scope.cantidad, $scope.tipo, $scope.ordenDeCompra);
+                        }
+                        $scope.obtenerListaArticulo();
+                        if(callback !== undefined){
+                            callback();
+                        }
+                    });
+                }
             });
         }else{
+            if($scope.articulo.codigo === "" || $scope.articulo.codigo === undefined){
+                alert("Debe ingresar el código de articulo para poder seguir.");
+                return;
+            }
             $scope.articulo.put().then(function(){
                  if(callback !== undefined){
                      callback();

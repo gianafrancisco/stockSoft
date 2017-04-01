@@ -93,6 +93,8 @@ angular
     function ( response ) {
         if ( response.status == 405 ) {
             alert("Operacion no permitida, solo el Administrador puede realizar esta accion.");
+        }else if( response.status == 404 ){
+          return true;
         }
         else {
             // Some other unknown Error.

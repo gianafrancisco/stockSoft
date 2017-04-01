@@ -30,6 +30,7 @@ import fransis.mpm.config.MemoryDBConfig;
 import fransis.mpm.repository.ArticuloRepository;
 
 import java.net.URI;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.hasSize;
@@ -297,6 +298,63 @@ public class ArticuloControllerTest {
         Assert.assertThat(page.getContent().get(0).getStockVirtual(),is(1L));
         Assert.assertThat(page.getContent().get(0).getStockFisicoReservado(),is(1L));
         Assert.assertThat(page.getContent().get(0).getStockVirtualReservado(),is(1L));
+
+    }
+
+    @Test
+    public void test_request_articulo_codigo() throws Exception {
+
+        Articulo articulo = new Articulo("1234","articulo 1");
+        articuloRepository.saveAndFlush(articulo);
+
+        Item item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123456");
+        item.setEstado(Estado.DISPONIBLE);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123459");
+        item.setEstado(Estado.DISPONIBLE);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123458");
+        item.setEstado(Estado.RESERVADO);
+        itemRepository.saveAndFlush(item);
+
+        item = new Item();
+        item.setArticulo(articulo);
+        item.setOrdenDeCompra("123453");
+        item.setEstado(Estado.RESERVADO);
+        item.setTipo(Tipo.FISICO);
+        itemRepository.saveAndFlush(item);
+
+
+        ResponseEntity<List<Articulo>> page = articuloController.byCodigo("1234");
+
+        Assert.assertThat(page.getStatusCode(),is(HttpStatus.OK));
+        Assert.assertThat(page.getBody().get(0).getCodigo(),is("1234"));
+        Assert.assertThat(page.getBody().get(0).getDescripcion(),is("articulo 1"));
+        Assert.assertThat(page.getBody().get(0).getStockFisico(),is(1L));
+        Assert.assertThat(page.getBody().get(0).getStockVirtual(),is(1L));
+        Assert.assertThat(page.getBody().get(0).getStockFisicoReservado(),is(1L));
+        Assert.assertThat(page.getBody().get(0).getStockVirtualReservado(),is(1L));
+
+    }
+
+    @Test
+    public void test_request_articulo_codigo_not_found() throws Exception {
+
+        Articulo articulo = new Articulo("1234","articulo 1");
+        articuloRepository.saveAndFlush(articulo);
+
+        ResponseEntity<List<Articulo>> page = articuloController.byCodigo("123");
+
+        Assert.assertThat(page.getStatusCode(),is(HttpStatus.NOT_FOUND));
 
     }
 

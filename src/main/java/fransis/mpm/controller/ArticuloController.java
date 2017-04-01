@@ -25,7 +25,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by francisco on 18/12/15.
@@ -82,6 +84,15 @@ public class ArticuloController {
         return list;
     }
 
+    @RequestMapping(value = "/articulos", method = RequestMethod.GET, params = {"codigo"})
+    public ResponseEntity<List<Articulo>> byCodigo(@RequestParam(value = "") String codigo){
+        List<Articulo> list = articuloRepository.findByCodigo(codigo);
+        if(list.size() > 0){
+            list.forEach(this::populateStock);
+            return ResponseEntity.ok(list);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+    }
 
     @RequestMapping(value = "/articulos", method = RequestMethod.POST)
     public ResponseEntity<Articulo> agregar(@RequestBody Articulo articulo){
