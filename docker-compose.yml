@@ -1,0 +1,16 @@
+version: '2'
+services:
+  web:
+    build: .
+    image: "fgiana/stock:latest"
+    ports:
+     - "9090:8080"
+    links:
+      - db:database
+  db:
+    image: "mariadb:5.5"
+    environment:
+     - MYSQL_DATABASE=stock
+     - MYSQL_ROOT_PASSWORD=123456
+    ports:
+     - "3306:3306"

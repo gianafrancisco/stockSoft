@@ -21,8 +21,8 @@ before_install:
 
 after_success:
   - docker build -t fgiana/stock:latest .
-  - docker run --name stock -d -P fgiana/stock:latest
-  - docker ps
-  - docker port stock
+#  - docker run --name stock -d -P fgiana/stock:latest
+#  - docker ps
+#  - docker port stock
   - docker push fgiana/stock:latest
 

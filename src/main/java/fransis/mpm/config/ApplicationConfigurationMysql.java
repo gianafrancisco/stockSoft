@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -21,7 +22,7 @@ import java.util.Properties;
 /**
  * Created by francisco on 04/12/2015.
  */
-//@Configuration
+@Configuration
 //@EnableJpaRepositories("fransis.mpm.repository")
 class ApplicationConfigurationMysql extends ApplicationConfiguration {
 
@@ -126,8 +127,11 @@ class ApplicationConfigurationMysql extends ApplicationConfiguration {
         Properties ps = new Properties();
         ps.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         ps.put("hibernate.hbm2ddl.auto", "update");
-        ps.put("hibernate.archive.autodetection","class");
-        ps.put("hibernate.show_sql","true");
+        ps.put("hibernate.archive.autodetection", "class");
+        ps.put("hibernate.show_sql", true);
+        ps.put("connection.autoReconnect", true);
+        ps.put("connection.autoReconnectForPools", true);
+        ps.put("connection.is-connection-validation-required", true);
 
         entityManagerFactoryBean.setJpaProperties(ps);
         entityManagerFactoryBean.afterPropertiesSet();
