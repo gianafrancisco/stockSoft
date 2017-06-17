@@ -10,11 +10,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.Properties;
 
@@ -25,89 +28,39 @@ import java.util.Properties;
 @EnableJpaRepositories("fransis.mpm.repository")
 public class MemoryDBConfig {
 
+    @Bean
+    public javax.sql.DataSource dataSource() {
 
-    private final DataSource dataSource;
-    private final PlatformTransactionManager transactionManager;
-    private final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean;
-    private final EntityManagerFactory entityManagerFactory;
-    private final PersistenceExceptionTranslationPostProcessor persistenceExceptionTranslationPostProcessor;
-
-    public MemoryDBConfig() {
-        dataSource = getDataSource();
-        entityManagerFactoryBean = entityManagerFactoryBean();
-        entityManagerFactory = entityManagerFactoryBean.getObject();
-        transactionManager = getTransactionManager(entityManagerFactory);
-        persistenceExceptionTranslationPostProcessor = getPersistenceExceptionTranslationPostProcessor();
+        EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        return builder.setType(EmbeddedDatabaseType.H2).build();
     }
 
     @Bean
-    public DataSource dataSource() {
-        return dataSource;
-    }
+    public EntityManagerFactory entityManagerFactory() {
 
-    public DataSource getDataSource(){
-        DataSource dataSource = new DataSource();
-        dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-        dataSource.setUrl("jdbc:hsqldb:mem:.");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        return dataSource;
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        vendorAdapter.setGenerateDdl(true);
+
+        LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setJpaVendorAdapter(vendorAdapter);
+        factory.setPackagesToScan("fransis.mpm");
+        factory.setDataSource(dataSource());
+        factory.afterPropertiesSet();
+
+        return factory.getObject();
     }
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-        return transactionManager;
-    }
 
-    public PlatformTransactionManager getTransactionManager(EntityManagerFactory entityManagerFactory){
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
-        return transactionManager;
+        JpaTransactionManager txManager = new JpaTransactionManager();
+        txManager.setEntityManagerFactory(entityManagerFactory());
+        return txManager;
     }
-
 
     @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-        return persistenceExceptionTranslationPostProcessor;
+    public EntityManager entityManger () {
+        return entityManagerFactory().createEntityManager();
     }
 
-    public PersistenceExceptionTranslationPostProcessor getPersistenceExceptionTranslationPostProcessor(){
-        return new PersistenceExceptionTranslationPostProcessor();
-    }
-
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(){
-        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean= new LocalContainerEntityManagerFactoryBean();
-
-        entityManagerFactoryBean.setDataSource(dataSource);
-        entityManagerFactoryBean.setPackagesToScan("fransis.mpm");
-        entityManagerFactoryBean.setPersistenceUnitName("test");
-
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
-
-        Properties ps = new Properties();
-        ps.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-        ps.put("hibernate.hbm2ddl.auto", "create-drop");
-        ps.put("hibernate.archive.autodetection","class");
-        ps.put("hibernate.show_sql","false");
-
-        ps.put("hibernate.order_inserts", "true");
-        ps.put("hibernate.order_updates", "true");
-        ps.put("hibernate.jdbc.batch_size", "2");
-
-        entityManagerFactoryBean.setJpaProperties(ps);
-        entityManagerFactoryBean.afterPropertiesSet();
-        return entityManagerFactoryBean;
-    }
-
-
-    @Bean
-    public EntityManagerFactory entityManagerFactory() {
-        return entityManagerFactory;
-    }
-/*
-    public EntityManagerFactory getEntityManagerFactory() {
-        return entityManagerFactoryBean().getObject();
-    }
-*/
 }

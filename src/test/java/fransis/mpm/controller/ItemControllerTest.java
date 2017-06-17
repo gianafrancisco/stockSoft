@@ -84,6 +84,7 @@ public class ItemControllerTest {
     public void tearDown() throws Exception {
         itemRepository.deleteAll();
         articuloRepository.deleteAll();
+        reservaRepository.deleteAll();
     }
 
     @Test

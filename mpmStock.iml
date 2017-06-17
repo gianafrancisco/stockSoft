@@ -51,8 +51,7 @@
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:1.9.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aspects:4.1.8.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.190" level="project" />
-    <orderEntry type="library" name="Maven: org.hsqldb:hsqldb:2.3.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.h2database:h2:1.4.194" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi:3.15" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
