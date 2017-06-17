@@ -46,7 +46,7 @@ Section "GG Intenieria - Control de Stock"
   SetOutPath $INSTDIR
   
   ; Put file there
-  File "..\target\mpmStock-0.1.5.jar"
+  File "..\target\mpmStock-0.1.6.jar"
   File "run.bat"
   File "icon.ico"
   File /nonfatal /a /r "jre"
@@ -81,7 +81,7 @@ Section "Uninstall"
 
   ; Remove files and uninstaller
   Delete $INSTDIR\run.bat
-  Delete $INSTDIR\mpmStock-0.1.5.jar
+  Delete $INSTDIR\mpmStock-0.1.6.jar
   Delete $INSTDIR\uninstall.exe
   Delete $INSTDIR\icon.ico
 
