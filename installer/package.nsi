@@ -46,7 +46,7 @@ Section "GG Intenieria - Control de Stock"
   SetOutPath $INSTDIR
   
   ; Put file there
-  File "..\target\mpmStock-0.1.6.jar"
+  File "mpmStock-0.1.6.jar"
   File "run.bat"
   File "icon.ico"
   File /nonfatal /a /r "jre"
