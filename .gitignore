@@ -15,3 +15,5 @@ db/
 /installer/*.jar
 /installer/jre/
 /installer/jre-8u74-windows-i586.gz
+/installer/jre-8u131-windows-i586.tar.gz
+/installer/jre.tar.gz

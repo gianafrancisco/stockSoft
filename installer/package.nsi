@@ -49,7 +49,9 @@ Section "GG Intenieria - Control de Stock"
   File "mpmStock-0.1.6.jar"
   File "run.bat"
   File "icon.ico"
-  File /nonfatal /a /r "jre"
+  ;File /nonfatal /a /r "jre"
+  File "jre.tar.gz"
+  untgz::extract "-d" "$INSTDIR" "jre.tar.gz"
   WriteUninstaller "uninstall.exe"
   
 SectionEnd
@@ -84,6 +86,7 @@ Section "Uninstall"
   Delete $INSTDIR\mpmStock-0.1.6.jar
   Delete $INSTDIR\uninstall.exe
   Delete $INSTDIR\icon.ico
+  Delete $INSTDIR\jre.tar.gz
 
   ; Remove shortcuts, if any
   Delete "$SMPROGRAMS\MPM\*.*"
